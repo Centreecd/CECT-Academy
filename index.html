@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CECT Academy — Learn. Grow. Lead.</title>
+<meta name="description" content="CECT Academy is a professional training and learning platform offering practical courses, live webinars, and certification for career growth.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+/* ============================================================
+   CECT ACADEMY — DESIGN SYSTEM
+   Palette: Navy #0B1220 · Blue #3F88EF · Purple #B351FC
+            Canvas #F7F8FC · Surface #FFFFFF · Success #16A34A
+   Display: Plus Jakarta Sans · Body/UI: Inter
+   ============================================================ */
+
+:root{
+  --navy: #0B1220;
+  --navy-soft: #4B5567;
+  --blue: #3F88EF;
+  --blue-dark: #2E6FD1;
+  --purple: #B351FC;
+  --canvas: #F7F8FC;
+  --surface: #FFFFFF;
+  --line: #E7EAF2;
+  --success: #16A34A;
+  --danger: #DC2626;
+  --warn: #D97706;
+
+  --grad-brand: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+  --grad-glow: radial-gradient(60% 60% at 50% 40%, rgba(63,136,239,0.25) 0%, rgba(179,81,252,0.18) 45%, rgba(179,81,252,0) 75%);
+
+  --shadow-sm: 0 1px 2px rgba(11,18,32,0.06);
+  --shadow-md: 0 4px 16px rgba(11,18,32,0.08);
+  --shadow-lg: 0 16px 48px rgba(11,18,32,0.12);
+  --shadow-brand: 0 12px 32px rgba(63,136,239,0.28);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --container: 1180px;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{
+  font-family:'Inter', -apple-system, sans-serif;
+  color:var(--navy);
+  background:var(--canvas);
+  -webkit-font-smoothing:antialiased;
+  line-height:1.55;
+}
+h1,h2,h3,h4,.display{
+  font-family:'Plus Jakarta Sans', sans-serif;
+  color:var(--navy);
+  letter-spacing:-0.02em;
+  line-height:1.12;
+}
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+button{ font-family:inherit; cursor:pointer; }
+ul{ list-style:none; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+}
+
+.wrap{ max-width:var(--container); margin:0 auto; padding:0 24px; }
+.visually-hidden{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+/* Focus states */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+  border-radius:6px;
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:13px 24px;
+  border-radius:11px;
+  font-weight:600;
+  font-size:15px;
+  border:1.5px solid transparent;
+  transition:transform .15s ease, box-shadow .15s ease, background .15s ease, opacity .15s ease;
+  white-space:nowrap;
+}
+.btn:active{ transform:translateY(1px); }
+.btn-primary{
+  background:var(--grad-brand);
+  color:#fff;
+  box-shadow:var(--shadow-brand);
+}
+.btn-primary:hover{ box-shadow:0 16px 40px rgba(63,136,239,0.38); transform:translateY(-1px); }
+.btn-secondary{
+  background:#fff;
+  color:var(--navy);
+  border-color:var(--line);
+}
+.btn-secondary:hover{ border-color:var(--blue); color:var(--blue-dark); }
+.btn-ghost{ background:transparent; color:var(--navy-soft); }
+.btn-ghost:hover{ color:var(--navy); }
+.btn-block{ width:100%; }
+.btn-sm{ padding:9px 16px; font-size:13.5px; border-radius:9px; }
+.btn[disabled]{ opacity:.55; pointer-events:none; }
+.btn .spinner{ display:none; }
+.btn.is-loading .spinner{ display:inline-block; }
+.btn.is-loading .btn-label{ opacity:.7; }
+
+.spinner{
+  width:16px; height:16px;
+  border:2px solid rgba(255,255,255,0.4);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+.spinner.dark{ border-color:rgba(11,18,32,0.15); border-top-color:var(--blue); }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ---------- Header / Nav ---------- */
+.site-header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(247,248,252,0.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 24px;
+  max-width:var(--container); margin:0 auto;
+}
+.brand{ display:flex; align-items:center; gap:10px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:19px; }
+.brand-mark{
+  width:38px; height:38px; border-radius:10px;
+  background:var(--grad-brand);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-weight:800; font-size:15px;
+  flex-shrink:0;
+  box-shadow:var(--shadow-brand);
+}
+.brand-name small{ display:block; font-size:10.5px; font-weight:600; color:var(--navy-soft); letter-spacing:.06em; text-transform:uppercase; margin-top:1px; }
+.brand-logo{ background:#fff; padding:4px; object-fit:contain; box-shadow:var(--shadow-sm); }
+.footer-brand .brand-logo{ background:#fff; }
+
+.nav-links{ display:flex; align-items:center; gap:32px; }
+.nav-links a{ font-size:14.5px; font-weight:600; color:var(--navy-soft); transition:color .15s; position:relative; }
+.nav-links a:hover{ color:var(--navy); }
+.nav-links a.active{ color:var(--blue-dark); }
+
+.nav-actions{ display:flex; align-items:center; gap:12px; }
+.nav-toggle{ display:none; background:none; border:none; padding:8px; }
+.nav-toggle span{ display:block; width:22px; height:2px; background:var(--navy); margin:5px 0; border-radius:2px; transition:transform .2s, opacity .2s; }
+
+.user-chip{
+  display:flex; align-items:center; gap:9px;
+  padding:6px 14px 6px 6px;
+  border-radius:99px;
+  border:1px solid var(--line);
+  background:#fff;
+  font-size:13.5px; font-weight:600;
+}
+.user-avatar{
+  width:28px; height:28px; border-radius:50%;
+  background:var(--grad-brand);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700;
+}
+
+@media (max-width:920px){
+  .nav-links{
+    position:fixed; inset:64px 16px auto 16px;
+    background:#fff; border-radius:16px; border:1px solid var(--line);
+    flex-direction:column; align-items:stretch; gap:2px;
+    padding:10px; box-shadow:var(--shadow-lg);
+    transform:translateY(-12px); opacity:0; pointer-events:none;
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  .nav-links.open{ transform:translateY(0); opacity:1; pointer-events:auto; }
+  .nav-links a{ padding:12px 14px; border-radius:9px; }
+  .nav-links a:hover{ background:var(--canvas); }
+  .nav-toggle{ display:block; }
+  .nav-actions .btn-secondary{ display:none; }
+}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;
+  padding:76px 0 90px;
+  overflow:hidden;
+}
+.hero-grid{
+  display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;
+}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:12.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--blue-dark);
+  background:rgba(63,136,239,0.09);
+  border:1px solid rgba(63,136,239,0.18);
+  padding:7px 14px; border-radius:99px;
+  margin-bottom:22px;
+}
+.eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--success); }
+.hero h1{
+  font-size:clamp(38px, 5vw, 58px);
+  font-weight:800;
+  margin-bottom:20px;
+}
+.hero h1 .accent{
+  background:var(--grad-brand);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero-sub{
+  font-size:18px; color:var(--navy-soft); max-width:520px; margin-bottom:34px;
+}
+.hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:38px; }
+.hero-proof{ display:flex; align-items:center; gap:18px; color:var(--navy-soft); font-size:13.5px; font-weight:600; }
+.hero-proof .stars{ color:#F5A623; letter-spacing:2px; }
+
+/* Hero visual: stacked cluster */
+.hero-visual{ position:relative; height:460px; }
+.hero-glow{
+  position:absolute; inset:-60px;
+  background:var(--grad-glow);
+  filter:blur(10px);
+  z-index:0;
+}
+.float-card{
+  position:absolute;
+  background:#fff;
+  border-radius:var(--radius-md);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow-lg);
+  padding:18px 20px;
+  z-index:1;
+}
+.card-main{
+  top:40px; left:10px; width:290px;
+  animation:float1 7s ease-in-out infinite;
+}
+.card-progress{
+  bottom:60px; left:60px; width:250px;
+  animation:float2 8s ease-in-out infinite;
+}
+.card-stat{
+  top:0px; right:0; width:190px;
+  animation:float3 6.5s ease-in-out infinite;
+}
+@keyframes float1{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+@keyframes float2{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(10px); } }
+@keyframes float3{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+@media (prefers-reduced-motion: reduce){
+  .float-card{ animation:none; }
+}
+
+.card-thumb{
+  width:100%; height:110px; border-radius:10px;
+  background:var(--grad-brand);
+  margin-bottom:12px;
+  position:relative; overflow:hidden;
+}
+.card-thumb::after{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 60%);
+}
+.card-main .card-title{ font-weight:700; font-size:14.5px; margin-bottom:4px; }
+.card-main .card-meta{ font-size:12.5px; color:var(--navy-soft); }
+
+.ring{ width:52px; height:52px; flex-shrink:0; }
+.ring circle{ fill:none; stroke-width:5; }
+.ring .bg{ stroke:var(--line); }
+.ring .fg{ stroke:url(#ringGrad); stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; }
+.progress-row{ display:flex; align-items:center; gap:14px; }
+.progress-row .ptext{ font-size:12px; color:var(--navy-soft); font-weight:600; }
+.progress-row .pnum{ font-size:18px; font-weight:800; color:var(--navy); }
+
+.card-stat .snum{ font-size:26px; font-weight:800; }
+.card-stat .slabel{ font-size:12px; color:var(--navy-soft); font-weight:600; }
+.card-stat .strend{ color:var(--success); font-size:12px; font-weight:700; margin-top:6px; display:flex; align-items:center; gap:4px; }
+
+/* ---------- Section shells ---------- */
+section{ padding:88px 0; }
+.section-head{ max-width:640px; margin-bottom:48px; }
+.section-head.center{ margin-left:auto; margin-right:auto; text-align:center; }
+.section-eyebrow{ font-size:12.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--purple); margin-bottom:12px; }
+.section-head h2{ font-size:clamp(28px,3.4vw,38px); font-weight:800; margin-bottom:14px; }
+.section-head p{ color:var(--navy-soft); font-size:16.5px; }
+
+.section-alt{ background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+
+/* ---------- Stats ---------- */
+.stats-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden; }
+.stat-cell{ background:#fff; padding:32px 20px; text-align:center; }
+.stat-num{ font-family:'Plus Jakarta Sans',sans-serif; font-size:32px; font-weight:800; background:var(--grad-brand); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.stat-label{ font-size:13px; color:var(--navy-soft); font-weight:600; margin-top:6px; }
+@media (max-width:920px){ .stats-grid{ grid-template-columns:repeat(2,1fr); } .stat-cell:last-child{ grid-column:span 2; } }
+
+/* ---------- Course cards ---------- */
+.course-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+.course-card{
+  background:#fff; border:1px solid var(--line); border-radius:var(--radius-md);
+  overflow:hidden; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  display:flex; flex-direction:column;
+}
+.course-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-lg); border-color:transparent; }
+.course-thumb{
+  height:160px;
+  background:var(--grad-brand);
+  position:relative;
+}
+.course-thumb img{ width:100%; height:100%; object-fit:cover; }
+.badge{
+  position:absolute; top:12px; left:12px;
+  font-size:11px; font-weight:700; letter-spacing:.03em;
+  padding:5px 10px; border-radius:99px;
+  background:rgba(11,18,32,0.75); color:#fff;
+  backdrop-filter:blur(4px);
+}
+.badge.free{ background:var(--success); }
+.badge.discount{ left:auto; right:12px; background:#fff; color:var(--purple); }
+.course-body{ padding:20px; display:flex; flex-direction:column; gap:10px; flex:1; }
+.course-cat{ font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--blue-dark); }
+.course-title{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:17px; line-height:1.3; }
+.course-desc{ font-size:13.5px; color:var(--navy-soft); flex:1; }
+.course-meta{ display:flex; align-items:center; gap:14px; font-size:12.5px; color:var(--navy-soft); font-weight:600; padding-top:8px; border-top:1px solid var(--line); }
+.course-meta span{ display:flex; align-items:center; gap:5px; }
+.course-footer{ display:flex; align-items:center; justify-content:space-between; padding-top:4px; }
+.price-block{ display:flex; align-items:baseline; gap:8px; }
+.price-now{ font-size:19px; font-weight:800; }
+.price-was{ font-size:13px; color:var(--navy-soft); text-decoration:line-through; }
+@media (max-width:920px){ .course-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:640px){ .course-grid{ grid-template-columns:1fr; } }
+
+/* ---------- Benefits ---------- */
+.benefit-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+.benefit-card{ padding:28px; border-radius:var(--radius-md); background:var(--canvas); border:1px solid var(--line); }
+.benefit-icon{
+  width:44px; height:44px; border-radius:11px;
+  background:var(--grad-brand); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:16px; font-size:19px;
+}
+.benefit-card h3{ font-size:16.5px; margin-bottom:8px; }
+.benefit-card p{ font-size:14px; color:var(--navy-soft); }
+@media (max-width:900px){ .benefit-grid{ grid-template-columns:1fr 1fr; } }
+@media (max-width:600px){ .benefit-grid{ grid-template-columns:1fr; } }
+
+/* ---------- Webinars ---------- */
+.webinar-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
+.webinar-card{
+  display:flex; gap:18px;
+  background:#fff; border:1px solid var(--line); border-radius:var(--radius-md);
+  padding:20px;
+}
+.webinar-date{
+  flex-shrink:0; width:66px; height:66px; border-radius:12px;
+  background:var(--canvas); border:1px solid var(--line);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.webinar-date .dnum{ font-size:20px; font-weight:800; }
+.webinar-date .dmon{ font-size:10.5px; font-weight:700; text-transform:uppercase; color:var(--navy-soft); }
+.webinar-info{ flex:1; min-width:0; }
+.webinar-info h3{ font-size:15.5px; margin-bottom:5px; }
+.webinar-info .wmeta{ font-size:12.5px; color:var(--navy-soft); margin-bottom:8px; }
+.webinar-info p{ font-size:13.5px; color:var(--navy-soft); margin-bottom:12px; }
+@media (max-width:800px){ .webinar-grid{ grid-template-columns:1fr; } }
+
+/* ---------- Process ---------- */
+.process-row{ display:grid; grid-template-columns:repeat(6,1fr); gap:16px; }
+.process-step{ text-align:center; }
+.process-num{
+  width:40px; height:40px; border-radius:50%; margin:0 auto 14px;
+  border:2px solid var(--line); display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:14px; color:var(--navy-soft); background:#fff;
+}
+.process-step.done .process-num{ background:var(--grad-brand); color:#fff; border-color:transparent; }
+.process-step h4{ font-size:14px; margin-bottom:4px; }
+.process-step p{ font-size:12px; color:var(--navy-soft); }
+@media (max-width:900px){ .process-row{ grid-template-columns:repeat(3,1fr); row-gap:32px; } }
+@media (max-width:520px){ .process-row{ grid-template-columns:repeat(2,1fr); } }
+
+/* ---------- Testimonials ---------- */
+.testi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.testi-card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; }
+.testi-stars{ color:#F5A623; font-size:14px; margin-bottom:14px; letter-spacing:2px; }
+.testi-quote{ font-size:14.5px; color:var(--navy); margin-bottom:18px; }
+.testi-person{ display:flex; align-items:center; gap:10px; }
+.testi-avatar{ width:38px; height:38px; border-radius:50%; background:var(--grad-brand); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+.testi-name{ font-size:13.5px; font-weight:700; }
+.testi-role{ font-size:12px; color:var(--navy-soft); }
+@media (max-width:900px){ .testi-grid{ grid-template-columns:1fr; } }
+
+/* ---------- Instructors ---------- */
+.instr-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; }
+.instr-card{ text-align:center; }
+.instr-photo{ width:100%; aspect-ratio:1; border-radius:var(--radius-md); background:var(--grad-brand); margin-bottom:14px; overflow:hidden; }
+.instr-photo img{ width:100%; height:100%; object-fit:cover; }
+.instr-card h4{ font-size:15px; margin-bottom:2px; }
+.instr-card p{ font-size:12.5px; color:var(--navy-soft); }
+@media (max-width:900px){ .instr-grid{ grid-template-columns:repeat(2,1fr); } }
+
+/* ---------- CTA band ---------- */
+.cta-band{
+  background:var(--navy);
+  border-radius:var(--radius-lg);
+  padding:64px 48px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.cta-band::before{
+  content:''; position:absolute; inset:0;
+  background:var(--grad-glow); opacity:.5;
+}
+.cta-band > *{ position:relative; z-index:1; }
+.cta-band h2{ color:#fff; font-size:clamp(26px,3.4vw,36px); margin-bottom:14px; }
+.cta-band p{ color:rgba(255,255,255,0.7); margin-bottom:30px; font-size:16px; }
+.cta-band .hero-ctas{ justify-content:center; margin-bottom:0; }
+
+/* ---------- Footer ---------- */
+.site-footer{ background:var(--navy); color:rgba(255,255,255,0.65); padding:64px 0 28px; margin-top:88px; }
+.footer-grid{ display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:40px; margin-bottom:48px; }
+.footer-brand .brand{ color:#fff; margin-bottom:14px; }
+.footer-brand p{ font-size:13.5px; line-height:1.7; max-width:280px; }
+.footer-col h4{ color:#fff; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; margin-bottom:16px; }
+.footer-col ul li{ margin-bottom:10px; }
+.footer-col a{ font-size:13.5px; transition:color .15s; }
+.footer-col a:hover{ color:#fff; }
+.footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:28px; border-top:1px solid rgba(255,255,255,0.1); font-size:12.5px; flex-wrap:wrap; gap:12px; }
+.social-row{ display:flex; gap:12px; }
+.social-row a{ width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; font-size:13px; }
+@media (max-width:900px){ .footer-grid{ grid-template-columns:1fr 1fr; } }
+@media (max-width:560px){ .footer-grid{ grid-template-columns:1fr; } .footer-bottom{ flex-direction:column; align-items:flex-start; } }
+
+/* ---------- Modal (Auth) ---------- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(11,18,32,0.55);
+  display:none; align-items:center; justify-content:center; padding:20px; z-index:1000;
+  backdrop-filter:blur(3px);
+}
+.modal-overlay.open{ display:flex; }
+.modal{
+  background:#fff; border-radius:var(--radius-lg); width:100%; max-width:420px;
+  padding:36px 32px; position:relative; box-shadow:var(--shadow-lg);
+  max-height:90vh; overflow-y:auto;
+}
+.modal-close{ position:absolute; top:18px; right:18px; width:32px; height:32px; border-radius:50%; border:1px solid var(--line); background:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--navy-soft); }
+.modal-close:hover{ background:var(--canvas); }
+.modal h3{ font-size:22px; margin-bottom:6px; }
+.modal .modal-sub{ font-size:14px; color:var(--navy-soft); margin-bottom:26px; }
+
+.field{ margin-bottom:16px; }
+.field label{ display:block; font-size:13px; font-weight:600; margin-bottom:7px; }
+.field input{
+  width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px;
+  font-size:14.5px; font-family:inherit; transition:border-color .15s;
+  background:var(--canvas);
+}
+.field input:focus{ outline:none; border-color:var(--blue); background:#fff; }
+.field-error{ font-size:12.5px; color:var(--danger); margin-top:6px; display:none; }
+.field.has-error input{ border-color:var(--danger); }
+.field.has-error .field-error{ display:block; }
+
+.form-msg{ font-size:13.5px; padding:11px 14px; border-radius:9px; margin-bottom:16px; display:none; }
+.form-msg.show{ display:block; }
+.form-msg.error{ background:#FEF2F2; color:var(--danger); }
+.form-msg.success{ background:#F0FDF4; color:var(--success); }
+
+.modal-switch{ text-align:center; font-size:13.5px; color:var(--navy-soft); margin-top:20px; }
+.modal-switch button{ background:none; border:none; color:var(--blue-dark); font-weight:700; }
+
+/* ---------- Toast ---------- */
+.toast-stack{ position:fixed; bottom:24px; right:24px; z-index:1200; display:flex; flex-direction:column; gap:10px; }
+.toast{
+  background:var(--navy); color:#fff; padding:14px 18px; border-radius:10px;
+  font-size:13.5px; font-weight:600; box-shadow:var(--shadow-lg);
+  display:flex; align-items:center; gap:10px; min-width:240px;
+  animation:toastIn .25s ease;
+}
+.toast.success{ background:var(--success); }
+.toast.error{ background:var(--danger); }
+@keyframes toastIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+@media (max-width:560px){ .toast-stack{ left:16px; right:16px; bottom:16px; } .toast{ min-width:0; } }
+
+/* ---------- Skeleton ---------- */
+.skel{ background:linear-gradient(90deg, var(--line) 25%, #eef0f6 37%, var(--line) 63%); background-size:400% 100%; animation:skel 1.4s ease infinite; border-radius:8px; }
+@keyframes skel{ 0%{ background-position:100% 0; } 100%{ background-position:0 0; } }
+
+/* ---------- Empty state ---------- */
+.empty-state{ text-align:center; padding:56px 24px; color:var(--navy-soft); }
+.empty-state .ee-icon{ font-size:34px; margin-bottom:14px; }
+.empty-state p{ font-size:14.5px; margin-bottom:18px; }
+
+@media (max-width:920px){
+  .hero-grid{ grid-template-columns:1fr; }
+  .hero-visual{ height:340px; margin-top:20px; }
+  .course-grid, .benefit-grid{ gap:18px; }
+}
+@media (max-width:768px){
+  section{ padding:60px 0; }
+  .hero{ padding:44px 0 56px; }
+}
+</style>
+</head>
+<body>
+
+<!-- SVG defs for ring gradient -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3F88EF"/>
+      <stop offset="100%" stop-color="#B351FC"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <nav class="nav wrap">
+    <a href="#home" class="brand">
+      <img class="brand-mark brand-logo" src="https://res.cloudinary.com/g2ajyskg/image/upload/v1786779146/file_00000000f84081f4b6c4415d9e8735e0.png" alt="CECT Academy logo">
+      <span class="brand-name">CECT Academy<small>Learn. Grow. Lead.</small></span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="active">Home</a></li>
+      <li><a href="#courses">Courses</a></li>
+      <li><a href="#webinars">Webinars</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#instructors">Instructors</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions" id="navActions">
+      <!-- Populated by JS: either Login/Get Started, or user chip -->
+      <button class="btn btn-ghost btn-sm" id="btnLogin">Login</button>
+      <button class="btn btn-primary btn-sm" id="btnGetStarted">Get Started</button>
+    </div>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main id="home">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> Enrolment open for August cohort</div>
+        <h1>Learn. Grow. <span class="accent">Lead.</span></h1>
+        <p class="hero-sub">CECT Academy gives you practical, professional and accessible training — real skills, expert instructors, and certificates that mean something for your career.</p>
+        <div class="hero-ctas">
+          <a href="#courses" class="btn btn-primary">Explore Courses</a>
+          <a href="#webinars" class="btn btn-secondary">Upcoming Webinars</a>
+        </div>
+        <div class="hero-proof">
+          <span class="stars">★★★★★</span>
+          <span>Rated by learners across Nigeria and beyond</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="float-card card-stat">
+          <div class="snum">92%</div>
+          <div class="slabel">Course completion rate</div>
+          <div class="strend">↑ growing every cohort</div>
+        </div>
+        <div class="float-card card-main">
+          <div class="card-thumb"></div>
+          <div class="card-title">Mastering Public Speaking</div>
+          <div class="card-meta">12 lessons · Intermediate</div>
+        </div>
+        <div class="float-card card-progress">
+          <div class="progress-row">
+            <svg class="ring" viewBox="0 0 52 52">
+              <circle class="bg" cx="26" cy="26" r="22"></circle>
+              <circle class="fg" cx="26" cy="26" r="22" stroke-dasharray="138.2" stroke-dashoffset="41.5"></circle>
+            </svg>
+            <div>
+              <div class="pnum">70%</div>
+              <div class="ptext">12 of 20 lessons complete</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Courses Available</div></div>
+        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Learners</div></div>
+        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Expert Instructors</div></div>
+        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Training Hours</div></div>
+        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Certificates Issued</div></div>
+      </div>
+      <p style="text-align:center;font-size:12px;color:var(--navy-soft);margin-top:12px">Live figures — updated automatically as the academy grows</p>
+    </div>
+  </section>
+
+  <!-- ============ FEATURED COURSES ============ -->
+  <section id="courses" class="section-alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">Featured Courses</div>
+        <h2>Practical training, built for real outcomes</h2>
+        <p>Every course is designed with clear learning outcomes, downloadable resources, and a certificate on completion.</p>
+      </div>
+      <div class="course-grid" id="courseGrid">
+        <!-- Loading skeletons; replaced by loadCourses() -->
+        <div class="course-card"><div class="skel" style="height:160px"></div><div class="course-body"><div class="skel" style="height:14px;width:60%"></div><div class="skel" style="height:20px"></div><div class="skel" style="height:40px"></div></div></div>
+        <div class="course-card"><div class="skel" style="height:160px"></div><div class="course-body"><div class="skel" style="height:14px;width:60%"></div><div class="skel" style="height:20px"></div><div class="skel" style="height:40px"></div></div></div>
+        <div class="course-card"><div class="skel" style="height:160px"></div><div class="course-body"><div class="skel" style="height:14px;width:60%"></div><div class="skel" style="height:20px"></div><div class="skel" style="height:40px"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY LEARN WITH US ============ -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head center" style="margin-left:auto;margin-right:auto">
+        <div class="section-eyebrow">Why CECT Academy</div>
+        <h2>Training that respects your time</h2>
+        <p>Built for people balancing work, life and ambition — learn at your pace, on any device.</p>
+      </div>
+      <div class="benefit-grid">
+        <div class="benefit-card"><div class="benefit-icon">◆</div><h3>Practical Learning</h3><p>Every module ties directly to a skill you can apply immediately, not just theory.</p></div>
+        <div class="benefit-card"><div class="benefit-icon">◆</div><h3>Expert-Led Training</h3><p>Instructors bring real industry experience, not just credentials.</p></div>
+        <div class="benefit-card"><div class="benefit-icon">◆</div><h3>Flexible Learning</h3><p>Learn from your phone, tablet or laptop — pause and resume anytime.</p></div>
+        <div class="benefit-card"><div class="benefit-icon">◆</div><h3>Downloadable Resources</h3><p>Slides, worksheets and guides you keep long after the course ends.</p></div>
+        <div class="benefit-card"><div class="benefit-icon">◆</div><h3>Verifiable Certificates</h3><p>Every certificate carries a unique ID anyone can verify online.</p></div>
+        <div class="benefit-card"><div class="benefit-icon">◆</div><h3>Career-Focused Skills</h3><p>Courses are built around what employers and clients actually need.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WEBINARS ============ -->
+  <section id="webinars" class="section-alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">Live Sessions</div>
+        <h2>Upcoming Webinars</h2>
+        <p>Free and paid live sessions with practitioners — ask questions in real time.</p>
+      </div>
+      <div class="webinar-grid" id="webinarGrid">
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="ee-icon">◇</div>
+          <p>There are no upcoming webinars at the moment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section>
+    <div class="wrap">
+      <div class="section-head center" style="margin-left:auto;margin-right:auto">
+        <div class="section-eyebrow">How It Works</div>
+        <h2>From sign-up to certificate</h2>
+      </div>
+      <div class="process-row">
+        <div class="process-step done"><div class="process-num">1</div><h4>Choose</h4><p>Pick a course</p></div>
+        <div class="process-step done"><div class="process-num">2</div><h4>Register</h4><p>Create your account</p></div>
+        <div class="process-step"><div class="process-num">3</div><h4>Learn</h4><p>Watch and read</p></div>
+        <div class="process-step"><div class="process-num">4</div><h4>Practise</h4><p>Apply what you learn</p></div>
+        <div class="process-step"><div class="process-num">5</div><h4>Complete</h4><p>Finish all lessons</p></div>
+        <div class="process-step"><div class="process-num">6</div><h4>Certify</h4><p>Get your certificate</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section class="section-alt" id="testimonials-section">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">Testimonials</div>
+        <h2>What learners say</h2>
+      </div>
+      <div class="testi-grid" id="testiGrid">
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="ee-icon">◇</div>
+          <p>Learner testimonials will appear here once submitted and approved.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INSTRUCTORS ============ -->
+  <section id="instructors">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">Our Team</div>
+        <h2>Learn from practitioners</h2>
+      </div>
+      <div class="instr-grid" id="instrGrid">
+        <div class="empty-state" style="grid-column:1/-1">
+          <div class="ee-icon">◇</div>
+          <p>Instructor profiles will appear here once added by the academy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section>
+    <div class="wrap">
+      <div class="cta-band">
+        <h2>Ready to take the next step in your learning journey?</h2>
+        <p>Join learners already building real, career-ready skills with CECT Academy.</p>
+        <div class="hero-ctas">
+          <a href="#courses" class="btn btn-primary">Explore Courses</a>
+          <a href="#webinars" class="btn btn-secondary" style="background:transparent;color:#fff;border-color:rgba(255,255,255,0.25)">Join a Webinar</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer" id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#home" class="brand"><img class="brand-mark brand-logo" src="https://res.cloudinary.com/g2ajyskg/image/upload/v1786779146/file_00000000f84081f4b6c4415d9e8735e0.png" alt="CECT Academy logo"> CECT Academy</a>
+        <p>Practical, professional and accessible training designed to help people develop relevant skills and achieve their goals.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#courses">Courses</a></li>
+          <li><a href="#webinars">Webinars</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#instructors">Instructors</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#" data-legal="privacy">Privacy Policy</a></li>
+          <li><a href="#" data-legal="terms">Terms</a></li>
+          <li><a href="#" data-legal="refund">Refund Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li>hello@cectacademy.com</li>
+          <li>+234 000 000 0000</li>
+        </ul>
+        <div class="social-row" style="margin-top:14px">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="Twitter / X">x</a>
+          <a href="#" aria-label="Instagram">ig</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> CECT Academy. All rights reserved.</span>
+      <span>Built for learners, by CECT.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ AUTH MODAL ============ -->
+<div class="modal-overlay" id="authOverlay">
+  <div class="modal">
+    <button class="modal-close" id="authClose" aria-label="Close">×</button>
+
+    <!-- LOGIN VIEW -->
+    <div id="loginView">
+      <h3>Welcome back</h3>
+      <p class="modal-sub">Log in to continue your learning journey.</p>
+      <div class="form-msg" id="loginMsg"></div>
+      <form id="loginForm" novalidate>
+        <div class="field" id="loginEmailField">
+          <label for="loginEmail">Email address</label>
+          <input type="email" id="loginEmail" autocomplete="email" required>
+          <div class="field-error">Enter a valid email address.</div>
+        </div>
+        <div class="field" id="loginPasswordField">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" autocomplete="current-password" required>
+          <div class="field-error">Enter your password.</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="loginSubmit">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label">Log In</span>
+        </button>
+      </form>
+      <p class="modal-switch">
+        <button type="button" id="toForgot">Forgot password?</button>
+      </p>
+      <p class="modal-switch">
+        New to CECT Academy? <button type="button" id="toRegister">Create an account</button>
+      </p>
+    </div>
+
+    <!-- REGISTER VIEW -->
+    <div id="registerView" style="display:none">
+      <h3>Create your account</h3>
+      <p class="modal-sub">One account gives you access to every course you purchase.</p>
+      <div class="form-msg" id="registerMsg"></div>
+      <form id="registerForm" novalidate>
+        <div class="field" id="regNameField">
+          <label for="regName">Full name</label>
+          <input type="text" id="regName" autocomplete="name" required>
+          <div class="field-error">Enter your full name.</div>
+        </div>
+        <div class="field" id="regEmailField">
+          <label for="regEmail">Email address</label>
+          <input type="email" id="regEmail" autocomplete="email" required>
+          <div class="field-error">Enter a valid email address.</div>
+        </div>
+        <div class="field" id="regPasswordField">
+          <label for="regPassword">Password</label>
+          <input type="password" id="regPassword" autocomplete="new-password" required minlength="8">
+          <div class="field-error">Password must be at least 8 characters.</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="registerSubmit">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label">Create Account</span>
+        </button>
+      </form>
+      <p class="modal-switch">
+        Already have an account? <button type="button" id="toLogin">Log in</button>
+      </p>
+    </div>
+
+    <!-- FORGOT PASSWORD VIEW -->
+    <div id="forgotView" style="display:none">
+      <h3>Reset your password</h3>
+      <p class="modal-sub">We'll email you a link to reset your password.</p>
+      <div class="form-msg" id="forgotMsg"></div>
+      <form id="forgotForm" novalidate>
+        <div class="field" id="forgotEmailField">
+          <label for="forgotEmail">Email address</label>
+          <input type="email" id="forgotEmail" autocomplete="email" required>
+          <div class="field-error">Enter a valid email address.</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="forgotSubmit">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label">Send Reset Link</span>
+        </button>
+      </form>
+      <p class="modal-switch">
+        <button type="button" id="backToLogin">Back to login</button>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script>
+/* ==========================================================================
+   CECT ACADEMY — APPLICATION SCRIPT (Phase 1)
+   Covers: Supabase config, auth (register/login/logout/reset), nav state,
+   homepage data loading (courses/stats/webinars/testimonials/instructors),
+   UI helpers (toast, loading states, validation).
+   ========================================================================== */
+
+/* ---------------------------------------------------------------
+   1. SUPABASE CONFIG
+   Replace these placeholders with your real project values once
+   you've created the Supabase project (Settings → API).
+   NEVER put the service_role key here — only the public anon key.
+--------------------------------------------------------------- */
+const SUPABASE_URL = 'https://ajjnfluxwtidcbgrdnwf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqam5mbHV4d3RpZGNiZ3JkbndmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NjMzODEsImV4cCI6MjEwMjMzOTM4MX0.Glql1Xbd8gt3c6gHrD0H4ygEzru3HU95b7Q6Do91lGM';
+
+let supabase = null;
+let supabaseReady = false;
+try {
+  if (SUPABASE_URL.startsWith('http') && SUPABASE_ANON_KEY.length > 20) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseReady = true;
+  }
+} catch (e) {
+  console.warn('Supabase not configured yet:', e);
+}
+
+let currentUser = null;
+let currentProfile = null;
+
+/* ---------------------------------------------------------------
+   2. TOAST HELPER
+--------------------------------------------------------------- */
+function showToast(message, type = 'default') {
+  const stack = document.getElementById('toastStack');
+  const el = document.createElement('div');
+  el.className = 'toast' + (type !== 'default' ? ' ' + type : '');
+  el.textContent = message;
+  stack.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity .25s ease';
+    setTimeout(() => el.remove(), 260);
+  }, 3600);
+}
+
+/* ---------------------------------------------------------------
+   3. NAV: mobile toggle + scroll active state
+--------------------------------------------------------------- */
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  });
+});
+
+/* ---------------------------------------------------------------
+   4. AUTH MODAL: open/close/switch views
+--------------------------------------------------------------- */
+const authOverlay = document.getElementById('authOverlay');
+const views = {
+  login: document.getElementById('loginView'),
+  register: document.getElementById('registerView'),
+  forgot: document.getElementById('forgotView'),
+};
+
+function openAuth(view = 'login') {
+  authOverlay.classList.add('open');
+  switchView(view);
+  document.body.style.overflow = 'hidden';
+}
+function closeAuth() {
+  authOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+  clearAllFormMessages();
+}
+function switchView(view) {
+  Object.values(views).forEach(v => v.style.display = 'none');
+  views[view].style.display = 'block';
+  clearAllFormMessages();
+}
+function clearAllFormMessages() {
+  document.querySelectorAll('.form-msg').forEach(m => { m.className = 'form-msg'; m.textContent = ''; });
+}
+
+document.getElementById('btnLogin').addEventListener('click', () => openAuth('login'));
+document.getElementById('btnGetStarted').addEventListener('click', () => openAuth('register'));
+document.getElementById('authClose').addEventListener('click', closeAuth);
+authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuth(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && authOverlay.classList.contains('open')) closeAuth(); });
+
+document.getElementById('toRegister').addEventListener('click', () => switchView('register'));
+document.getElementById('toLogin').addEventListener('click', () => switchView('login'));
+document.getElementById('toForgot').addEventListener('click', () => switchView('forgot'));
+document.getElementById('backToLogin').addEventListener('click', () => switchView('login'));
+
+/* ---------------------------------------------------------------
+   5. FORM VALIDATION HELPERS
+--------------------------------------------------------------- */
+function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+function setFieldError(fieldId, hasError) {
+  const field = document.getElementById(fieldId);
+  field.classList.toggle('has-error', hasError);
+}
+
+function setFormMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'form-msg show ' + type;
+}
+
+function setButtonLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  btn.classList.toggle('is-loading', loading);
+  btn.disabled = loading;
+}
+
+function requireSupabase() {
+  if (!supabaseReady) {
+    showToast('Supabase is not configured yet — add your project URL and anon key in the code.', 'error');
+    return false;
+  }
+  return true;
+}
+
+/* ---------------------------------------------------------------
+   6. REGISTER
+--------------------------------------------------------------- */
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!requireSupabase()) return;
+
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+
+  let valid = true;
+  setFieldError('regNameField', name.length < 2); if (name.length < 2) valid = false;
+  setFieldError('regEmailField', !isValidEmail(email)); if (!isValidEmail(email)) valid = false;
+  setFieldError('regPasswordField', password.length < 8); if (password.length < 8) valid = false;
+  if (!valid) return;
+
+  setButtonLoading('registerSubmit', true);
+  clearAllFormMessages();
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email, password,
+      options: { data: { full_name: name } }
+    });
+    if (error) throw error;
+
+    setFormMsg('registerMsg', 'Account created! Check your email to verify your address.', 'success');
+    showToast('Welcome to CECT Academy — check your email to verify your account.', 'success');
+    setTimeout(() => { closeAuth(); }, 1800);
+  } catch (err) {
+    setFormMsg('registerMsg', err.message || 'Could not create account. Please try again.', 'error');
+  } finally {
+    setButtonLoading('registerSubmit', false);
+  }
+});
+
+/* ---------------------------------------------------------------
+   7. LOGIN
+--------------------------------------------------------------- */
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!requireSupabase()) return;
+
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  let valid = true;
+  setFieldError('loginEmailField', !isValidEmail(email)); if (!isValidEmail(email)) valid = false;
+  setFieldError('loginPasswordField', password.length < 1); if (password.length < 1) valid = false;
+  if (!valid) return;
+
+  setButtonLoading('loginSubmit', true);
+  clearAllFormMessages();
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+
+    showToast('Welcome back!', 'success');
+    closeAuth();
+    await refreshSession();
+  } catch (err) {
+    setFormMsg('loginMsg', err.message === 'Invalid login credentials'
+      ? 'Incorrect email or password.'
+      : (err.message || 'Could not log in. Please try again.'), 'error');
+  } finally {
+    setButtonLoading('loginSubmit', false);
+  }
+});
+
+/* ---------------------------------------------------------------
+   8. FORGOT PASSWORD
+--------------------------------------------------------------- */
+document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!requireSupabase()) return;
+
+  const email = document.getElementById('forgotEmail').value.trim();
+  setFieldError('forgotEmailField', !isValidEmail(email));
+  if (!isValidEmail(email)) return;
+
+  setButtonLoading('forgotSubmit', true);
+  clearAllFormMessages();
+
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname
+    });
+    if (error) throw error;
+    setFormMsg('forgotMsg', 'Reset link sent — check your email.', 'success');
+  } catch (err) {
+    setFormMsg('forgotMsg', err.message || 'Could not send reset link.', 'error');
+  } finally {
+    setButtonLoading('forgotSubmit', false);
+  }
+});
+
+/* ---------------------------------------------------------------
+   9. SESSION / NAV STATE
+--------------------------------------------------------------- */
+async function refreshSession() {
+  if (!supabaseReady) return;
+  const { data: { session } } = await supabase.auth.getSession();
+  currentUser = session?.user || null;
+
+  if (currentUser) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('full_name, role, avatar_url')
+      .eq('id', currentUser.id)
+      .single();
+    currentProfile = profile || null;
+  } else {
+    currentProfile = null;
+  }
+  renderNavActions();
+}
+
+function renderNavActions() {
+  const container = document.getElementById('navActions');
+  if (currentUser) {
+    const name = currentProfile?.full_name || currentUser.email;
+    const initials = name.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
+    container.innerHTML = `
+      <a href="#dashboard" class="user-chip" id="userChipBtn">
+        <span class="user-avatar">${initials}</span>
+        <span>${name.split(' ')[0]}</span>
+      </a>
+      <button class="btn btn-ghost btn-sm" id="btnLogout">Logout</button>
+    `;
+    document.getElementById('btnLogout').addEventListener('click', logout);
+    document.getElementById('userChipBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast('Student dashboard is coming in the next build phase.', 'default');
+    });
+  } else {
+    container.innerHTML = `
+      <button class="btn btn-ghost btn-sm" id="btnLogin">Login</button>
+      <button class="btn btn-primary btn-sm" id="btnGetStarted">Get Started</button>
+    `;
+    document.getElementById('btnLogin').addEventListener('click', () => openAuth('login'));
+    document.getElementById('btnGetStarted').addEventListener('click', () => openAuth('register'));
+  }
+}
+
+async function logout() {
+  if (!supabaseReady) return;
+  await supabase.auth.signOut();
+  currentUser = null;
+  currentProfile = null;
+  renderNavActions();
+  showToast('You have been logged out.', 'default');
+}
+
+if (supabaseReady) {
+  supabase.auth.onAuthStateChange((_event, _session) => {
+    refreshSession();
+  });
+}
+
+/* ---------------------------------------------------------------
+   10. HOMEPAGE DATA LOADING
+   Falls back to editable-placeholder empty states if Supabase
+   is not yet configured or tables don't exist yet.
+--------------------------------------------------------------- */
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str ?? '';
+  return div.innerHTML;
+}
+function formatNaira(amount) {
+  if (amount === null || amount === undefined) return '';
+  return '₦' + Number(amount).toLocaleString('en-NG');
+}
+
+async function loadStats() {
+  const cells = document.querySelectorAll('#statsGrid .stat-num');
+  if (!supabaseReady) {
+    // Editable placeholders — replace with real counts once Supabase is connected.
+    const placeholders = ['—', '—', '—', '—', '—'];
+    cells.forEach((c, i) => c.textContent = placeholders[i]);
+    return;
+  }
+  try {
+    const [{ count: courseCount }, { count: studentCount }, { count: instructorCount }, { count: certCount }] = await Promise.all([
+      supabase.from('courses').select('*', { count: 'exact', head: true }).eq('status', 'published'),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'instructor'),
+      supabase.from('certificates').select('*', { count: 'exact', head: true }),
+    ]);
+    const values = [courseCount ?? 0, studentCount ?? 0, instructorCount ?? 0, '—', certCount ?? 0];
+    cells.forEach((c, i) => c.textContent = values[i]);
+  } catch (err) {
+    console.warn('Stats not available yet:', err.message);
+  }
+}
+
+async function loadCourses() {
+  const grid = document.getElementById('courseGrid');
+  if (!supabaseReady) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="ee-icon">◇</div><p>Courses will appear here once the academy's catalogue is connected.</p></div>`;
+    return;
+  }
+  try {
+    const { data: courses, error } = await supabase
+      .from('courses')
+      .select('id, title, slug, subtitle, thumbnail_url, price, discount_price, level, duration, featured, status')
+      .eq('status', 'published')
+      .order('featured', { ascending: false })
+      .limit(6);
+    if (error) throw error;
+
+    if (!courses || courses.length === 0) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="ee-icon">◇</div><p>No courses published yet. Check back soon.</p></div>`;
+      return;
+    }
+
+    grid.innerHTML = courses.map(c => {
+      const hasDiscount = c.discount_price && c.discount_price < c.price;
+      const pct = hasDiscount ? Math.round((1 - c.discount_price / c.price) * 100) : 0;
+      return `
+        <div class="course-card">
+          <div class="course-thumb">
+            ${c.thumbnail_url ? `<img src="${escapeHtml(c.thumbnail_url)}" alt="${escapeHtml(c.title)}">` : ''}
+            ${hasDiscount ? `<span class="badge discount">${pct}% OFF</span>` : ''}
+          </div>
+          <div class="course-body">
+            <div class="course-cat">${escapeHtml(c.level || 'All Levels')}</div>
+            <div class="course-title">${escapeHtml(c.title)}</div>
+            <div class="course-desc">${escapeHtml(c.subtitle || '')}</div>
+            <div class="course-meta">
+              <span>${c.duration || '—'}</span>
+            </div>
+            <div class="course-footer">
+              <div class="price-block">
+                <span class="price-now">${c.price > 0 ? formatNaira(hasDiscount ? c.discount_price : c.price) : 'Free'}</span>
+                ${hasDiscount ? `<span class="price-was">${formatNaira(c.price)}</span>` : ''}
+              </div>
+              <a href="#course-${escapeHtml(c.slug)}" class="btn btn-secondary btn-sm">View Course</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    console.warn('Courses not available yet:', err.message);
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="ee-icon">◇</div><p>Courses will appear here once the catalogue is set up.</p></div>`;
+  }
+}
+
+async function loadWebinars() {
+  if (!supabaseReady) return; // static empty state already in markup
+  const grid = document.getElementById('webinarGrid');
+  try {
+    const { data: webinars, error } = await supabase
+      .from('webinars')
+      .select('id, title, slug, description, date, time, speaker_id, price, status')
+      .eq('status', 'upcoming')
+      .order('date', { ascending: true })
+      .limit(4);
+    if (error) throw error;
+    if (!webinars || webinars.length === 0) return;
+
+    grid.innerHTML = webinars.map(w => {
+      const d = new Date(w.date);
+      const day = d.getDate();
+      const mon = d.toLocaleString('en-US', { month: 'short' });
+      return `
+        <div class="webinar-card">
+          <div class="webinar-date"><div class="dnum">${day}</div><div class="dmon">${mon}</div></div>
+          <div class="webinar-info">
+            <h3>${escapeHtml(w.title)}</h3>
+            <div class="wmeta">${w.time || ''} · ${w.price > 0 ? formatNaira(w.price) : 'Free'}</div>
+            <p>${escapeHtml((w.description || '').slice(0, 90))}${(w.description || '').length > 90 ? '…' : ''}</p>
+            <a href="#webinar-${escapeHtml(w.slug)}" class="btn btn-primary btn-sm">Register Now</a>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    console.warn('Webinars not available yet:', err.message);
+  }
+}
+
+async function loadTestimonials() {
+  if (!supabaseReady) return;
+  const grid = document.getElementById('testiGrid');
+  try {
+    const { data: rows, error } = await supabase
+      .from('testimonials')
+      .select('id, name, role, quote, rating')
+      .eq('status', 'approved')
+      .limit(3);
+    if (error) throw error;
+    if (!rows || rows.length === 0) return;
+
+    grid.innerHTML = rows.map(t => `
+      <div class="testi-card">
+        <div class="testi-stars">${'★'.repeat(t.rating || 5)}</div>
+        <p class="testi-quote">${escapeHtml(t.quote)}</p>
+        <div class="testi-person">
+          <span class="testi-avatar">${escapeHtml((t.name || '').split(' ').map(p => p[0]).slice(0,2).join(''))}</span>
+          <div><div class="testi-name">${escapeHtml(t.name)}</div><div class="testi-role">${escapeHtml(t.role || '')}</div></div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.warn('Testimonials not available yet:', err.message);
+  }
+}
+
+async function loadInstructors() {
+  if (!supabaseReady) return;
+  const grid = document.getElementById('instrGrid');
+  try {
+    const { data: rows, error } = await supabase
+      .from('profiles')
+      .select('id, full_name, avatar_url, bio')
+      .eq('role', 'instructor')
+      .limit(4);
+    if (error) throw error;
+    if (!rows || rows.length === 0) return;
+
+    grid.innerHTML = rows.map(i => `
+      <div class="instr-card">
+        <div class="instr-photo">${i.avatar_url ? `<img src="${escapeHtml(i.avatar_url)}" alt="${escapeHtml(i.full_name)}">` : ''}</div>
+        <h4>${escapeHtml(i.full_name)}</h4>
+        <p>${escapeHtml((i.bio || '').slice(0, 40))}</p>
+      </div>
+    `).join('');
+  } catch (err) {
+    console.warn('Instructors not available yet:', err.message);
+  }
+}
+
+/* ---------------------------------------------------------------
+   11. SCROLL-SPY FOR NAV ACTIVE STATE
+--------------------------------------------------------------- */
+const sections = ['home', 'courses', 'webinars', 'about', 'instructors', 'contact'];
+function updateActiveNav() {
+  let current = 'home';
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) current = id;
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+/* ---------------------------------------------------------------
+   12. INIT
+--------------------------------------------------------------- */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+(async function init() {
+  await refreshSession();
+  loadStats();
+  loadCourses();
+  loadWebinars();
+  loadTestimonials();
+  loadInstructors();
+
+  if (!supabaseReady) {
+    console.info('%cCECT Academy: Supabase is not configured yet.', 'color:#B351FC;font-weight:bold');
+    console.info('Add your SUPABASE_URL and SUPABASE_ANON_KEY near the top of the <script> tag once your project is created. Run the accompanying schema.sql in the Supabase SQL editor first.');
+  }
+})();
+</script>
+
+</body>
+</html>
