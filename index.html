@@ -15,6 +15,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <!-- Paystack -->
 <script src="https://js.paystack.co/v1/inline.js"></script>
+<!-- jsPDF (client-side certificate PDF rendering) -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <style>
 /* ============================================================
@@ -998,6 +1000,7 @@ section{ padding:88px 0; }
         <a href="#admin/categories" data-admin-tab="categories" class="admin-nav-link">Categories</a>
         <a href="#admin/students" data-admin-tab="students" class="admin-nav-link">Students</a>
         <a href="#admin/webinars" data-admin-tab="webinars" class="admin-nav-link">Webinars</a>
+        <a href="#admin/certificates" data-admin-tab="certificates" class="admin-nav-link">Certificates</a>
         <a href="#admin/testimonials" data-admin-tab="testimonials" class="admin-nav-link">Testimonials</a>
       </nav>
       <a href="#home" class="admin-exit">← Back to site</a>
@@ -1081,6 +1084,17 @@ section{ padding:88px 0; }
             <table class="admin-table">
               <thead><tr><th>Title</th><th>Date</th><th>Price</th><th>Status</th><th></th></tr></thead>
               <tbody id="adminWebinarRows"><tr><td colspan="5"><div class="admin-empty-note">Loading webinars…</div></td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- CERTIFICATES TAB -->
+        <section id="adminTab-certificates" class="admin-panel" style="display:none">
+          <div class="admin-panel-head"><div><h3>Certificates</h3><p>All certificates issued to students. Revoke a certificate to invalidate its public verification.</p></div></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Student</th><th>Course</th><th>Certificate ID</th><th>Issued</th><th>Status</th><th></th></tr></thead>
+              <tbody id="adminCertRows"><tr><td colspan="6"><div class="admin-empty-note">Loading certificates…</div></td></tr></tbody>
             </table>
           </div>
         </section>
@@ -1202,6 +1216,30 @@ section{ padding:88px 0; }
     <main class="player-main" id="playerMain">
       <div class="skel" style="height:400px"></div>
     </main>
+  </div>
+</div>
+
+<!-- ============ CERTIFICATE (private, route #certificate/:code) ============ -->
+<div id="certificateRoot" style="display:none">
+  <div class="wrap" style="padding:40px 24px 80px;max-width:900px">
+    <a href="#dashboard" class="btn btn-ghost btn-sm" style="padding-left:0;margin-bottom:20px">← Back to Dashboard</a>
+    <div id="certificateContent">
+      <div class="skel" style="height:40px;width:60%;margin-bottom:16px"></div>
+      <div class="skel" style="height:320px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PUBLIC CERTIFICATE VERIFICATION (route #verify-certificate/:code) ============ -->
+<div id="verifyCertRoot" style="display:none">
+  <div class="wrap" style="padding:56px 24px 90px;max-width:640px">
+    <h2 style="margin-bottom:6px">Verify a Certificate</h2>
+    <p style="color:var(--navy-soft);margin-bottom:26px">Enter a certificate ID to confirm it was issued by CECT Academy.</p>
+    <form id="verifyCertForm" style="display:flex;gap:10px;margin-bottom:28px" novalidate>
+      <input type="text" id="verifyCertInput" placeholder="e.g. CECT-2026-AB12CD34" style="flex:1;padding:13px 16px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14.5px">
+      <button type="submit" class="btn btn-primary" id="verifyCertBtn"><span class="btn-label">Verify</span><span class="spinner"></span></button>
+    </form>
+    <div id="verifyCertResult"></div>
   </div>
 </div>
 
@@ -1850,6 +1888,8 @@ async function handleRoute() {
   const publicRoot = document.getElementById('home');
   const courseLandingRoot = document.getElementById('courseLandingRoot');
   const learningPlayerRoot = document.getElementById('learningPlayerRoot');
+  const certificateRoot = document.getElementById('certificateRoot');
+  const verifyCertRoot = document.getElementById('verifyCertRoot');
   const header = document.querySelector('.site-header');
   const footer = document.querySelector('.site-footer');
 
@@ -1858,6 +1898,8 @@ async function handleRoute() {
   publicRoot.style.display = 'none';
   courseLandingRoot.style.display = 'none';
   learningPlayerRoot.style.display = 'none';
+  certificateRoot.style.display = 'none';
+  verifyCertRoot.style.display = 'none';
   header.style.display = '';
   footer.style.display = '';
 
@@ -1919,6 +1961,33 @@ async function handleRoute() {
     return;
   }
 
+  if (hash.startsWith('#certificate/')) {
+    if (!supabaseReady) { window.location.hash = '#home'; return; }
+    await refreshSession();
+    if (!currentUser) {
+      showToast('Log in to view your certificate.', 'error');
+      openAuth('login');
+      window.location.hash = '#home';
+      return;
+    }
+    footer.style.display = 'none';
+    certificateRoot.style.display = 'block';
+    const code = hash.replace('#certificate/', '');
+    loadCertificateView(code);
+    return;
+  }
+
+  if (hash.startsWith('#verify-certificate')) {
+    footer.style.display = 'none';
+    verifyCertRoot.style.display = 'block';
+    const code = hash.replace('#verify-certificate', '').replace(/^\//, '');
+    if (code) {
+      document.getElementById('verifyCertInput').value = decodeURIComponent(code);
+      runCertificateVerification(decodeURIComponent(code));
+    }
+    return;
+  }
+
   publicRoot.style.display = 'block';
 }
 
@@ -1932,7 +2001,7 @@ function showAdminTab(tab) {
   panel.style.display = 'block';
   if (link) link.classList.add('active');
 
-  const titles = { overview: 'Overview', courses: 'Courses', categories: 'Categories', students: 'Students', webinars: 'Webinars', testimonials: 'Testimonials', courseDetail: currentCourseDetailTitle || 'Course' };
+  const titles = { overview: 'Overview', courses: 'Courses', categories: 'Categories', students: 'Students', webinars: 'Webinars', certificates: 'Certificates', testimonials: 'Testimonials', courseDetail: currentCourseDetailTitle || 'Course' };
   document.getElementById('adminTabTitle').textContent = titles[tab] || 'Overview';
 
   const chip = document.getElementById('adminUserChip');
@@ -1943,6 +2012,7 @@ function showAdminTab(tab) {
   if (tab === 'categories') loadAdminCategories();
   if (tab === 'students') loadAdminStudents();
   if (tab === 'webinars') loadAdminWebinars();
+  if (tab === 'certificates') loadAdminCertificates();
   if (tab === 'testimonials') loadAdminTestimonials();
 }
 
@@ -2301,6 +2371,47 @@ async function loadAdminWebinars() {
 }
 
 /* ---------- Testimonials ---------- */
+/* ---------- Certificates (admin) ---------- */
+async function loadAdminCertificates() {
+  const tbody = document.getElementById('adminCertRows');
+  try {
+    const { data, error } = await supabase
+      .from('certificates')
+      .select('id, certificate_number, verification_code, issued_at, status, profiles(full_name), courses(title)')
+      .order('issued_at', { ascending: false });
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="admin-empty-note">No certificates issued yet.</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(c => `
+      <tr>
+        <td>${escapeHtml(c.profiles?.full_name || '—')}</td>
+        <td>${escapeHtml(c.courses?.title || '—')}</td>
+        <td><a href="#verify-certificate/${encodeURIComponent(c.verification_code)}" target="_blank" style="color:var(--blue-dark);font-weight:600">${escapeHtml(c.certificate_number)}</a></td>
+        <td>${new Date(c.issued_at).toLocaleDateString()}</td>
+        <td><span class="status-pill ${c.status === 'active' ? 'published' : 'draft'}">${escapeHtml(c.status)}</span></td>
+        <td>
+          ${c.status === 'active'
+            ? `<button class="table-action danger" data-revoke-cert="${c.id}">Revoke</button>`
+            : `<button class="table-action" data-restore-cert="${c.id}">Restore</button>`}
+        </td>
+      </tr>
+    `).join('');
+    tbody.querySelectorAll('[data-revoke-cert]').forEach(btn => btn.addEventListener('click', async () => {
+      if (!confirm('Revoke this certificate? It will no longer verify publicly.')) return;
+      await supabase.from('certificates').update({ status: 'revoked' }).eq('id', btn.dataset.revokeCert);
+      loadAdminCertificates();
+    }));
+    tbody.querySelectorAll('[data-restore-cert]').forEach(btn => btn.addEventListener('click', async () => {
+      await supabase.from('certificates').update({ status: 'active' }).eq('id', btn.dataset.restoreCert);
+      loadAdminCertificates();
+    }));
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="admin-empty-note">${escapeHtml(err.message)}</div></td></tr>`;
+  }
+}
+
 async function loadAdminTestimonials() {
   const tbody = document.getElementById('adminTestiRows');
   try {
@@ -2672,6 +2783,18 @@ async function loadLearningPlayer(slug, lessonId) {
     document.getElementById('playerProgressFill').style.width = pct + '%';
     document.getElementById('playerProgressText').textContent = `${completedSet.size} of ${allLessons.length} lessons complete (${pct}%)`;
 
+    let certBannerHtml = '';
+    if (pct === 100 && course.certificate_enabled) {
+      const cert = await ensureCertificate(course.id);
+      if (cert) {
+        certBannerHtml = `
+          <div class="cert-earned-banner" style="background:var(--grad-brand);border-radius:14px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;color:#fff">
+            <div><strong style="display:block;font-size:15.5px">🎓 Course completed — your certificate is ready</strong><span style="font-size:13px;opacity:.9">Certificate ID: ${escapeHtml(cert.certificate_number)}</span></div>
+            <a href="#certificate/${encodeURIComponent(cert.verification_code)}" class="btn btn-secondary btn-sm">View Certificate</a>
+          </div>`;
+      }
+    }
+
     let activeLesson = lessonId ? allLessons.find(l => l.id === lessonId) : null;
     if (!activeLesson) activeLesson = allLessons.find(l => !completedSet.has(l.id)) || allLessons[0];
 
@@ -2698,6 +2821,7 @@ async function loadLearningPlayer(slug, lessonId) {
     const isCompleted = completedSet.has(activeLesson.id);
 
     main.innerHTML = `
+      ${certBannerHtml}
       ${activeLesson.lesson_type === 'video' && activeLesson.video_url ? embedForVideo(activeLesson.video_url) : `<div class="player-placeholder">${activeLesson.lesson_type === 'pdf' ? '📄' : activeLesson.lesson_type === 'slides' ? '📊' : '📝'} ${escapeHtml(activeLesson.lesson_type)} lesson</div>`}
       <div class="player-lesson-body">
         <h2 style="font-size:22px;margin-bottom:10px">${escapeHtml(activeLesson.title)}</h2>
@@ -2738,6 +2862,166 @@ async function loadLearningPlayer(slug, lessonId) {
     console.error(err);
   }
 }
+
+/* ============================================================
+   PHASE 4 — CERTIFICATES
+   Issuance is decided server-side (RPC `issue_certificate`), which
+   re-checks enrolment + lesson completion itself — the client never
+   grants a certificate on its own say-so. See schema patch:
+   certificates.sql for the RPCs and RLS this relies on.
+   ============================================================ */
+
+// Called once a course reaches 100% — asks Postgres to issue (or
+// return the existing) certificate. Silently no-ops on any error
+// so an ineligible student never sees a broken banner.
+async function ensureCertificate(courseId) {
+  try {
+    const { data, error } = await supabase.rpc('issue_certificate', { p_course_id: courseId });
+    if (error) { console.warn('issue_certificate:', error.message); return null; }
+    return Array.isArray(data) ? data[0] : data;
+  } catch (err) {
+    console.warn('issue_certificate failed:', err);
+    return null;
+  }
+}
+
+async function loadCertificateView(code) {
+  const el = document.getElementById('certificateContent');
+  el.innerHTML = `<div class="skel" style="height:40px;width:60%;margin-bottom:16px"></div><div class="skel" style="height:320px"></div>`;
+  try {
+    const { data: cert, error } = await supabase
+      .from('certificates')
+      .select('id, certificate_number, verification_code, issued_at, status, student_id, courses(title, profiles(full_name))')
+      .eq('verification_code', code)
+      .maybeSingle();
+
+    if (error || !cert) {
+      el.innerHTML = `<div class="empty-state"><p>Certificate not found.</p></div>`;
+      return;
+    }
+    if (cert.student_id !== currentUser.id) {
+      el.innerHTML = `<div class="empty-state"><div class="ee-icon">🔒</div><p>You do not have permission to access this page.</p></div>`;
+      return;
+    }
+
+    const studentName = currentProfile?.full_name || currentUser.email;
+    const courseTitle = cert.courses?.title || 'Course';
+    const instructorName = cert.courses?.profiles?.full_name || 'CECT Academy';
+    const issuedDate = new Date(cert.issued_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+
+    el.innerHTML = `
+      <div class="cert-preview" style="border:2px solid var(--line);border-radius:16px;padding:48px 40px;text-align:center;background:#fff;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:var(--grad-glow);opacity:.5;pointer-events:none"></div>
+        <div style="position:relative">
+          <div class="brand-mark" style="margin:0 auto 18px">CE</div>
+          <p style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-soft);font-weight:700">CECT Academy — Certificate of Completion</p>
+          <h1 style="font-size:30px;margin:18px 0 6px">${escapeHtml(studentName)}</h1>
+          <p style="color:var(--navy-soft);margin-bottom:18px">has successfully completed</p>
+          <h2 style="font-size:22px;margin-bottom:22px">${escapeHtml(courseTitle)}</h2>
+          <p style="font-size:13px;color:var(--navy-soft)">Issued ${escapeHtml(issuedDate)} · Instructor: ${escapeHtml(instructorName)}</p>
+          <p style="font-size:12px;color:var(--navy-soft);margin-top:6px">Certificate ID: ${escapeHtml(cert.certificate_number)} ${cert.status !== 'active' ? '· <strong style="color:var(--danger)">REVOKED</strong>' : ''}</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="btnDownloadCert" ${cert.status !== 'active' ? 'disabled' : ''}>⬇ Download PDF</button>
+        <a href="#verify-certificate/${encodeURIComponent(cert.verification_code)}" target="_blank" class="btn btn-secondary">Public Verification Link</a>
+      </div>
+    `;
+
+    document.getElementById('btnDownloadCert')?.addEventListener('click', () => {
+      generateCertificatePDF({ studentName, courseTitle, instructorName, issuedDate, certificateNumber: cert.certificate_number });
+    });
+  } catch (err) {
+    el.innerHTML = `<div class="empty-state"><p>Something went wrong while loading this certificate. Please try again.</p></div>`;
+    console.error(err);
+  }
+}
+
+function generateCertificatePDF({ studentName, courseTitle, instructorName, issuedDate, certificateNumber }) {
+  if (typeof window.jspdf === 'undefined') { showToast('Could not load the PDF engine. Please try again.', 'error'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+
+  doc.setFillColor(247, 248, 252);
+  doc.rect(0, 0, W, H, 'F');
+  doc.setDrawColor(63, 136, 239);
+  doc.setLineWidth(3);
+  doc.rect(24, 24, W - 48, H - 48);
+  doc.setDrawColor(179, 81, 252);
+  doc.setLineWidth(1);
+  doc.rect(32, 32, W - 64, H - 64);
+
+  doc.setTextColor(11, 18, 32);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.text('CECT ACADEMY', W / 2, 90, { align: 'center' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(75, 85, 103);
+  doc.text('CERTIFICATE OF COMPLETION', W / 2, 112, { align: 'center' });
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(30);
+  doc.setTextColor(11, 18, 32);
+  doc.text(studentName, W / 2, 175, { align: 'center' });
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(13);
+  doc.setTextColor(75, 85, 103);
+  doc.text('has successfully completed the course', W / 2, 205, { align: 'center' });
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.setTextColor(63, 136, 239);
+  doc.text(courseTitle, W / 2, 240, { align: 'center', maxWidth: W - 160 });
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(75, 85, 103);
+  doc.text(`Issued ${issuedDate}  ·  Instructor: ${instructorName}`, W / 2, H - 110, { align: 'center' });
+  doc.text(`Certificate ID: ${certificateNumber}`, W / 2, H - 92, { align: 'center' });
+  doc.setFontSize(9.5);
+  doc.text(`Verify at: ${window.location.origin}${window.location.pathname}#verify-certificate/${certificateNumber}`, W / 2, H - 76, { align: 'center' });
+
+  doc.save(`CECT-Certificate-${certificateNumber}.pdf`);
+}
+
+/* ---------- Public certificate verification ---------- */
+async function runCertificateVerification(code) {
+  const resultEl = document.getElementById('verifyCertResult');
+  resultEl.innerHTML = `<div class="skel" style="height:140px"></div>`;
+  try {
+    const { data, error } = await supabase.rpc('verify_certificate', { p_code: code.trim() });
+    const row = Array.isArray(data) ? data[0] : data;
+    if (error || !row) {
+      resultEl.innerHTML = `<div class="empty-state"><div class="ee-icon">✕</div><p>No certificate found for that ID.</p></div>`;
+      return;
+    }
+    const valid = row.status === 'active';
+    resultEl.innerHTML = `
+      <div style="border:1.5px solid ${valid ? 'var(--success)' : 'var(--danger)'};border-radius:14px;padding:26px">
+        <p style="font-weight:700;color:${valid ? 'var(--success)' : 'var(--danger)'};margin-bottom:14px">${valid ? '✓ Valid certificate' : '✕ This certificate has been revoked'}</p>
+        <p style="font-size:14px;margin-bottom:4px"><strong>Student:</strong> ${escapeHtml(row.student_name)}</p>
+        <p style="font-size:14px;margin-bottom:4px"><strong>Course:</strong> ${escapeHtml(row.course_title)}</p>
+        <p style="font-size:14px;margin-bottom:4px"><strong>Issued:</strong> ${new Date(row.issued_at).toLocaleDateString()}</p>
+        <p style="font-size:14px;color:var(--navy-soft)"><strong>Issuing organisation:</strong> CECT Academy</p>
+      </div>
+    `;
+  } catch (err) {
+    resultEl.innerHTML = `<div class="empty-state"><p>Something went wrong while verifying. Please try again.</p></div>`;
+    console.error(err);
+  }
+}
+
+document.getElementById('verifyCertForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const code = document.getElementById('verifyCertInput').value.trim();
+  if (!code) return;
+  window.location.hash = `#verify-certificate/${encodeURIComponent(code)}`;
+  runCertificateVerification(code);
+});
 </script>
 
 </body>
