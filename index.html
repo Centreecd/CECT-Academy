@@ -13,6 +13,8 @@
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Paystack -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
 
 <style>
 /* ============================================================
@@ -604,7 +606,7 @@ section{ padding:88px 0; }
 
 /* ---------- Learning player ---------- */
 .player-shell{ display:flex; min-height:100vh; background:var(--canvas); }
-.player-sidebar{ width:290px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); padding:20px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.player-sidebar{ width:290px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); padding:20px; position:sticky; top:73px; height:calc(100vh - 73px); overflow-y:auto; }
 .player-progress-bar{ height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin-bottom:8px; }
 .player-progress-fill{ height:100%; background:var(--grad-brand); border-radius:99px; transition:width .3s ease; }
 .pcurr-module{ margin-bottom:16px; }
@@ -1335,6 +1337,11 @@ section{ padding:88px 0; }
 const SUPABASE_URL = 'https://ajjnfluxwtidcbgrdnwf.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFqam5mbHV4d3RpZGNiZ3JkbndmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3NjMzODEsImV4cCI6MjEwMjMzOTM4MX0.Glql1Xbd8gt3c6gHrD0H4ygEzru3HU95b7Q6Do91lGM';
 
+// Paystack PUBLIC key only — safe to expose in the browser.
+// NEVER put the Paystack SECRET key here; it lives only in the
+// verify-payment Edge Function's environment (Supabase secrets).
+const PAYSTACK_PUBLIC_KEY = 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY';
+
 let supabase = null;
 let supabaseReady = false;
 try {
@@ -1889,7 +1896,6 @@ async function handleRoute() {
   }
 
   if (hash.startsWith('#course-')) {
-    header.style.display = 'none';
     footer.style.display = 'none';
     courseLandingRoot.style.display = 'block';
     const slug = hash.replace('#course-', '');
@@ -1906,7 +1912,6 @@ async function handleRoute() {
       window.location.hash = '#home';
       return;
     }
-    header.style.display = 'none';
     footer.style.display = 'none';
     learningPlayerRoot.style.display = 'block';
     const [, slug, lessonId] = hash.split('/');
@@ -2571,14 +2576,66 @@ async function loadCourseLanding(slug) {
       }
     });
     const btnBuy = document.getElementById('btnBuyCourse');
-    if (btnBuy) btnBuy.addEventListener('click', () => {
-      if (!currentUser) { openAuth('login'); return; }
-      showToast('Paystack checkout is coming in the next build phase.', 'default');
-    });
+    if (btnBuy) btnBuy.addEventListener('click', () => startCheckout(course, hasDiscount ? course.discount_price : course.price, slug));
 
   } catch (err) {
     el.innerHTML = `<div class="empty-state"><p>Something went wrong while loading this course. Please try again.</p></div>`;
     console.error(err);
+  }
+}
+
+/* ============================================================
+   PHASE 3 — PAYSTACK CHECKOUT
+   ============================================================ */
+function startCheckout(course, amountNaira, slug) {
+  if (!currentUser) { openAuth('login'); return; }
+  if (!PAYSTACK_PUBLIC_KEY || PAYSTACK_PUBLIC_KEY.includes('YOUR_PAYSTACK')) {
+    showToast('Paystack is not configured yet — add your public key in the code.', 'error');
+    return;
+  }
+  if (typeof PaystackPop === 'undefined') {
+    showToast('Payment system failed to load. Check your connection and try again.', 'error');
+    return;
+  }
+
+  const reference = 'cect_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+
+  const handler = PaystackPop.setup({
+    key: PAYSTACK_PUBLIC_KEY,
+    email: currentUser.email,
+    amount: Math.round(amountNaira * 100), // kobo
+    currency: 'NGN',
+    ref: reference,
+    metadata: { course_id: course.id, student_id: currentUser.id },
+    callback: function (response) {
+      verifyAndEnroll(response.reference, course.id, slug);
+    },
+    onClose: function () {
+      showToast('Payment window closed.', 'default');
+    },
+  });
+  handler.openIframe();
+}
+
+async function verifyAndEnroll(reference, courseId, slug) {
+  showToast('Verifying your payment…', 'default');
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/verify-payment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ reference, courseId }),
+    });
+    const result = await res.json();
+    if (!res.ok || !result.success) throw new Error(result.error || 'Payment could not be verified.');
+
+    showToast('Payment verified! You are now enrolled.', 'success');
+    window.location.hash = `#learn/${slug}`;
+  } catch (err) {
+    showToast('Your payment could not be completed. ' + (err.message || 'Please try again.'), 'error');
   }
 }
 
