@@ -1220,6 +1220,16 @@ section{ padding:88px 0; }
 </div>
 
 <!-- ============ CERTIFICATE (private, route #certificate/:code) ============ -->
+<!-- ============ STUDENT DASHBOARD (route #dashboard) ============ -->
+<div id="dashboardRoot" style="display:none">
+  <div class="wrap" style="padding:40px 24px 90px">
+    <div id="dashboardContent">
+      <div class="skel" style="height:40px;width:40%;margin-bottom:20px"></div>
+      <div class="skel" style="height:220px"></div>
+    </div>
+  </div>
+</div>
+
 <div id="certificateRoot" style="display:none">
   <div class="wrap" style="padding:40px 24px 80px;max-width:900px">
     <a href="#dashboard" class="btn btn-ghost btn-sm" style="padding-left:0;margin-bottom:20px">← Back to Dashboard</a>
@@ -1633,7 +1643,7 @@ function renderNavActions() {
       if (currentProfile && ['admin', 'super_admin'].includes(currentProfile.role)) {
         window.location.hash = '#admin';
       } else {
-        showToast('Student dashboard is coming in the next build phase.', 'default');
+        window.location.hash = '#dashboard';
       }
     });
   } else {
@@ -1890,6 +1900,7 @@ async function handleRoute() {
   const learningPlayerRoot = document.getElementById('learningPlayerRoot');
   const certificateRoot = document.getElementById('certificateRoot');
   const verifyCertRoot = document.getElementById('verifyCertRoot');
+  const dashboardRoot = document.getElementById('dashboardRoot');
   const header = document.querySelector('.site-header');
   const footer = document.querySelector('.site-footer');
 
@@ -1900,8 +1911,23 @@ async function handleRoute() {
   learningPlayerRoot.style.display = 'none';
   certificateRoot.style.display = 'none';
   verifyCertRoot.style.display = 'none';
+  dashboardRoot.style.display = 'none';
   header.style.display = '';
   footer.style.display = '';
+
+  if (hash.startsWith('#dashboard')) {
+    if (!supabaseReady) { window.location.hash = '#home'; return; }
+    await refreshSession();
+    if (!currentUser) {
+      showToast('Log in to view your dashboard.', 'error');
+      openAuth('login');
+      window.location.hash = '#home';
+      return;
+    }
+    dashboardRoot.style.display = 'block';
+    loadDashboard();
+    return;
+  }
 
   if (hash.startsWith('#admin')) {
     if (!supabaseReady) {
@@ -2859,6 +2885,104 @@ async function loadLearningPlayer(slug, lessonId) {
 
   } catch (err) {
     main.innerHTML = `<div class="empty-state"><p>Something went wrong while loading this page. Please try again.</p></div>`;
+    console.error(err);
+  }
+}
+
+/* ============================================================
+   STUDENT DASHBOARD — route #dashboard
+   ============================================================ */
+async function loadDashboard() {
+  const el = document.getElementById('dashboardContent');
+  el.innerHTML = `<div class="skel" style="height:40px;width:40%;margin-bottom:20px"></div><div class="skel" style="height:220px"></div>`;
+
+  try {
+    const [{ data: enrollments }, { data: certs }, { data: webinarRegs }] = await Promise.all([
+      supabase.from('enrollments')
+        .select('id, status, enrolled_at, courses(id, title, slug, thumbnail_url, certificate_enabled, course_modules(lessons(id)))')
+        .eq('student_id', currentUser.id).eq('status', 'active'),
+      supabase.from('certificates')
+        .select('id, certificate_number, verification_code, issued_at, status, courses(title)')
+        .eq('student_id', currentUser.id).order('issued_at', { ascending: false }),
+      supabase.from('webinar_registrations')
+        .select('id, registered_at, webinars(id, title, slug, date, time)')
+        .eq('user_id', currentUser.id).order('registered_at', { ascending: false }),
+    ]);
+
+    // progress per course
+    const courseCards = await Promise.all((enrollments || []).map(async (e) => {
+      const course = e.courses;
+      if (!course) return null;
+      const lessonIds = (course.course_modules || []).flatMap(m => (m.lessons || []).map(l => l.id));
+      let completed = 0;
+      if (lessonIds.length) {
+        const { count } = await supabase.from('lesson_progress')
+          .select('id', { count: 'exact', head: true })
+          .eq('student_id', currentUser.id).eq('completed', true).in('lesson_id', lessonIds);
+        completed = count || 0;
+      }
+      const pct = lessonIds.length ? Math.round((completed / lessonIds.length) * 100) : 0;
+      return { course, pct, completed, total: lessonIds.length };
+    }));
+    const validCourses = courseCards.filter(Boolean);
+    const inProgress = validCourses.filter(c => c.pct < 100);
+    const name = currentProfile?.full_name || currentUser.email;
+
+    el.innerHTML = `
+      <h1 style="font-size:26px;margin-bottom:4px">Welcome back, ${escapeHtml(name.split(' ')[0])}</h1>
+      <p style="color:var(--navy-soft);margin-bottom:32px">Here's where you left off.</p>
+
+      <h3 style="font-size:16px;margin-bottom:14px">Continue Learning</h3>
+      ${inProgress.length === 0 ? `<div class="empty-state"><p>You haven't enrolled in any courses yet.</p><a href="#courses" class="btn btn-primary btn-sm" style="margin-top:10px">Explore Courses</a></div>` : `
+        <div class="dash-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:36px">
+          ${inProgress.map(c => `
+            <a href="#learn/${c.course.slug}" class="dash-card" style="display:block;border:1.5px solid var(--line);border-radius:14px;padding:16px;background:#fff">
+              <p style="font-weight:700;font-size:14.5px;margin-bottom:10px">${escapeHtml(c.course.title)}</p>
+              <div class="player-progress-bar"><div class="player-progress-fill" style="width:${c.pct}%"></div></div>
+              <p style="font-size:12px;color:var(--navy-soft);margin-top:8px">${c.completed} of ${c.total} lessons · ${c.pct}%</p>
+            </a>
+          `).join('')}
+        </div>
+      `}
+
+      <h3 style="font-size:16px;margin-bottom:14px">My Courses</h3>
+      ${validCourses.length === 0 ? `<div class="empty-state"><p>No enrolments yet.</p></div>` : `
+        <div class="dash-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:36px">
+          ${validCourses.map(c => `
+            <a href="#learn/${c.course.slug}" class="dash-card" style="display:block;border:1.5px solid var(--line);border-radius:14px;padding:16px;background:#fff">
+              <p style="font-weight:700;font-size:14.5px;margin-bottom:6px">${escapeHtml(c.course.title)}</p>
+              <p style="font-size:12.5px;color:${c.pct===100 ? 'var(--success)':'var(--navy-soft)'}">${c.pct===100 ? '✓ Completed' : c.pct + '% complete'}</p>
+            </a>
+          `).join('')}
+        </div>
+      `}
+
+      <h3 style="font-size:16px;margin-bottom:14px">Certificates</h3>
+      ${(!certs || certs.length === 0) ? `<div class="empty-state"><p>No certificates earned yet.</p></div>` : `
+        <div class="dash-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:36px">
+          ${certs.map(c => `
+            <a href="#certificate/${encodeURIComponent(c.verification_code)}" class="dash-card" style="display:block;border:1.5px solid var(--line);border-radius:14px;padding:16px;background:#fff">
+              <p style="font-weight:700;font-size:14.5px;margin-bottom:6px">🎓 ${escapeHtml(c.courses?.title || 'Course')}</p>
+              <p style="font-size:12.5px;color:var(--navy-soft)">${escapeHtml(c.certificate_number)} · ${c.status === 'active' ? 'Active' : 'Revoked'}</p>
+            </a>
+          `).join('')}
+        </div>
+      `}
+
+      <h3 style="font-size:16px;margin-bottom:14px">Upcoming Webinars</h3>
+      ${(!webinarRegs || webinarRegs.length === 0) ? `<div class="empty-state"><p>There are no upcoming webinars at the moment.</p></div>` : `
+        <div class="dash-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+          ${webinarRegs.filter(w => w.webinars).map(w => `
+            <a href="#webinars" class="dash-card" style="display:block;border:1.5px solid var(--line);border-radius:14px;padding:16px;background:#fff">
+              <p style="font-weight:700;font-size:14.5px;margin-bottom:6px">${escapeHtml(w.webinars.title)}</p>
+              <p style="font-size:12.5px;color:var(--navy-soft)">${w.webinars.date ? new Date(w.webinars.date).toLocaleDateString() : ''} ${w.webinars.time || ''}</p>
+            </a>
+          `).join('')}
+        </div>
+      `}
+    `;
+  } catch (err) {
+    el.innerHTML = `<div class="empty-state"><p>Something went wrong while loading your dashboard. Please try again.</p></div>`;
     console.error(err);
   }
 }
