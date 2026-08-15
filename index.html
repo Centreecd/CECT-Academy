@@ -510,6 +510,119 @@ section{ padding:88px 0; }
   section{ padding:60px 0; }
   .hero{ padding:44px 0 56px; }
 }
+
+/* ============================================================
+   ADMIN DASHBOARD
+   ============================================================ */
+.admin-shell{ display:flex; min-height:100vh; background:var(--canvas); }
+.admin-sidebar{
+  width:230px; flex-shrink:0; background:var(--navy); color:#fff;
+  display:flex; flex-direction:column; padding:22px 16px; position:sticky; top:0; height:100vh;
+}
+.admin-brand{ margin-bottom:28px; padding:0 6px; }
+.admin-nav{ display:flex; flex-direction:column; gap:2px; flex:1; }
+.admin-nav-link{ padding:11px 14px; border-radius:9px; font-size:13.5px; font-weight:600; color:rgba(255,255,255,.65); transition:background .15s,color .15s; }
+.admin-nav-link:hover{ background:rgba(255,255,255,.06); color:#fff; }
+.admin-nav-link.active{ background:var(--grad-brand); color:#fff; }
+.admin-exit{ font-size:13px; color:rgba(255,255,255,.5); padding:12px 14px; }
+.admin-exit:hover{ color:#fff; }
+
+.admin-main{ flex:1; min-width:0; }
+.admin-topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 32px; background:#fff; border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:10;
+}
+.admin-topbar h2{ font-size:20px; }
+.admin-content{ padding:32px; }
+.admin-panel-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:22px; gap:16px; flex-wrap:wrap; }
+.admin-panel-head h3{ font-size:19px; margin-bottom:4px; }
+.admin-panel-head p{ font-size:13.5px; color:var(--navy-soft); }
+
+.admin-stats-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:24px; }
+.admin-stat-card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:22px; min-height:88px; }
+.admin-stat-card .asnum{ font-size:26px; font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; }
+.admin-stat-card .aslabel{ font-size:12.5px; color:var(--navy-soft); font-weight:600; margin-top:4px; }
+.askel{ height:60px; }
+@media (max-width:900px){ .admin-stats-grid{ grid-template-columns:repeat(2,1fr); } }
+
+.admin-empty-note{ font-size:13.5px; color:var(--navy-soft); padding:18px 0; }
+
+.admin-table-wrap{ background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); overflow-x:auto; }
+.admin-table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px; }
+.admin-table th{ text-align:left; padding:13px 18px; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--navy-soft); border-bottom:1px solid var(--line); background:var(--canvas); }
+.admin-table td{ padding:13px 18px; border-bottom:1px solid var(--line); vertical-align:middle; }
+.admin-table tr:last-child td{ border-bottom:none; }
+.status-pill{ font-size:11px; font-weight:700; padding:4px 10px; border-radius:99px; text-transform:capitalize; }
+.status-pill.published{ background:#F0FDF4; color:var(--success); }
+.status-pill.draft{ background:#FFF7ED; color:var(--warn); }
+.status-pill.upcoming{ background:#EFF6FF; color:var(--blue-dark); }
+.table-action{ font-size:12.5px; font-weight:700; color:var(--blue-dark); margin-right:12px; }
+.table-action.danger{ color:var(--danger); }
+
+.inline-form{ display:flex; gap:10px; margin-bottom:20px; max-width:440px; }
+.inline-form input{ flex:1; padding:11px 14px; border:1.5px solid var(--line); border-radius:9px; font-family:inherit; font-size:14px; background:var(--canvas); }
+.inline-form input:focus{ outline:none; border-color:var(--blue); background:#fff; }
+
+.cb-steps{ display:flex; gap:6px; margin-bottom:22px; }
+.cb-step-dot{ height:4px; flex:1; border-radius:99px; background:var(--line); }
+.cb-step-dot.active{ background:var(--grad-brand); }
+
+@media (max-width:820px){
+  .admin-shell{ flex-direction:column; }
+  .admin-sidebar{ width:100%; height:auto; position:relative; flex-direction:row; align-items:center; overflow-x:auto; padding:14px 12px; gap:14px; }
+  .admin-brand{ margin-bottom:0; flex-shrink:0; }
+  .admin-brand .brand-name{ display:none; }
+  .admin-nav{ flex-direction:row; flex:none; }
+  .admin-nav-link{ white-space:nowrap; padding:9px 12px; }
+  .admin-exit{ display:none; }
+  .admin-content{ padding:18px; }
+  .admin-topbar{ padding:16px 18px; }
+  .admin-stats-grid{ grid-template-columns:1fr 1fr; }
+}
+
+/* ---------- Curriculum editor (admin) ---------- */
+.module-block{ background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); margin-bottom:16px; overflow:hidden; }
+.module-head{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:var(--canvas); border-bottom:1px solid var(--line); gap:12px; flex-wrap:wrap; }
+.module-head h4{ font-size:15px; }
+.lesson-list{ padding:6px 20px; }
+.lesson-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); font-size:13.5px; }
+.lesson-row:last-child{ border-bottom:none; }
+.lesson-type-tag{ font-size:10.5px; font-weight:700; text-transform:uppercase; background:var(--canvas); border:1px solid var(--line); padding:3px 8px; border-radius:6px; color:var(--navy-soft); }
+.lesson-row-title{ font-weight:600; }
+.resource-row{ font-size:12.5px; color:var(--navy-soft); padding:4px 0 4px 20px; }
+
+/* ---------- Course landing page (public) ---------- */
+.cland-grid{ display:grid; grid-template-columns:1.6fr 1fr; gap:48px; align-items:start; }
+.cland-sidebar{ background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:22px; position:sticky; top:90px; }
+.curriculum-list{ display:flex; flex-direction:column; gap:10px; }
+.curr-module{ background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); overflow:hidden; }
+.curr-module summary{ padding:14px 18px; font-weight:700; font-size:14.5px; cursor:pointer; background:var(--canvas); list-style:none; }
+.curr-module summary::-webkit-details-marker{ display:none; }
+.curr-lesson{ display:flex; align-items:center; gap:12px; padding:11px 18px; font-size:13.5px; border-top:1px solid var(--line); }
+@media (max-width:900px){ .cland-grid{ grid-template-columns:1fr; } .cland-sidebar{ position:static; } }
+
+/* ---------- Learning player ---------- */
+.player-shell{ display:flex; min-height:100vh; background:var(--canvas); }
+.player-sidebar{ width:290px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); padding:20px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+.player-progress-bar{ height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin-bottom:8px; }
+.player-progress-fill{ height:100%; background:var(--grad-brand); border-radius:99px; transition:width .3s ease; }
+.pcurr-module{ margin-bottom:16px; }
+.pcurr-module-title{ font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--navy-soft); margin-bottom:8px; }
+.pcurr-lesson{ display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px; font-size:13.5px; margin-bottom:2px; }
+.pcurr-lesson:hover{ background:var(--canvas); }
+.pcurr-lesson.active{ background:rgba(63,136,239,0.09); color:var(--blue-dark); font-weight:700; }
+.pcurr-check{ flex-shrink:0; }
+.player-main{ flex:1; min-width:0; padding:0; }
+.video-embed{ width:100%; aspect-ratio:16/9; border:none; display:block; background:#000; }
+.player-placeholder{ width:100%; aspect-ratio:16/9; background:var(--navy); color:rgba(255,255,255,.6); display:flex; align-items:center; justify-content:center; font-size:15px; gap:8px; }
+.player-lesson-body{ padding:28px 32px; max-width:820px; }
+.resource-download-list{ display:flex; gap:10px; flex-wrap:wrap; }
+@media (max-width:900px){
+  .player-shell{ flex-direction:column; }
+  .player-sidebar{ width:100%; height:auto; position:relative; max-height:280px; }
+  .player-lesson-body{ padding:20px; }
+}
 </style>
 </head>
 <body>
@@ -869,6 +982,340 @@ section{ padding:88px 0; }
   </div>
 </div>
 
+<!-- ============ ADMIN DASHBOARD (hash route #admin) ============ -->
+<div id="adminRoot" style="display:none">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <a href="#home" class="brand admin-brand">
+        <img class="brand-mark brand-logo" src="https://res.cloudinary.com/g2ajyskg/image/upload/v1786779146/file_00000000f84081f4b6c4415d9e8735e0.png" alt="CECT Academy logo">
+        <span class="brand-name" style="color:#fff">CECT Academy<small style="color:rgba(255,255,255,.55)">Admin</small></span>
+      </a>
+      <nav class="admin-nav">
+        <a href="#admin/overview" data-admin-tab="overview" class="admin-nav-link active">Overview</a>
+        <a href="#admin/courses" data-admin-tab="courses" class="admin-nav-link">Courses</a>
+        <a href="#admin/categories" data-admin-tab="categories" class="admin-nav-link">Categories</a>
+        <a href="#admin/students" data-admin-tab="students" class="admin-nav-link">Students</a>
+        <a href="#admin/webinars" data-admin-tab="webinars" class="admin-nav-link">Webinars</a>
+        <a href="#admin/testimonials" data-admin-tab="testimonials" class="admin-nav-link">Testimonials</a>
+      </nav>
+      <a href="#home" class="admin-exit">← Back to site</a>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <h2 id="adminTabTitle">Overview</h2>
+        <div class="user-chip" id="adminUserChip" style="background:var(--canvas)"></div>
+      </header>
+
+      <div class="admin-content">
+
+        <!-- OVERVIEW TAB -->
+        <section id="adminTab-overview" class="admin-panel">
+          <div class="admin-stats-grid" id="adminStatsGrid">
+            <div class="admin-stat-card"><div class="askel skel"></div></div>
+            <div class="admin-stat-card"><div class="askel skel"></div></div>
+            <div class="admin-stat-card"><div class="askel skel"></div></div>
+            <div class="admin-stat-card"><div class="askel skel"></div></div>
+          </div>
+          <div class="admin-empty-note">Revenue and enrolment charts arrive once payments (Phase 3) are connected.</div>
+        </section>
+
+        <!-- COURSES TAB -->
+        <section id="adminTab-courses" class="admin-panel" style="display:none">
+          <div class="admin-panel-head">
+            <div>
+              <h3>Courses</h3>
+              <p>Create, edit, publish and manage every course on the platform.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnNewCourse">+ New Course</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr><th>Course</th><th>Category</th><th>Price</th><th>Status</th><th>Featured</th><th></th></tr>
+              </thead>
+              <tbody id="adminCourseRows">
+                <tr><td colspan="6"><div class="admin-empty-note">Loading courses…</div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- CATEGORIES TAB -->
+        <section id="adminTab-categories" class="admin-panel" style="display:none">
+          <div class="admin-panel-head">
+            <div><h3>Categories</h3><p>Organise courses so learners can browse and filter.</p></div>
+          </div>
+          <form id="newCategoryForm" class="inline-form">
+            <input type="text" id="newCategoryName" placeholder="Category name (e.g. Public Speaking)" required>
+            <button type="submit" class="btn btn-primary btn-sm">Add Category</button>
+          </form>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Name</th><th>Slug</th><th></th></tr></thead>
+              <tbody id="adminCategoryRows"><tr><td colspan="3"><div class="admin-empty-note">Loading categories…</div></td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- STUDENTS TAB -->
+        <section id="adminTab-students" class="admin-panel" style="display:none">
+          <div class="admin-panel-head"><div><h3>Students</h3><p>Everyone registered on the platform.</p></div></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead>
+              <tbody id="adminStudentRows"><tr><td colspan="4"><div class="admin-empty-note">Loading students…</div></td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- WEBINARS TAB -->
+        <section id="adminTab-webinars" class="admin-panel" style="display:none">
+          <div class="admin-panel-head">
+            <div><h3>Webinars</h3><p>Create and manage live sessions.</p></div>
+            <button class="btn btn-primary btn-sm" id="btnNewWebinar">+ New Webinar</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Title</th><th>Date</th><th>Price</th><th>Status</th><th></th></tr></thead>
+              <tbody id="adminWebinarRows"><tr><td colspan="5"><div class="admin-empty-note">Loading webinars…</div></td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- TESTIMONIALS TAB -->
+        <section id="adminTab-testimonials" class="admin-panel" style="display:none">
+          <div class="admin-panel-head"><div><h3>Testimonials</h3><p>Approve or hide learner testimonials shown on the homepage.</p></div></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Name</th><th>Quote</th><th>Status</th><th></th></tr></thead>
+              <tbody id="adminTestiRows"><tr><td colspan="4"><div class="admin-empty-note">Loading testimonials…</div></td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- COURSE DETAIL (curriculum editor) — route #admin/course/:id -->
+        <section id="adminTab-courseDetail" class="admin-panel" style="display:none">
+          <button class="btn btn-ghost btn-sm" id="btnBackToCourses" style="margin-bottom:16px;padding-left:0">← Back to Courses</button>
+          <div class="admin-panel-head">
+            <div><h3 id="cdCourseTitle">Course</h3><p>Add modules, lessons, video and resources.</p></div>
+          </div>
+
+          <form id="newModuleForm" class="inline-form">
+            <input type="text" id="newModuleTitle" placeholder="New module title (e.g. Module 1 — Foundations)" required>
+            <button type="submit" class="btn btn-primary btn-sm">Add Module</button>
+          </form>
+
+          <div id="modulesList"></div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LESSON EDITOR MODAL ============ -->
+<div class="modal-overlay" id="lessonBuilderOverlay">
+  <div class="modal">
+    <button class="modal-close" id="lessonBuilderClose" aria-label="Close">×</button>
+    <h3>New Lesson</h3>
+    <div class="form-msg" id="lbMsg"></div>
+    <form id="lessonBuilderForm" novalidate>
+      <input type="hidden" id="lbModuleId">
+      <div class="field"><label for="lbTitle">Lesson title</label><input type="text" id="lbTitle" required></div>
+      <div class="field">
+        <label for="lbType">Content type</label>
+        <select id="lbType" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--canvas);font-family:inherit;font-size:14.5px">
+          <option value="video">Video</option>
+          <option value="pdf">PDF</option>
+          <option value="slides">Slides</option>
+          <option value="text">Text</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="lbVideoUrl">Video URL (YouTube, Vimeo, or Cloudinary link)</label>
+        <input type="url" id="lbVideoUrl" placeholder="https://...">
+      </div>
+      <div class="field"><label for="lbDescription">Description</label><input type="text" id="lbDescription"></div>
+      <label style="display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:14px;font-weight:600">
+        <input type="checkbox" id="lbPreview" style="width:auto"> Free preview (visible without enrolling)
+      </label>
+      <button type="submit" class="btn btn-primary btn-block" id="lbSubmit">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Save Lesson</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ RESOURCE UPLOAD MODAL ============ -->
+<div class="modal-overlay" id="resourceBuilderOverlay">
+  <div class="modal">
+    <button class="modal-close" id="resourceBuilderClose" aria-label="Close">×</button>
+    <h3>Add Resource</h3>
+    <div class="form-msg" id="rbMsg"></div>
+    <form id="resourceBuilderForm" novalidate>
+      <input type="hidden" id="rbLessonId">
+      <div class="field"><label for="rbTitle">Resource title</label><input type="text" id="rbTitle" required></div>
+      <div class="field">
+        <label for="rbType">Type</label>
+        <select id="rbType" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--canvas);font-family:inherit;font-size:14.5px">
+          <option value="pdf">PDF</option>
+          <option value="slides">Slides</option>
+          <option value="worksheet">Worksheet</option>
+          <option value="audio">Audio</option>
+          <option value="external_link">External Link</option>
+        </select>
+      </div>
+      <div class="field"><label for="rbFileUrl">File URL (Cloudinary link)</label><input type="url" id="rbFileUrl" required></div>
+      <button type="submit" class="btn btn-primary btn-block" id="rbSubmit">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Add Resource</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ PUBLIC COURSE LANDING PAGE (route #course/:slug) ============ -->
+<div id="courseLandingRoot" style="display:none">
+  <div class="wrap" style="padding:40px 24px 80px">
+    <a href="#courses" class="btn btn-ghost btn-sm" style="padding-left:0;margin-bottom:20px">← Back to Courses</a>
+    <div id="courseLandingContent">
+      <div class="skel" style="height:40px;width:70%;margin-bottom:16px"></div>
+      <div class="skel" style="height:200px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LEARNING PLAYER (route #learn/:slug/:lessonId) ============ -->
+<div id="learningPlayerRoot" style="display:none">
+  <div class="player-shell">
+    <aside class="player-sidebar">
+      <a href="#home" class="btn btn-ghost btn-sm" style="margin-bottom:14px;padding-left:0">← Exit course</a>
+      <h4 id="playerCourseTitle" style="font-size:15px;margin-bottom:6px"></h4>
+      <div class="player-progress-bar"><div class="player-progress-fill" id="playerProgressFill"></div></div>
+      <div id="playerProgressText" style="font-size:12px;color:var(--navy-soft);margin-bottom:18px"></div>
+      <div id="playerCurriculum"></div>
+    </aside>
+    <main class="player-main" id="playerMain">
+      <div class="skel" style="height:400px"></div>
+    </main>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+<div class="modal-overlay" id="courseBuilderOverlay">
+  <div class="modal" style="max-width:640px">
+    <button class="modal-close" id="courseBuilderClose" aria-label="Close">×</button>
+    <h3 id="cbTitle">New Course</h3>
+    <p class="modal-sub">Step <span id="cbStepNum">1</span> of 5</p>
+    <div class="form-msg" id="cbMsg"></div>
+
+    <!-- Step indicator -->
+    <div class="cb-steps">
+      <span class="cb-step-dot active" data-step="1"></span>
+      <span class="cb-step-dot" data-step="2"></span>
+      <span class="cb-step-dot" data-step="3"></span>
+      <span class="cb-step-dot" data-step="4"></span>
+      <span class="cb-step-dot" data-step="5"></span>
+    </div>
+
+    <form id="courseBuilderForm" novalidate>
+
+      <!-- Step 1: Basic Info -->
+      <div class="cb-step" data-step="1">
+        <div class="field"><label for="cbTitleInput">Course title</label><input type="text" id="cbTitleInput" required></div>
+        <div class="field"><label for="cbSubtitle">Subtitle</label><input type="text" id="cbSubtitle" placeholder="One-line hook for the course"></div>
+        <div class="field"><label for="cbDescription">Description</label><input type="text" id="cbDescription" placeholder="Full description"></div>
+        <div class="field">
+          <label for="cbCategory">Category</label>
+          <select id="cbCategory" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--canvas);font-family:inherit;font-size:14.5px"></select>
+        </div>
+        <div class="field">
+          <label for="cbLevel">Level</label>
+          <select id="cbLevel" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--canvas);font-family:inherit;font-size:14.5px">
+            <option value="all_levels">All Levels</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Step 2: Pricing -->
+      <div class="cb-step" data-step="2" style="display:none">
+        <div class="field"><label for="cbPrice">Price (₦) — 0 for free</label><input type="number" id="cbPrice" min="0" step="100" value="0"></div>
+        <div class="field"><label for="cbDiscountPrice">Discount price (₦, optional)</label><input type="number" id="cbDiscountPrice" min="0" step="100"></div>
+        <div class="field"><label for="cbDuration">Duration (e.g. "6 hours")</label><input type="text" id="cbDuration"></div>
+      </div>
+
+      <!-- Step 3: Thumbnail -->
+      <div class="cb-step" data-step="3" style="display:none">
+        <div class="field">
+          <label for="cbThumbnail">Thumbnail image URL</label>
+          <input type="url" id="cbThumbnail" placeholder="Paste Cloudinary image URL">
+          <p style="font-size:12.5px;color:var(--navy-soft);margin-top:8px">Upload the image to Cloudinary first (Media Library → Upload), then paste the resulting URL here.</p>
+        </div>
+      </div>
+
+      <!-- Step 4: Curriculum note -->
+      <div class="cb-step" data-step="4" style="display:none">
+        <p style="font-size:14px;color:var(--navy-soft);line-height:1.7">
+          Modules and lessons are added after the course is created — once you publish this course here, open it from the Courses table to add curriculum, videos and resources.
+        </p>
+      </div>
+
+      <!-- Step 5: Settings & Publish -->
+      <div class="cb-step" data-step="5" style="display:none">
+        <label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:14px;font-weight:600">
+          <input type="checkbox" id="cbFeatured" style="width:auto"> Feature on homepage
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:14px;font-weight:600">
+          <input type="checkbox" id="cbCertificate" checked style="width:auto"> Certificate enabled
+        </label>
+        <div class="field">
+          <label for="cbStatus">Status</label>
+          <select id="cbStatus" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--canvas);font-family:inherit;font-size:14.5px">
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:24px">
+        <button type="button" class="btn btn-secondary" id="cbBack" style="display:none">Back</button>
+        <button type="button" class="btn btn-primary" id="cbNext">Continue</button>
+        <button type="submit" class="btn btn-primary" id="cbSubmit" style="display:none">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label">Save Course</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ WEBINAR BUILDER MODAL ============ -->
+<div class="modal-overlay" id="webinarBuilderOverlay">
+  <div class="modal">
+    <button class="modal-close" id="webinarBuilderClose" aria-label="Close">×</button>
+    <h3>New Webinar</h3>
+    <p class="modal-sub">Fill in the details and publish.</p>
+    <div class="form-msg" id="wbMsg"></div>
+    <form id="webinarBuilderForm" novalidate>
+      <div class="field"><label for="wbTitle">Title</label><input type="text" id="wbTitle" required></div>
+      <div class="field"><label for="wbDescription">Description</label><input type="text" id="wbDescription"></div>
+      <div class="field"><label for="wbDate">Date</label><input type="date" id="wbDate" required></div>
+      <div class="field"><label for="wbTime">Time (e.g. "6:00 PM WAT")</label><input type="text" id="wbTime"></div>
+      <div class="field"><label for="wbPrice">Price (₦) — 0 for free</label><input type="number" id="wbPrice" min="0" step="100" value="0"></div>
+      <div class="field"><label for="wbMeetingUrl">Meeting URL</label><input type="url" id="wbMeetingUrl"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="wbSubmit">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Create Webinar</span>
+      </button>
+    </form>
+  </div>
+</div>
+
 <div class="toast-stack" id="toastStack"></div>
 
 <script>
@@ -1138,7 +1585,11 @@ function renderNavActions() {
     document.getElementById('btnLogout').addEventListener('click', logout);
     document.getElementById('userChipBtn').addEventListener('click', (e) => {
       e.preventDefault();
-      showToast('Student dashboard is coming in the next build phase.', 'default');
+      if (currentProfile && ['admin', 'super_admin'].includes(currentProfile.role)) {
+        window.location.hash = '#admin';
+      } else {
+        showToast('Student dashboard is coming in the next build phase.', 'default');
+      }
     });
   } else {
     container.innerHTML = `
@@ -1368,12 +1819,868 @@ document.getElementById('year').textContent = new Date().getFullYear();
   loadWebinars();
   loadTestimonials();
   loadInstructors();
+  handleRoute();
 
   if (!supabaseReady) {
     console.info('%cCECT Academy: Supabase is not configured yet.', 'color:#B351FC;font-weight:bold');
     console.info('Add your SUPABASE_URL and SUPABASE_ANON_KEY near the top of the <script> tag once your project is created. Run the accompanying schema.sql in the Supabase SQL editor first.');
   }
 })();
+
+/* ============================================================
+   PHASE 2 — ADMIN DASHBOARD (hash route: #admin, #admin/courses, etc.)
+   ============================================================ */
+
+let categoriesCache = [];
+let currentCourseDetailId = null;
+let currentCourseDetailTitle = '';
+
+window.addEventListener('hashchange', handleRoute);
+
+async function handleRoute() {
+  const hash = window.location.hash;
+  const adminRoot = document.getElementById('adminRoot');
+  const publicRoot = document.getElementById('home');
+  const courseLandingRoot = document.getElementById('courseLandingRoot');
+  const learningPlayerRoot = document.getElementById('learningPlayerRoot');
+  const header = document.querySelector('.site-header');
+  const footer = document.querySelector('.site-footer');
+
+  // Hide all route roots first
+  adminRoot.style.display = 'none';
+  publicRoot.style.display = 'none';
+  courseLandingRoot.style.display = 'none';
+  learningPlayerRoot.style.display = 'none';
+  header.style.display = '';
+  footer.style.display = '';
+
+  if (hash.startsWith('#admin')) {
+    if (!supabaseReady) {
+      showToast('Connect Supabase first to use the admin dashboard.', 'error');
+      window.location.hash = '#home';
+      return;
+    }
+    await refreshSession();
+    if (!currentUser) {
+      showToast('Log in first — the admin dashboard requires an account.', 'error');
+      openAuth('login');
+      window.location.hash = '#home';
+      return;
+    }
+    if (!currentProfile || !['admin', 'super_admin'].includes(currentProfile.role)) {
+      showToast('You do not have permission to access this page.', 'error');
+      window.location.hash = '#home';
+      return;
+    }
+
+    header.style.display = 'none';
+    footer.style.display = 'none';
+    adminRoot.style.display = 'block';
+
+    const parts = hash.replace('#admin', '').split('/').filter(Boolean);
+    if (parts[0] === 'course' && parts[1]) {
+      currentCourseDetailId = parts[1];
+      showAdminTab('courseDetail');
+      loadCourseDetail(parts[1]);
+    } else {
+      showAdminTab(parts[0] || 'overview');
+    }
+    return;
+  }
+
+  if (hash.startsWith('#course-')) {
+    header.style.display = 'none';
+    footer.style.display = 'none';
+    courseLandingRoot.style.display = 'block';
+    const slug = hash.replace('#course-', '');
+    loadCourseLanding(slug);
+    return;
+  }
+
+  if (hash.startsWith('#learn/')) {
+    if (!supabaseReady) { window.location.hash = '#home'; return; }
+    await refreshSession();
+    if (!currentUser) {
+      showToast('Log in to access the learning player.', 'error');
+      openAuth('login');
+      window.location.hash = '#home';
+      return;
+    }
+    header.style.display = 'none';
+    footer.style.display = 'none';
+    learningPlayerRoot.style.display = 'block';
+    const [, slug, lessonId] = hash.split('/');
+    loadLearningPlayer(slug, lessonId || null);
+    return;
+  }
+
+  publicRoot.style.display = 'block';
+}
+
+function showAdminTab(tab) {
+  document.querySelectorAll('.admin-panel').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.admin-nav-link').forEach(l => l.classList.remove('active'));
+
+  const panel = document.getElementById('adminTab-' + tab);
+  const link = document.querySelector(`[data-admin-tab="${tab}"]`);
+  if (!panel) { showAdminTab('overview'); return; }
+  panel.style.display = 'block';
+  if (link) link.classList.add('active');
+
+  const titles = { overview: 'Overview', courses: 'Courses', categories: 'Categories', students: 'Students', webinars: 'Webinars', testimonials: 'Testimonials', courseDetail: currentCourseDetailTitle || 'Course' };
+  document.getElementById('adminTabTitle').textContent = titles[tab] || 'Overview';
+
+  const chip = document.getElementById('adminUserChip');
+  if (currentProfile) chip.innerHTML = `<span class="user-avatar">${(currentProfile.full_name||'A').slice(0,2).toUpperCase()}</span> ${currentProfile.full_name}`;
+
+  if (tab === 'overview') loadAdminStats();
+  if (tab === 'courses') loadAdminCourses();
+  if (tab === 'categories') loadAdminCategories();
+  if (tab === 'students') loadAdminStudents();
+  if (tab === 'webinars') loadAdminWebinars();
+  if (tab === 'testimonials') loadAdminTestimonials();
+}
+
+document.getElementById('btnBackToCourses').addEventListener('click', () => { window.location.hash = '#admin/courses'; });
+
+/* ---------- Course Detail (curriculum editor) ---------- */
+async function loadCourseDetail(courseId) {
+  document.getElementById('cdCourseTitle').textContent = currentCourseDetailTitle || 'Course';
+  const list = document.getElementById('modulesList');
+  list.innerHTML = `<div class="admin-empty-note">Loading curriculum…</div>`;
+
+  try {
+    const { data: course } = await supabase.from('courses').select('title').eq('id', courseId).single();
+    if (course) { currentCourseDetailTitle = course.title; document.getElementById('cdCourseTitle').textContent = course.title; document.getElementById('adminTabTitle').textContent = course.title; }
+
+    const { data: modules, error } = await supabase
+      .from('course_modules')
+      .select('id, title, sort_order, lessons(id, title, lesson_type, is_preview, sort_order, resources(id, title, resource_type, file_url))')
+      .eq('course_id', courseId)
+      .order('sort_order');
+    if (error) throw error;
+
+    if (!modules || modules.length === 0) {
+      list.innerHTML = `<div class="admin-empty-note">No modules yet — add your first module above.</div>`;
+      return;
+    }
+
+    list.innerHTML = modules.map(m => `
+      <div class="module-block">
+        <div class="module-head">
+          <h4>${escapeHtml(m.title)}</h4>
+          <div>
+            <button class="table-action" data-add-lesson="${m.id}">+ Add Lesson</button>
+            <button class="table-action danger" data-delete-module="${m.id}">Delete Module</button>
+          </div>
+        </div>
+        <div class="lesson-list">
+          ${(m.lessons || []).sort((a,b)=>a.sort_order-b.sort_order).map(l => `
+            <div class="lesson-row">
+              <span class="lesson-type-tag">${escapeHtml(l.lesson_type)}</span>
+              <span class="lesson-row-title">${escapeHtml(l.title)}</span>
+              ${l.is_preview ? '<span class="badge free" style="position:static;display:inline-block">PREVIEW</span>' : ''}
+              <span style="flex:1"></span>
+              <button class="table-action" data-add-resource="${l.id}">+ Resource</button>
+              <button class="table-action danger" data-delete-lesson="${l.id}">Delete</button>
+            </div>
+            ${(l.resources || []).map(r => `<div class="resource-row">↳ ${escapeHtml(r.title)} <span style="color:var(--navy-soft)">(${escapeHtml(r.resource_type)})</span></div>`).join('')}
+          `).join('') || `<div class="admin-empty-note" style="padding:10px 0">No lessons yet in this module.</div>`}
+        </div>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('[data-add-lesson]').forEach(btn => btn.addEventListener('click', () => openLessonBuilder(btn.dataset.addLesson)));
+    list.querySelectorAll('[data-add-resource]').forEach(btn => btn.addEventListener('click', () => openResourceBuilder(btn.dataset.addResource)));
+    list.querySelectorAll('[data-delete-module]').forEach(btn => btn.addEventListener('click', async () => {
+      if (!confirm('Delete this module and all its lessons?')) return;
+      await supabase.from('course_modules').delete().eq('id', btn.dataset.deleteModule);
+      loadCourseDetail(courseId);
+    }));
+    list.querySelectorAll('[data-delete-lesson]').forEach(btn => btn.addEventListener('click', async () => {
+      if (!confirm('Delete this lesson?')) return;
+      await supabase.from('lessons').delete().eq('id', btn.dataset.deleteLesson);
+      loadCourseDetail(courseId);
+    }));
+  } catch (err) {
+    list.innerHTML = `<div class="admin-empty-note">Could not load curriculum: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+document.getElementById('newModuleForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const input = document.getElementById('newModuleTitle');
+  const title = input.value.trim();
+  if (!title || !currentCourseDetailId) return;
+  try {
+    const { data: existing } = await supabase.from('course_modules').select('sort_order').eq('course_id', currentCourseDetailId).order('sort_order', { ascending: false }).limit(1);
+    const nextOrder = existing && existing[0] ? existing[0].sort_order + 1 : 0;
+    const { error } = await supabase.from('course_modules').insert({ course_id: currentCourseDetailId, title, sort_order: nextOrder });
+    if (error) throw error;
+    input.value = '';
+    loadCourseDetail(currentCourseDetailId);
+  } catch (err) { showToast(err.message, 'error'); }
+});
+
+/* ---------- Lesson builder ---------- */
+const lessonBuilderOverlay = document.getElementById('lessonBuilderOverlay');
+function openLessonBuilder(moduleId) {
+  document.getElementById('lessonBuilderForm').reset();
+  document.getElementById('lbModuleId').value = moduleId;
+  lessonBuilderOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+document.getElementById('lessonBuilderClose').addEventListener('click', () => { lessonBuilderOverlay.classList.remove('open'); document.body.style.overflow = ''; });
+lessonBuilderOverlay.addEventListener('click', (e) => { if (e.target === lessonBuilderOverlay) { lessonBuilderOverlay.classList.remove('open'); document.body.style.overflow = ''; } });
+
+document.getElementById('lessonBuilderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  setButtonLoading('lbSubmit', true);
+  clearAllFormMessages();
+  const moduleId = document.getElementById('lbModuleId').value;
+  const title = document.getElementById('lbTitle').value.trim();
+  try {
+    const { data: existing } = await supabase.from('lessons').select('sort_order').eq('module_id', moduleId).order('sort_order', { ascending: false }).limit(1);
+    const nextOrder = existing && existing[0] ? existing[0].sort_order + 1 : 0;
+    const payload = {
+      module_id: moduleId,
+      title,
+      slug: slugify(title) + '-' + Math.random().toString(36).slice(2, 6),
+      lesson_type: document.getElementById('lbType').value,
+      video_url: document.getElementById('lbVideoUrl').value.trim() || null,
+      description: document.getElementById('lbDescription').value.trim() || null,
+      is_preview: document.getElementById('lbPreview').checked,
+      sort_order: nextOrder,
+    };
+    const { error } = await supabase.from('lessons').insert(payload);
+    if (error) throw error;
+    lessonBuilderOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    showToast('Lesson added.', 'success');
+    loadCourseDetail(currentCourseDetailId);
+  } catch (err) {
+    setFormMsg('lbMsg', err.message, 'error');
+  } finally {
+    setButtonLoading('lbSubmit', false);
+  }
+});
+
+/* ---------- Resource builder ---------- */
+const resourceBuilderOverlay = document.getElementById('resourceBuilderOverlay');
+function openResourceBuilder(lessonId) {
+  document.getElementById('resourceBuilderForm').reset();
+  document.getElementById('rbLessonId').value = lessonId;
+  resourceBuilderOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+document.getElementById('resourceBuilderClose').addEventListener('click', () => { resourceBuilderOverlay.classList.remove('open'); document.body.style.overflow = ''; });
+resourceBuilderOverlay.addEventListener('click', (e) => { if (e.target === resourceBuilderOverlay) { resourceBuilderOverlay.classList.remove('open'); document.body.style.overflow = ''; } });
+
+document.getElementById('resourceBuilderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  setButtonLoading('rbSubmit', true);
+  clearAllFormMessages();
+  try {
+    const payload = {
+      lesson_id: document.getElementById('rbLessonId').value,
+      title: document.getElementById('rbTitle').value.trim(),
+      resource_type: document.getElementById('rbType').value,
+      file_url: document.getElementById('rbFileUrl').value.trim(),
+    };
+    const { error } = await supabase.from('resources').insert(payload);
+    if (error) throw error;
+    resourceBuilderOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    showToast('Resource added.', 'success');
+    loadCourseDetail(currentCourseDetailId);
+  } catch (err) {
+    setFormMsg('rbMsg', err.message, 'error');
+  } finally {
+    setButtonLoading('rbSubmit', false);
+  }
+});
+
+/* ---------- Overview stats ---------- */
+async function loadAdminStats() {
+  const grid = document.getElementById('adminStatsGrid');
+  try {
+    const [{ count: courses }, { count: students }, { count: enrolments }, { count: webinarRegs }] = await Promise.all([
+      supabase.from('courses').select('*', { count: 'exact', head: true }),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
+      supabase.from('enrollments').select('*', { count: 'exact', head: true }),
+      supabase.from('webinar_registrations').select('*', { count: 'exact', head: true }),
+    ]);
+    const cards = [
+      ['Total Courses', courses ?? 0],
+      ['Students', students ?? 0],
+      ['Enrolments', enrolments ?? 0],
+      ['Webinar Registrations', webinarRegs ?? 0],
+    ];
+    grid.innerHTML = cards.map(([label, num]) => `
+      <div class="admin-stat-card"><div class="asnum">${num}</div><div class="aslabel">${label}</div></div>
+    `).join('');
+  } catch (err) {
+    grid.innerHTML = `<div class="admin-empty-note">Could not load stats: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+/* ---------- Courses ---------- */
+async function loadAdminCourses() {
+  const tbody = document.getElementById('adminCourseRows');
+  try {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('id, title, slug, price, discount_price, status, featured, categories(name)')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="admin-empty-note">No courses yet — click "New Course" to create your first one.</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(c => `
+      <tr>
+        <td><strong>${escapeHtml(c.title)}</strong></td>
+        <td>${escapeHtml(c.categories?.name || '—')}</td>
+        <td>${c.price > 0 ? formatNaira(c.discount_price || c.price) : 'Free'}</td>
+        <td><span class="status-pill ${c.status}">${c.status}</span></td>
+        <td>${c.featured ? '★ Featured' : '—'}</td>
+        <td>
+          <a href="#admin/course/${c.id}" class="table-action" data-manage-curriculum="${c.id}" data-course-title="${escapeHtml(c.title)}">Curriculum</a>
+          <button class="table-action" data-toggle-status="${c.id}" data-current="${c.status}">${c.status === 'published' ? 'Unpublish' : 'Publish'}</button>
+          <button class="table-action danger" data-delete-course="${c.id}">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+
+    tbody.querySelectorAll('[data-manage-curriculum]').forEach(link => {
+      link.addEventListener('click', () => {
+        currentCourseDetailId = link.dataset.manageCurriculum;
+        currentCourseDetailTitle = link.dataset.courseTitle;
+      });
+    });
+
+    tbody.querySelectorAll('[data-toggle-status]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.toggleStatus;
+        const newStatus = btn.dataset.current === 'published' ? 'unpublished' : 'published';
+        const { error } = await supabase.from('courses').update({ status: newStatus }).eq('id', id);
+        if (error) { showToast(error.message, 'error'); return; }
+        showToast(`Course ${newStatus}.`, 'success');
+        loadAdminCourses(); loadCourses();
+      });
+    });
+    tbody.querySelectorAll('[data-delete-course]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this course permanently? This cannot be undone.')) return;
+        const { error } = await supabase.from('courses').delete().eq('id', btn.dataset.deleteCourse);
+        if (error) { showToast(error.message, 'error'); return; }
+        showToast('Course deleted.', 'success');
+        loadAdminCourses(); loadCourses();
+      });
+    });
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="6"><div class="admin-empty-note">Could not load courses: ${escapeHtml(err.message)}</div></td></tr>`;
+  }
+}
+
+/* ---------- Categories ---------- */
+async function loadAdminCategories() {
+  const tbody = document.getElementById('adminCategoryRows');
+  try {
+    const { data, error } = await supabase.from('categories').select('*').order('name');
+    if (error) throw error;
+    categoriesCache = data || [];
+    populateCategorySelect();
+
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="3"><div class="admin-empty-note">No categories yet — add one above.</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(c => `
+      <tr><td>${escapeHtml(c.name)}</td><td>${escapeHtml(c.slug)}</td>
+      <td><button class="table-action danger" data-delete-cat="${c.id}">Delete</button></td></tr>
+    `).join('');
+    tbody.querySelectorAll('[data-delete-cat]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this category?')) return;
+        const { error } = await supabase.from('categories').delete().eq('id', btn.dataset.deleteCat);
+        if (error) { showToast(error.message, 'error'); return; }
+        loadAdminCategories();
+      });
+    });
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="3"><div class="admin-empty-note">${escapeHtml(err.message)}</div></td></tr>`;
+  }
+}
+
+document.querySelectorAll('.admin-nav-link').forEach(link => {
+  link.addEventListener('click', () => setTimeout(handleRoute, 0));
+});
+
+function slugify(str) {
+  return str.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+}
+
+document.getElementById('newCategoryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const input = document.getElementById('newCategoryName');
+  const name = input.value.trim();
+  if (!name) return;
+  try {
+    const { error } = await supabase.from('categories').insert({ name, slug: slugify(name) });
+    if (error) throw error;
+    input.value = '';
+    showToast('Category added.', 'success');
+    loadAdminCategories();
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
+});
+
+function populateCategorySelect() {
+  const sel = document.getElementById('cbCategory');
+  sel.innerHTML = categoriesCache.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('')
+    || `<option value="">No categories yet</option>`;
+}
+
+/* ---------- Students ---------- */
+async function loadAdminStudents() {
+  const tbody = document.getElementById('adminStudentRows');
+  try {
+    const { data, error } = await supabase.from('profiles').select('full_name, email, role, created_at').order('created_at', { ascending: false }).limit(100);
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="admin-empty-note">No registered users yet.</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(u => `
+      <tr><td>${escapeHtml(u.full_name)}</td><td>${escapeHtml(u.email || '—')}</td><td><span class="status-pill upcoming">${escapeHtml(u.role)}</span></td><td>${new Date(u.created_at).toLocaleDateString()}</td></tr>
+    `).join('');
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="4"><div class="admin-empty-note">${escapeHtml(err.message)}</div></td></tr>`;
+  }
+}
+
+/* ---------- Webinars ---------- */
+async function loadAdminWebinars() {
+  const tbody = document.getElementById('adminWebinarRows');
+  try {
+    const { data, error } = await supabase.from('webinars').select('*').order('date', { ascending: false });
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="admin-empty-note">No webinars yet — click "New Webinar" to create one.</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(w => `
+      <tr>
+        <td>${escapeHtml(w.title)}</td>
+        <td>${new Date(w.date).toLocaleDateString()}</td>
+        <td>${w.price > 0 ? formatNaira(w.price) : 'Free'}</td>
+        <td><span class="status-pill ${w.status}">${w.status}</span></td>
+        <td><button class="table-action danger" data-delete-webinar="${w.id}">Delete</button></td>
+      </tr>
+    `).join('');
+    tbody.querySelectorAll('[data-delete-webinar]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this webinar?')) return;
+        const { error } = await supabase.from('webinars').delete().eq('id', btn.dataset.deleteWebinar);
+        if (error) { showToast(error.message, 'error'); return; }
+        showToast('Webinar deleted.', 'success');
+        loadAdminWebinars(); loadWebinars();
+      });
+    });
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="5"><div class="admin-empty-note">${escapeHtml(err.message)}</div></td></tr>`;
+  }
+}
+
+/* ---------- Testimonials ---------- */
+async function loadAdminTestimonials() {
+  const tbody = document.getElementById('adminTestiRows');
+  try {
+    const { data, error } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="admin-empty-note">No testimonials submitted yet.</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(t => `
+      <tr>
+        <td>${escapeHtml(t.name)}</td>
+        <td>${escapeHtml((t.quote||'').slice(0,60))}${(t.quote||'').length>60?'…':''}</td>
+        <td><span class="status-pill ${t.status === 'approved' ? 'published' : 'draft'}">${t.status}</span></td>
+        <td>
+          ${t.status !== 'approved' ? `<button class="table-action" data-approve-testi="${t.id}">Approve</button>` : `<button class="table-action" data-hide-testi="${t.id}">Hide</button>`}
+          <button class="table-action danger" data-delete-testi="${t.id}">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+    tbody.querySelectorAll('[data-approve-testi]').forEach(btn => btn.addEventListener('click', async () => {
+      await supabase.from('testimonials').update({ status: 'approved' }).eq('id', btn.dataset.approveTesti);
+      loadAdminTestimonials(); loadTestimonials();
+    }));
+    tbody.querySelectorAll('[data-hide-testi]').forEach(btn => btn.addEventListener('click', async () => {
+      await supabase.from('testimonials').update({ status: 'hidden' }).eq('id', btn.dataset.hideTesti);
+      loadAdminTestimonials(); loadTestimonials();
+    }));
+    tbody.querySelectorAll('[data-delete-testi]').forEach(btn => btn.addEventListener('click', async () => {
+      if (!confirm('Delete this testimonial?')) return;
+      await supabase.from('testimonials').delete().eq('id', btn.dataset.deleteTesti);
+      loadAdminTestimonials(); loadTestimonials();
+    }));
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="4"><div class="admin-empty-note">${escapeHtml(err.message)}</div></td></tr>`;
+  }
+}
+
+/* ---------------------------------------------------------------
+   COURSE BUILDER (multi-step modal)
+--------------------------------------------------------------- */
+let cbCurrentStep = 1;
+const CB_TOTAL_STEPS = 5;
+const courseBuilderOverlay = document.getElementById('courseBuilderOverlay');
+
+document.getElementById('btnNewCourse').addEventListener('click', () => {
+  document.getElementById('courseBuilderForm').reset();
+  cbCurrentStep = 1;
+  cbShowStep(1);
+  courseBuilderOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+document.getElementById('courseBuilderClose').addEventListener('click', closeCourseBuilder);
+courseBuilderOverlay.addEventListener('click', (e) => { if (e.target === courseBuilderOverlay) closeCourseBuilder(); });
+function closeCourseBuilder() {
+  courseBuilderOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function cbShowStep(step) {
+  document.querySelectorAll('.cb-step').forEach(s => s.style.display = (parseInt(s.dataset.step) === step) ? 'block' : 'none');
+  document.querySelectorAll('.cb-step-dot').forEach(d => d.classList.toggle('active', parseInt(d.dataset.step) <= step));
+  document.getElementById('cbStepNum').textContent = step;
+  document.getElementById('cbBack').style.display = step > 1 ? 'inline-flex' : 'none';
+  document.getElementById('cbNext').style.display = step < CB_TOTAL_STEPS ? 'inline-flex' : 'none';
+  document.getElementById('cbSubmit').style.display = step === CB_TOTAL_STEPS ? 'inline-flex' : 'none';
+}
+
+document.getElementById('cbNext').addEventListener('click', () => {
+  if (cbCurrentStep === 1 && !document.getElementById('cbTitleInput').value.trim()) {
+    setFormMsg('cbMsg', 'Course title is required.', 'error');
+    return;
+  }
+  clearAllFormMessages();
+  cbCurrentStep = Math.min(cbCurrentStep + 1, CB_TOTAL_STEPS);
+  cbShowStep(cbCurrentStep);
+});
+document.getElementById('cbBack').addEventListener('click', () => {
+  cbCurrentStep = Math.max(cbCurrentStep - 1, 1);
+  cbShowStep(cbCurrentStep);
+});
+
+document.getElementById('courseBuilderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  setButtonLoading('cbSubmit', true);
+  clearAllFormMessages();
+
+  const title = document.getElementById('cbTitleInput').value.trim();
+  const payload = {
+    title,
+    slug: slugify(title) + '-' + Math.random().toString(36).slice(2, 6),
+    subtitle: document.getElementById('cbSubtitle').value.trim() || null,
+    description: document.getElementById('cbDescription').value.trim() || null,
+    category_id: document.getElementById('cbCategory').value || null,
+    level: document.getElementById('cbLevel').value,
+    price: Number(document.getElementById('cbPrice').value) || 0,
+    discount_price: document.getElementById('cbDiscountPrice').value ? Number(document.getElementById('cbDiscountPrice').value) : null,
+    duration: document.getElementById('cbDuration').value.trim() || null,
+    thumbnail_url: document.getElementById('cbThumbnail').value.trim() || null,
+    featured: document.getElementById('cbFeatured').checked,
+    certificate_enabled: document.getElementById('cbCertificate').checked,
+    status: document.getElementById('cbStatus').value,
+    instructor_id: currentUser.id,
+  };
+
+  try {
+    const { error } = await supabase.from('courses').insert(payload);
+    if (error) throw error;
+    showToast('Course created successfully.', 'success');
+    closeCourseBuilder();
+    loadAdminCourses();
+    loadCourses();
+  } catch (err) {
+    setFormMsg('cbMsg', err.message || 'Could not save course.', 'error');
+  } finally {
+    setButtonLoading('cbSubmit', false);
+  }
+});
+
+/* ---------------------------------------------------------------
+   WEBINAR BUILDER
+--------------------------------------------------------------- */
+const webinarBuilderOverlay = document.getElementById('webinarBuilderOverlay');
+document.getElementById('btnNewWebinar').addEventListener('click', () => {
+  document.getElementById('webinarBuilderForm').reset();
+  webinarBuilderOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+document.getElementById('webinarBuilderClose').addEventListener('click', closeWebinarBuilder);
+webinarBuilderOverlay.addEventListener('click', (e) => { if (e.target === webinarBuilderOverlay) closeWebinarBuilder(); });
+function closeWebinarBuilder() {
+  webinarBuilderOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('webinarBuilderForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  setButtonLoading('wbSubmit', true);
+  clearAllFormMessages();
+
+  const title = document.getElementById('wbTitle').value.trim();
+  const payload = {
+    title,
+    slug: slugify(title) + '-' + Math.random().toString(36).slice(2, 6),
+    description: document.getElementById('wbDescription').value.trim() || null,
+    date: document.getElementById('wbDate').value,
+    time: document.getElementById('wbTime').value.trim() || null,
+    price: Number(document.getElementById('wbPrice').value) || 0,
+    meeting_url: document.getElementById('wbMeetingUrl').value.trim() || null,
+    speaker_id: currentUser.id,
+    status: 'upcoming',
+  };
+
+  try {
+    const { error } = await supabase.from('webinars').insert(payload);
+    if (error) throw error;
+    showToast('Webinar created.', 'success');
+    closeWebinarBuilder();
+    loadAdminWebinars();
+    loadWebinars();
+  } catch (err) {
+    setFormMsg('wbMsg', err.message || 'Could not save webinar.', 'error');
+  } finally {
+    setButtonLoading('wbSubmit', false);
+  }
+});
+
+/* ============================================================
+   PUBLIC COURSE LANDING PAGE — route #course-:slug
+   ============================================================ */
+function embedForVideo(url) {
+  if (!url) return '';
+  const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/);
+  if (yt) return `<iframe class="video-embed" src="https://www.youtube.com/embed/${yt[1]}" title="Lesson video" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`;
+  const vm = url.match(/vimeo\.com\/(\d+)/);
+  if (vm) return `<iframe class="video-embed" src="https://player.vimeo.com/video/${vm[1]}" title="Lesson video" frameborder="0" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>`;
+  return `<video class="video-embed" src="${escapeHtml(url)}" controls playsinline></video>`;
+}
+
+async function loadCourseLanding(slug) {
+  const el = document.getElementById('courseLandingContent');
+  el.innerHTML = `<div class="skel" style="height:40px;width:70%;margin-bottom:16px"></div><div class="skel" style="height:200px"></div>`;
+  if (!supabaseReady) { el.innerHTML = `<div class="empty-state"><p>Connect Supabase to view courses.</p></div>`; return; }
+
+  await refreshSession();
+
+  try {
+    const { data: course, error } = await supabase
+      .from('courses')
+      .select('*, categories(name), profiles!courses_instructor_id_fkey(full_name), course_modules(id, title, sort_order, lessons(id, title, lesson_type, is_preview, sort_order))')
+      .eq('slug', slug)
+      .single();
+    if (error || !course) { el.innerHTML = `<div class="empty-state"><div class="ee-icon">◇</div><p>This course is currently unavailable.</p></div>`; return; }
+
+    let enrolled = false;
+    if (currentUser) {
+      const { data: enr } = await supabase.from('enrollments').select('id').eq('course_id', course.id).eq('student_id', currentUser.id).eq('status', 'active').maybeSingle();
+      enrolled = !!enr;
+    }
+
+    const hasDiscount = course.discount_price && course.discount_price < course.price;
+    const modules = (course.course_modules || []).sort((a,b) => a.sort_order - b.sort_order);
+    const totalLessons = modules.reduce((n, m) => n + (m.lessons?.length || 0), 0);
+
+    let ctaHtml;
+    if (enrolled) {
+      ctaHtml = `<a href="#learn/${escapeHtml(slug)}" class="btn btn-primary btn-block">Continue Learning</a>`;
+    } else if (course.price === 0) {
+      ctaHtml = `<button class="btn btn-primary btn-block" id="btnEnrollFree">Enroll Free</button>`;
+    } else {
+      ctaHtml = `<button class="btn btn-primary btn-block" id="btnBuyCourse">Buy Course — ${formatNaira(hasDiscount ? course.discount_price : course.price)}</button>
+                 <p style="text-align:center;font-size:12px;color:var(--navy-soft);margin-top:10px">Payment checkout arrives in the next build phase.</p>`;
+    }
+
+    el.innerHTML = `
+      <div class="cland-grid">
+        <div>
+          <div class="section-eyebrow">${escapeHtml(course.categories?.name || 'Course')}</div>
+          <h1 style="font-size:clamp(26px,3.6vw,36px);margin-bottom:10px">${escapeHtml(course.title)}</h1>
+          <p style="font-size:16px;color:var(--navy-soft);margin-bottom:20px">${escapeHtml(course.subtitle || '')}</p>
+          <div class="hero-proof" style="margin-bottom:28px">
+            <span>${totalLessons} lessons</span> · <span>${escapeHtml(course.level.replace('_',' '))}</span> · <span>${escapeHtml(course.duration || '—')}</span> · <span>${escapeHtml(course.language)}</span>
+            ${course.certificate_enabled ? ' · <span>🎓 Certificate included</span>' : ''}
+          </div>
+
+          ${course.description ? `<h3 style="font-size:18px;margin-bottom:10px">Course Description</h3><p style="color:var(--navy-soft);margin-bottom:30px;line-height:1.7">${escapeHtml(course.description)}</p>` : ''}
+
+          <h3 style="font-size:18px;margin-bottom:14px">Curriculum</h3>
+          <div class="curriculum-list">
+            ${modules.length === 0 ? `<div class="admin-empty-note">Curriculum is being finalised.</div>` : modules.map(m => `
+              <details class="curr-module" open>
+                <summary>${escapeHtml(m.title)} <span style="color:var(--navy-soft);font-weight:500">(${(m.lessons||[]).length} lessons)</span></summary>
+                <div>
+                  ${(m.lessons||[]).sort((a,b)=>a.sort_order-b.sort_order).map(l => `
+                    <div class="curr-lesson">
+                      <span>${l.is_preview || enrolled ? '▶' : '🔒'}</span>
+                      <span>${escapeHtml(l.title)}</span>
+                      ${l.is_preview ? '<span class="badge free" style="position:static;display:inline-block;margin-left:auto">FREE PREVIEW</span>' : ''}
+                    </div>
+                  `).join('')}
+                </div>
+              </details>
+            `).join('')}
+          </div>
+        </div>
+
+        <div>
+          <div class="cland-sidebar">
+            <div class="course-thumb" style="height:180px;border-radius:12px;margin-bottom:18px">${course.thumbnail_url ? `<img src="${escapeHtml(course.thumbnail_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:12px">` : ''}</div>
+            <div class="price-block" style="margin-bottom:18px">
+              <span class="price-now" style="font-size:26px">${course.price > 0 ? formatNaira(hasDiscount ? course.discount_price : course.price) : 'Free'}</span>
+              ${hasDiscount ? `<span class="price-was">${formatNaira(course.price)}</span>` : ''}
+            </div>
+            ${ctaHtml}
+            <p style="font-size:12.5px;color:var(--navy-soft);margin-top:16px">Instructor: ${escapeHtml(course.profiles?.full_name || 'CECT Academy')}</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const btnFree = document.getElementById('btnEnrollFree');
+    if (btnFree) btnFree.addEventListener('click', async () => {
+      if (!currentUser) { openAuth('login'); return; }
+      btnFree.disabled = true; btnFree.textContent = 'Enrolling…';
+      try {
+        const { error } = await supabase.from('enrollments').insert({ student_id: currentUser.id, course_id: course.id });
+        if (error) throw error;
+        showToast('Enrolled! Redirecting to your course…', 'success');
+        window.location.hash = `#learn/${slug}`;
+      } catch (err) {
+        showToast(err.message, 'error');
+        btnFree.disabled = false; btnFree.textContent = 'Enroll Free';
+      }
+    });
+    const btnBuy = document.getElementById('btnBuyCourse');
+    if (btnBuy) btnBuy.addEventListener('click', () => {
+      if (!currentUser) { openAuth('login'); return; }
+      showToast('Paystack checkout is coming in the next build phase.', 'default');
+    });
+
+  } catch (err) {
+    el.innerHTML = `<div class="empty-state"><p>Something went wrong while loading this course. Please try again.</p></div>`;
+    console.error(err);
+  }
+}
+
+/* ============================================================
+   LEARNING PLAYER — route #learn/:slug/:lessonId
+   ============================================================ */
+async function loadLearningPlayer(slug, lessonId) {
+  const main = document.getElementById('playerMain');
+  main.innerHTML = `<div class="skel" style="height:400px"></div>`;
+
+  try {
+    const { data: course, error } = await supabase
+      .from('courses')
+      .select('id, title, certificate_enabled, course_modules(id, title, sort_order, lessons(id, title, lesson_type, video_url, description, is_preview, sort_order, resources(id, title, resource_type, file_url)))')
+      .eq('slug', slug)
+      .single();
+    if (error || !course) { main.innerHTML = `<div class="empty-state"><p>Course unavailable.</p></div>`; return; }
+
+    const { data: enr } = await supabase.from('enrollments').select('id').eq('course_id', course.id).eq('student_id', currentUser.id).eq('status', 'active').maybeSingle();
+    if (!enr) {
+      main.innerHTML = `<div class="empty-state"><div class="ee-icon">🔒</div><p>You do not have permission to access this page.</p><a href="#course-${slug}" class="btn btn-primary btn-sm">View Course</a></div>`;
+      document.getElementById('playerCurriculum').innerHTML = '';
+      return;
+    }
+
+    document.getElementById('playerCourseTitle').textContent = course.title;
+    const modules = (course.course_modules || []).sort((a,b) => a.sort_order - b.sort_order);
+    const allLessons = modules.flatMap(m => (m.lessons||[]).sort((a,b)=>a.sort_order-b.sort_order));
+
+    const { data: progressRows } = await supabase.from('lesson_progress').select('lesson_id, completed').eq('student_id', currentUser.id);
+    const completedSet = new Set((progressRows||[]).filter(p=>p.completed).map(p=>p.lesson_id));
+
+    const pct = allLessons.length ? Math.round((completedSet.size / allLessons.length) * 100) : 0;
+    document.getElementById('playerProgressFill').style.width = pct + '%';
+    document.getElementById('playerProgressText').textContent = `${completedSet.size} of ${allLessons.length} lessons complete (${pct}%)`;
+
+    let activeLesson = lessonId ? allLessons.find(l => l.id === lessonId) : null;
+    if (!activeLesson) activeLesson = allLessons.find(l => !completedSet.has(l.id)) || allLessons[0];
+
+    document.getElementById('playerCurriculum').innerHTML = modules.map(m => `
+      <div class="pcurr-module">
+        <div class="pcurr-module-title">${escapeHtml(m.title)}</div>
+        ${(m.lessons||[]).sort((a,b)=>a.sort_order-b.sort_order).map(l => `
+          <a href="#learn/${slug}/${l.id}" class="pcurr-lesson ${activeLesson && l.id===activeLesson.id ? 'active' : ''}">
+            <span class="pcurr-check">${completedSet.has(l.id) ? '✓' : '○'}</span>
+            <span>${escapeHtml(l.title)}</span>
+          </a>
+        `).join('')}
+      </div>
+    `).join('');
+
+    if (!activeLesson) {
+      main.innerHTML = `<div class="empty-state"><p>No lessons published yet for this course.</p></div>`;
+      return;
+    }
+
+    const idx = allLessons.findIndex(l => l.id === activeLesson.id);
+    const prevLesson = allLessons[idx-1];
+    const nextLesson = allLessons[idx+1];
+    const isCompleted = completedSet.has(activeLesson.id);
+
+    main.innerHTML = `
+      ${activeLesson.lesson_type === 'video' && activeLesson.video_url ? embedForVideo(activeLesson.video_url) : `<div class="player-placeholder">${activeLesson.lesson_type === 'pdf' ? '📄' : activeLesson.lesson_type === 'slides' ? '📊' : '📝'} ${escapeHtml(activeLesson.lesson_type)} lesson</div>`}
+      <div class="player-lesson-body">
+        <h2 style="font-size:22px;margin-bottom:10px">${escapeHtml(activeLesson.title)}</h2>
+        <p style="color:var(--navy-soft);margin-bottom:20px">${escapeHtml(activeLesson.description || '')}</p>
+
+        ${(activeLesson.resources||[]).length ? `
+          <h4 style="font-size:14px;margin-bottom:10px">Resources</h4>
+          <div class="resource-download-list">
+            ${activeLesson.resources.map(r => `<a href="${escapeHtml(r.file_url)}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">⬇ ${escapeHtml(r.title)}</a>`).join('')}
+          </div>
+        ` : ''}
+
+        <div style="display:flex;gap:12px;margin-top:28px;flex-wrap:wrap">
+          <button class="btn ${isCompleted ? 'btn-secondary' : 'btn-primary'}" id="btnMarkComplete">${isCompleted ? '✓ Completed' : 'Mark as Complete'}</button>
+          ${prevLesson ? `<a href="#learn/${slug}/${prevLesson.id}" class="btn btn-ghost">← Previous</a>` : ''}
+          ${nextLesson ? `<a href="#learn/${slug}/${nextLesson.id}" class="btn btn-ghost">Next →</a>` : ''}
+        </div>
+      </div>
+    `;
+
+    await supabase.from('lesson_progress').upsert({
+      student_id: currentUser.id, lesson_id: activeLesson.id, last_accessed_at: new Date().toISOString()
+    }, { onConflict: 'student_id,lesson_id' });
+
+    document.getElementById('btnMarkComplete').addEventListener('click', async () => {
+      try {
+        await supabase.from('lesson_progress').upsert({
+          student_id: currentUser.id, lesson_id: activeLesson.id,
+          completed: true, completed_at: new Date().toISOString(), last_accessed_at: new Date().toISOString()
+        }, { onConflict: 'student_id,lesson_id' });
+        showToast('Lesson marked complete.', 'success');
+        loadLearningPlayer(slug, activeLesson.id);
+      } catch (err) { showToast(err.message, 'error'); }
+    });
+
+  } catch (err) {
+    main.innerHTML = `<div class="empty-state"><p>Something went wrong while loading this page. Please try again.</p></div>`;
+    console.error(err);
+  }
+}
 </script>
 
 </body>
