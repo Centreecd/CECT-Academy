@@ -2877,6 +2877,19 @@ async function loadLearningPlayer(slug, lessonId) {
           completed: true, completed_at: new Date().toISOString(), last_accessed_at: new Date().toISOString()
         }, { onConflict: 'student_id,lesson_id' });
         showToast('Lesson marked complete.', 'success');
+
+        // Check if this lesson completes the full course
+        const wasAlreadyDone = completedSet.has(activeLesson.id);
+        const newCount = completedSet.size + (wasAlreadyDone ? 0 : 1);
+        if (course.certificate_enabled && newCount >= allLessons.length && allLessons.length > 0) {
+          const cert = await ensureCertificate(course.id);
+          if (cert && cert.verification_code) {
+            showToast('🎓 Course complete! Your certificate is ready.', 'success');
+            setTimeout(() => { window.location.hash = `#certificate/${encodeURIComponent(cert.verification_code)}`; }, 2200);
+            return; // skip reload — we're navigating away
+          }
+        }
+
         loadLearningPlayer(slug, activeLesson.id);
       } catch (err) { showToast(err.message, 'error'); }
     });
