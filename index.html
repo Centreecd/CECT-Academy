@@ -231,7 +231,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .hero-proof{ display:flex; align-items:center; gap:18px; color:var(--navy-soft); font-size:13.5px; font-weight:600; }
 .hero-proof .stars{ color:#F5A623; letter-spacing:2px; }
 
-/* Hero visual: stacked cluster */
+/* Hero visual */
 .hero-visual{ position:relative; height:460px; }
 .hero-glow{
   position:absolute; inset:-60px;
@@ -239,58 +239,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   filter:blur(10px);
   z-index:0;
 }
-.float-card{
-  position:absolute;
-  background:#fff;
-  border-radius:var(--radius-md);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow-lg);
-  padding:18px 20px;
-  z-index:1;
-}
-.card-main{
-  top:40px; left:10px; width:290px;
-  animation:float1 7s ease-in-out infinite;
-}
-.card-progress{
-  bottom:60px; left:60px; width:250px;
-  animation:float2 8s ease-in-out infinite;
-}
-.card-stat{
-  top:0px; right:0; width:190px;
-  animation:float3 6.5s ease-in-out infinite;
-}
-@keyframes float1{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
-@keyframes float2{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(10px); } }
-@keyframes float3{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
-@media (prefers-reduced-motion: reduce){
-  .float-card{ animation:none; }
-}
-
-.card-thumb{
-  width:100%; height:110px; border-radius:10px;
-  background:var(--grad-brand);
-  margin-bottom:12px;
-  position:relative; overflow:hidden;
-}
-.card-thumb::after{
-  content:''; position:absolute; inset:0;
-  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 60%);
-}
-.card-main .card-title{ font-weight:700; font-size:14.5px; margin-bottom:4px; }
-.card-main .card-meta{ font-size:12.5px; color:var(--navy-soft); }
-
-.ring{ width:52px; height:52px; flex-shrink:0; }
-.ring circle{ fill:none; stroke-width:5; }
-.ring .bg{ stroke:var(--line); }
-.ring .fg{ stroke:url(#ringGrad); stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; }
-.progress-row{ display:flex; align-items:center; gap:14px; }
-.progress-row .ptext{ font-size:12px; color:var(--navy-soft); font-weight:600; }
-.progress-row .pnum{ font-size:18px; font-weight:800; color:var(--navy); }
-
-.card-stat .snum{ font-size:26px; font-weight:800; }
-.card-stat .slabel{ font-size:12px; color:var(--navy-soft); font-weight:600; }
-.card-stat .strend{ color:var(--success); font-size:12px; font-weight:700; margin-top:6px; display:flex; align-items:center; gap:4px; }
 
 /* ---------- Section shells ---------- */
 section{ padding:88px 0; }
@@ -713,38 +661,67 @@ section{ padding:88px 0; }
         </div>
       </div>
 
-      <div class="hero-visual">
-        <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-glow"></div>
+        <!-- Decorative brand graphic — no data, no cards -->
+        <div style="
+          position:absolute; inset:0;
+          display:flex; align-items:center; justify-content:center;
+        ">
+          <svg viewBox="0 0 400 360" fill="none" xmlns="http://www.w3.org/2000/svg"
+               style="width:100%;max-width:420px;height:auto">
+            <defs>
+              <linearGradient id="hg1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#3F88EF"/>
+                <stop offset="100%" stop-color="#B351FC"/>
+              </linearGradient>
+              <linearGradient id="hg2" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#B351FC" stop-opacity=".35"/>
+                <stop offset="100%" stop-color="#3F88EF" stop-opacity=".15"/>
+              </linearGradient>
+              <filter id="blur1"><feGaussianBlur stdDeviation="18"/></filter>
+            </defs>
 
-        <!-- Illustrative card — not real user data -->
-        <div class="float-card card-stat" aria-hidden="true">
-          <div style="font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-soft);opacity:.65;margin-bottom:6px">Platform average</div>
-          <div class="snum">92%</div>
-          <div class="slabel">Course completion rate</div>
-          <div class="strend">↑ growing every cohort</div>
-        </div>
+            <!-- Soft glow blobs -->
+            <ellipse cx="200" cy="180" rx="160" ry="130" fill="url(#hg2)" filter="url(#blur1)"/>
 
-        <!-- Illustrative card — not real user data -->
-        <div class="float-card card-main" aria-hidden="true">
-          <div style="font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-soft);opacity:.65;margin-bottom:8px">Example course</div>
-          <div class="card-thumb"></div>
-          <div class="card-title">Mastering Public Speaking</div>
-          <div class="card-meta">12 lessons · Intermediate</div>
-        </div>
+            <!-- Outer ring -->
+            <circle cx="200" cy="180" r="140" stroke="url(#hg1)" stroke-width="2" stroke-dasharray="8 6" opacity=".3"/>
+            <!-- Middle ring -->
+            <circle cx="200" cy="180" r="105" stroke="url(#hg1)" stroke-width="1.5" opacity=".2"/>
 
-        <!-- Illustrative card — not real user data -->
-        <div class="float-card card-progress" aria-hidden="true">
-          <div style="font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-soft);opacity:.65;margin-bottom:8px">Example progress</div>
-          <div class="progress-row">
-            <svg class="ring" viewBox="0 0 52 52">
-              <circle class="bg" cx="26" cy="26" r="22"></circle>
-              <circle class="fg" cx="26" cy="26" r="22" stroke-dasharray="138.2" stroke-dashoffset="41.5"></circle>
-            </svg>
-            <div>
-              <div class="pnum">70%</div>
-              <div class="ptext">12 of 20 lessons complete</div>
-            </div>
-          </div>
+            <!-- Centre logo badge -->
+            <rect x="160" y="140" width="80" height="80" rx="18" fill="url(#hg1)" opacity=".95"/>
+            <image href="https://res.cloudinary.com/g2ajyskg/image/upload/v1786779146/file_00000000f84081f4b6c4415d9e8735e0.png"
+                   x="168" y="148" width="64" height="64" preserveAspectRatio="xMidYMid meet"/>
+
+            <!-- Floating benefit dots -->
+            <!-- Top -->
+            <circle cx="200" cy="30" r="7" fill="url(#hg1)" opacity=".8"/>
+            <!-- Right -->
+            <circle cx="350" cy="180" r="7" fill="url(#hg1)" opacity=".8"/>
+            <!-- Bottom -->
+            <circle cx="200" cy="330" r="7" fill="url(#hg1)" opacity=".8"/>
+            <!-- Left -->
+            <circle cx="50" cy="180" r="7" fill="url(#hg1)" opacity=".8"/>
+            <!-- Diagonals -->
+            <circle cx="96" cy="66" r="5" fill="url(#hg1)" opacity=".5"/>
+            <circle cx="304" cy="66" r="5" fill="url(#hg1)" opacity=".5"/>
+            <circle cx="96" cy="294" r="5" fill="url(#hg1)" opacity=".5"/>
+            <circle cx="304" cy="294" r="5" fill="url(#hg1)" opacity=".5"/>
+
+            <!-- Connecting lines from dots to centre -->
+            <line x1="200" y1="37" x2="200" y2="140" stroke="url(#hg1)" stroke-width="1" opacity=".2"/>
+            <line x1="343" y1="180" x2="240" y2="180" stroke="url(#hg1)" stroke-width="1" opacity=".2"/>
+            <line x1="200" y1="323" x2="200" y2="220" stroke="url(#hg1)" stroke-width="1" opacity=".2"/>
+            <line x1="57" y1="180" x2="160" y2="180" stroke="url(#hg1)" stroke-width="1" opacity=".2"/>
+
+            <!-- Benefit labels -->
+            <text x="200" y="14" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#3F88EF" opacity=".9">Certificates</text>
+            <text x="362" y="177" text-anchor="start" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#3F88EF" opacity=".9">Flexible</text>
+            <text x="200" y="354" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#3F88EF" opacity=".9">Practical</text>
+            <text x="38" y="177" text-anchor="end" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#3F88EF" opacity=".9">Expert</text>
+          </svg>
         </div>
       </div>
     </div>
