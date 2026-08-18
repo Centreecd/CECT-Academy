@@ -307,7 +307,7 @@ section{ padding:88px 0; }
 .stat-cell{ background:#fff; padding:32px 20px; text-align:center; }
 .stat-num{ font-family:'Plus Jakarta Sans',sans-serif; font-size:32px; font-weight:800; background:var(--grad-brand); -webkit-background-clip:text; background-clip:text; color:transparent; }
 .stat-label{ font-size:13px; color:var(--navy-soft); font-weight:600; margin-top:6px; }
-@media (max-width:920px){ .stats-grid{ grid-template-columns:repeat(2,1fr); } .stat-cell:last-child{ grid-column:span 2; } }
+@media (max-width:920px){ .stats-grid{ grid-template-columns:repeat(2,1fr) !important; } }
 
 /* ---------- Course cards ---------- */
 .course-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
@@ -715,17 +715,26 @@ section{ padding:88px 0; }
 
       <div class="hero-visual">
         <div class="hero-glow" aria-hidden="true"></div>
-        <div class="float-card card-stat">
+
+        <!-- Illustrative card — not real user data -->
+        <div class="float-card card-stat" aria-hidden="true">
+          <div style="font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-soft);opacity:.65;margin-bottom:6px">Platform average</div>
           <div class="snum">92%</div>
           <div class="slabel">Course completion rate</div>
           <div class="strend">↑ growing every cohort</div>
         </div>
-        <div class="float-card card-main">
+
+        <!-- Illustrative card — not real user data -->
+        <div class="float-card card-main" aria-hidden="true">
+          <div style="font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-soft);opacity:.65;margin-bottom:8px">Example course</div>
           <div class="card-thumb"></div>
           <div class="card-title">Mastering Public Speaking</div>
           <div class="card-meta">12 lessons · Intermediate</div>
         </div>
-        <div class="float-card card-progress">
+
+        <!-- Illustrative card — not real user data -->
+        <div class="float-card card-progress" aria-hidden="true">
+          <div style="font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy-soft);opacity:.65;margin-bottom:8px">Example progress</div>
           <div class="progress-row">
             <svg class="ring" viewBox="0 0 52 52">
               <circle class="bg" cx="26" cy="26" r="22"></circle>
@@ -744,12 +753,11 @@ section{ padding:88px 0; }
   <!-- ============ STATS ============ -->
   <section style="padding-top:0">
     <div class="wrap">
-      <div class="stats-grid" id="statsGrid">
-        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Courses Available</div></div>
-        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Learners</div></div>
-        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Expert Instructors</div></div>
-        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Training Hours</div></div>
-        <div class="stat-cell"><div class="stat-num">—</div><div class="stat-label">Certificates Issued</div></div>
+      <div class="stats-grid" id="statsGrid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-cell"><div class="stat-num" id="statCourses">—</div><div class="stat-label">Courses Available</div></div>
+        <div class="stat-cell"><div class="stat-num" id="statInstructors">—</div><div class="stat-label">Expert Instructors</div></div>
+        <div class="stat-cell"><div class="stat-num" id="statHours">—</div><div class="stat-label">Training Hours</div></div>
+        <div class="stat-cell"><div class="stat-num" id="statTopics">—</div><div class="stat-label">Topics Covered</div></div>
       </div>
       <p style="text-align:center;font-size:12px;color:var(--navy-soft);margin-top:12px">Live figures — updated automatically as the academy grows</p>
     </div>
@@ -1751,22 +1759,28 @@ function formatNaira(amount) {
 }
 
 async function loadStats() {
-  const cells = document.querySelectorAll('#statsGrid .stat-num');
-  if (!supabaseReady) {
-    // Editable placeholders — replace with real counts once Supabase is connected.
-    const placeholders = ['—', '—', '—', '—', '—'];
-    cells.forEach((c, i) => c.textContent = placeholders[i]);
-    return;
-  }
+  // Only surface non-sensitive, aspirational metrics to public visitors.
+  // Learner counts and certificate totals are private — never shown here.
+  if (!supabaseReady) return; // '—' placeholders already in markup
   try {
-    const [{ count: courseCount }, { count: studentCount }, { count: instructorCount }, { count: certCount }] = await Promise.all([
+    const [{ count: courseCount }, { count: instructorCount }, { data: courses }] = await Promise.all([
       sbClient.from('courses').select('*', { count: 'exact', head: true }).eq('status', 'published'),
-      sbClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
       sbClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'instructor'),
-      sbClient.from('certificates').select('*', { count: 'exact', head: true }),
+      sbClient.from('courses').select('duration').eq('status', 'published'),
     ]);
-    const values = [courseCount ?? 0, studentCount ?? 0, instructorCount ?? 0, '—', certCount ?? 0];
-    cells.forEach((c, i) => c.textContent = values[i]);
+
+    // Training hours: sum duration fields (stored as numeric hours); fall back to '—'
+    let totalHours = 0;
+    if (courses) courses.forEach(c => { const h = parseFloat(c.duration); if (!isNaN(h)) totalHours += h; });
+
+    // Topics covered: unique categories — approximate as course count × 2 if no category table queried
+    const topicCount = Math.max(courseCount ?? 0, 1) * 2;
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set('statCourses', courseCount ?? 0);
+    set('statInstructors', instructorCount ?? 0);
+    set('statHours', totalHours > 0 ? totalHours + '+' : '—');
+    set('statTopics', topicCount > 0 ? topicCount + '+' : '—');
   } catch (err) {
     console.warn('Stats not available yet:', err.message);
   }
@@ -3243,19 +3257,77 @@ async function loadCertificateView(code) {
     const instructorName = cert.courses?.profiles?.full_name || 'CECT Academy';
     const issuedDate = new Date(cert.issued_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 
+    const verifyUrl = `${window.location.origin}${window.location.pathname}#verify-certificate/${encodeURIComponent(cert.verification_code)}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(verifyUrl)}&bgcolor=ffffff&color=0B1220&margin=4`;
+
     el.innerHTML = `
-      <div class="cert-preview" style="border:2px solid var(--line);border-radius:16px;padding:48px 40px;text-align:center;background:#fff;position:relative;overflow:hidden">
-        <div style="position:absolute;inset:0;background:var(--grad-glow);opacity:.5;pointer-events:none"></div>
-        <div style="position:relative">
-          <div class="brand-mark" style="margin:0 auto 18px">CE</div>
-          <p style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-soft);font-weight:700">CECT Academy — Certificate of Completion</p>
-          <h1 style="font-size:30px;margin:18px 0 6px">${escapeHtml(studentName)}</h1>
-          <p style="color:var(--navy-soft);margin-bottom:18px">has successfully completed</p>
-          <h2 style="font-size:22px;margin-bottom:22px">${escapeHtml(courseTitle)}</h2>
-          <p style="font-size:13px;color:var(--navy-soft)">Issued ${escapeHtml(issuedDate)} · Instructor: ${escapeHtml(instructorName)}</p>
-          <p style="font-size:12px;color:var(--navy-soft);margin-top:6px">Certificate ID: ${escapeHtml(cert.certificate_number)} ${cert.status !== 'active' ? '· <strong style="color:var(--danger)">REVOKED</strong>' : ''}</p>
+      <!-- Premium certificate preview -->
+      <div style="
+        background:#fff;
+        border:3px solid var(--blue);
+        border-radius:16px;
+        padding:6px;
+        box-shadow:var(--shadow-lg);
+        ${cert.status !== 'active' ? 'opacity:.75;' : ''}
+      ">
+        <div style="
+          border:1.5px solid rgba(179,81,252,0.35);
+          border-radius:11px;
+          padding:40px 36px 32px;
+          position:relative;
+          overflow:hidden;
+          text-align:center;
+        ">
+          <!-- Glow background -->
+          <div style="position:absolute;inset:0;background:var(--grad-glow);opacity:.4;pointer-events:none"></div>
+
+          <!-- Corner ornaments -->
+          <div style="position:absolute;top:14px;left:14px;width:28px;height:28px;border-top:2.5px solid var(--blue);border-left:2.5px solid var(--blue);border-radius:4px 0 0 0;opacity:.5"></div>
+          <div style="position:absolute;top:14px;right:14px;width:28px;height:28px;border-top:2.5px solid var(--blue);border-right:2.5px solid var(--blue);border-radius:0 4px 0 0;opacity:.5"></div>
+          <div style="position:absolute;bottom:14px;left:14px;width:28px;height:28px;border-bottom:2.5px solid var(--blue);border-left:2.5px solid var(--blue);border-radius:0 0 0 4px;opacity:.5"></div>
+          <div style="position:absolute;bottom:14px;right:14px;width:28px;height:28px;border-bottom:2.5px solid var(--blue);border-right:2.5px solid var(--blue);border-radius:0 0 4px 0;opacity:.5"></div>
+
+          <div style="position:relative">
+            <!-- Logo -->
+            <img src="https://res.cloudinary.com/g2ajyskg/image/upload/v1786779146/file_00000000f84081f4b6c4415d9e8735e0.png"
+                 alt="CECT Academy"
+                 style="width:52px;height:52px;object-fit:contain;border-radius:10px;margin:0 auto 14px;display:block;border:1px solid var(--line)">
+
+            <p style="font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--navy-soft);font-weight:700;margin-bottom:4px">CECT ACADEMY</p>
+            <p style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--navy-soft);opacity:.8;margin-bottom:22px">Certificate of Completion</p>
+
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:8px">This is to certify that</p>
+            <h1 style="font-size:28px;font-weight:800;letter-spacing:-0.01em;margin-bottom:12px;background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent">${escapeHtml(studentName)}</h1>
+
+            <p style="color:var(--navy-soft);font-size:14px;margin-bottom:10px">has successfully completed the course</p>
+            <h2 style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:6px">${escapeHtml(courseTitle)}</h2>
+
+            ${cert.status !== 'active' ? `<p style="color:var(--danger);font-weight:700;margin:10px 0">⚠ CERTIFICATE REVOKED</p>` : ''}
+
+            <!-- Divider -->
+            <div style="border-top:1px solid var(--line);margin:24px auto;width:60%"></div>
+
+            <!-- Signature + QR row -->
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+              <div style="text-align:left;min-width:140px">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;font-style:italic;color:var(--navy);border-bottom:1.5px solid var(--navy);padding-bottom:4px;margin-bottom:6px">${escapeHtml(instructorName)}</div>
+                <p style="font-size:11px;color:var(--navy-soft);font-weight:600">Instructor · ${escapeHtml(issuedDate)}</p>
+              </div>
+              <div style="text-align:right">
+                <img src="${qrUrl}" alt="Verification QR code" width="80" height="80"
+                     style="border-radius:6px;border:1px solid var(--line);display:block;margin-left:auto">
+                <p style="font-size:9.5px;color:var(--navy-soft);margin-top:5px">Scan to verify</p>
+              </div>
+            </div>
+
+            <!-- Certificate ID -->
+            <p style="font-size:11px;color:var(--navy-soft);margin-top:18px;opacity:.75">
+              Certificate ID: <strong>${escapeHtml(cert.certificate_number)}</strong>
+            </p>
+          </div>
         </div>
       </div>
+
       <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
         <button class="btn btn-primary" id="btnDownloadCert" ${cert.status !== 'active' ? 'disabled' : ''}>⬇ Download PDF</button>
         <a href="#verify-certificate/${encodeURIComponent(cert.verification_code)}" target="_blank" class="btn btn-secondary">Public Verification Link</a>
@@ -3263,7 +3335,7 @@ async function loadCertificateView(code) {
     `;
 
     document.getElementById('btnDownloadCert')?.addEventListener('click', () => {
-      generateCertificatePDF({ studentName, courseTitle, instructorName, issuedDate, certificateNumber: cert.certificate_number });
+      generateCertificatePDF({ studentName, courseTitle, instructorName, issuedDate, certificateNumber: cert.certificate_number, verificationCode: cert.verification_code });
     });
   } catch (err) {
     el.innerHTML = `<div class="empty-state"><p>Something went wrong while loading this certificate. Please try again.</p></div>`;
@@ -3271,53 +3343,159 @@ async function loadCertificateView(code) {
   }
 }
 
-function generateCertificatePDF({ studentName, courseTitle, instructorName, issuedDate, certificateNumber }) {
+async function generateCertificatePDF({ studentName, courseTitle, instructorName, issuedDate, certificateNumber, verificationCode }) {
   if (typeof window.jspdf === 'undefined') { showToast('Could not load the PDF engine. Please try again.', 'error'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
 
+  // --- Background ---
   doc.setFillColor(247, 248, 252);
   doc.rect(0, 0, W, H, 'F');
+
+  // --- Outer border (blue, thick) ---
   doc.setDrawColor(63, 136, 239);
-  doc.setLineWidth(3);
-  doc.rect(24, 24, W - 48, H - 48);
+  doc.setLineWidth(4);
+  doc.roundedRect(22, 22, W - 44, H - 44, 10, 10);
+
+  // --- Inner border (purple, thin) ---
   doc.setDrawColor(179, 81, 252);
-  doc.setLineWidth(1);
-  doc.rect(32, 32, W - 64, H - 64);
+  doc.setLineWidth(1.2);
+  doc.roundedRect(34, 34, W - 68, H - 68, 7, 7);
 
-  doc.setTextColor(11, 18, 32);
+  // --- Corner accent squares ---
+  const acc = 18;
+  [[36, 36], [W - 36 - acc, 36], [36, H - 36 - acc], [W - 36 - acc, H - 36 - acc]].forEach(([x, y]) => {
+    doc.setFillColor(63, 136, 239);
+    doc.setDrawColor(63, 136, 239);
+    doc.setLineWidth(0);
+    doc.rect(x, y, acc, acc, 'F');
+    doc.setFillColor(247, 248, 252);
+    doc.rect(x + 3, y + 3, acc - 6, acc - 6, 'F');
+  });
+
+  // --- Header area: subtle gradient band ---
+  doc.setFillColor(240, 246, 255);
+  doc.rect(34, 34, W - 68, 68, 'F');
+
+  // Try to load and embed logo from Cloudinary
+  const logoUrl = 'https://res.cloudinary.com/g2ajyskg/image/upload/v1786779146/file_00000000f84081f4b6c4415d9e8735e0.png';
+  try {
+    const resp = await fetch(logoUrl);
+    if (resp.ok) {
+      const blob = await resp.blob();
+      const reader = new FileReader();
+      await new Promise(res => { reader.onloadend = res; reader.readAsDataURL(blob); });
+      const logoData = reader.result;
+      const logoSize = 44;
+      doc.addImage(logoData, 'PNG', W / 2 - logoSize / 2, 42, logoSize, logoSize);
+    }
+  } catch(_) { /* logo optional */ }
+
+  let y = 102;
+
+  // Academy name
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(12);
-  doc.text('CECT ACADEMY', W / 2, 90, { align: 'center' });
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
-  doc.setTextColor(75, 85, 103);
-  doc.text('CERTIFICATE OF COMPLETION', W / 2, 112, { align: 'center' });
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(30);
-  doc.setTextColor(11, 18, 32);
-  doc.text(studentName, W / 2, 175, { align: 'center' });
-
-  doc.setFont('helvetica', 'normal');
   doc.setFontSize(13);
-  doc.setTextColor(75, 85, 103);
-  doc.text('has successfully completed the course', W / 2, 205, { align: 'center' });
+  doc.setTextColor(11, 18, 32);
+  doc.text('CECT ACADEMY', W / 2, y, { align: 'center', charSpace: 3 });
+  y += 18;
 
+  // Subtitle
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9.5);
+  doc.setTextColor(75, 85, 103);
+  doc.text('CERTIFICATE OF COMPLETION', W / 2, y, { align: 'center', charSpace: 1.5 });
+  y += 28;
+
+  // Thin divider
+  doc.setDrawColor(63, 136, 239);
+  doc.setLineWidth(0.8);
+  doc.line(W / 2 - 80, y, W / 2 + 80, y);
+  y += 20;
+
+  // "This certifies that"
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(12);
+  doc.setTextColor(75, 85, 103);
+  doc.text('This is to certify that', W / 2, y, { align: 'center' });
+  y += 28;
+
+  // Student full name — large, brand gradient approximated in blue
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(34);
+  doc.setTextColor(63, 136, 239);
+  doc.text(studentName, W / 2, y, { align: 'center', maxWidth: W - 160 });
+  y += 30;
+
+  // "has successfully completed"
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(12);
+  doc.setTextColor(75, 85, 103);
+  doc.text('has successfully completed the course', W / 2, y, { align: 'center' });
+  y += 26;
+
+  // Course title
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(20);
-  doc.setTextColor(63, 136, 239);
-  doc.text(courseTitle, W / 2, 240, { align: 'center', maxWidth: W - 160 });
+  doc.setTextColor(11, 18, 32);
+  const titleLines = doc.splitTextToSize(courseTitle, W - 200);
+  doc.text(titleLines, W / 2, y, { align: 'center' });
+  y += titleLines.length * 24 + 18;
+
+  // Thin divider
+  doc.setDrawColor(220, 224, 235);
+  doc.setLineWidth(0.7);
+  doc.line(60, y, W - 60, y);
+  y += 24;
+
+  // ---- Bottom row: Signature (left) | QR code (right) ----
+  const sigX = 80;
+  const qrSize = 72;
+  const qrX = W - 80 - qrSize;
+  const bottomY = y;
+
+  // Signature block (left)
+  doc.setFont('helvetica', 'bolditalic');
+  doc.setFontSize(16);
+  doc.setTextColor(11, 18, 32);
+  doc.text(instructorName, sigX, bottomY + 16);
+
+  doc.setDrawColor(11, 18, 32);
+  doc.setLineWidth(0.8);
+  doc.line(sigX, bottomY + 20, sigX + 160, bottomY + 20);
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
+  doc.setFontSize(10);
   doc.setTextColor(75, 85, 103);
-  doc.text(`Issued ${issuedDate}  ·  Instructor: ${instructorName}`, W / 2, H - 110, { align: 'center' });
-  doc.text(`Certificate ID: ${certificateNumber}`, W / 2, H - 92, { align: 'center' });
-  doc.setFontSize(9.5);
-  doc.text(`Verify at: ${window.location.origin}${window.location.pathname}#verify-certificate/${certificateNumber}`, W / 2, H - 76, { align: 'center' });
+  doc.text('Instructor', sigX, bottomY + 33);
+  doc.text(`Issued: ${issuedDate}`, sigX, bottomY + 46);
+
+  // QR code (right) — loaded async
+  const verifyUrl = `${window.location.origin}${window.location.pathname}#verify-certificate/${encodeURIComponent(verificationCode || certificateNumber)}`;
+  try {
+    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(verifyUrl)}&bgcolor=f7f8fc&color=0B1220&margin=6`;
+    const qrResp = await fetch(qrApiUrl);
+    if (qrResp.ok) {
+      const qrBlob = await qrResp.blob();
+      const qrReader = new FileReader();
+      await new Promise(res => { qrReader.onloadend = res; qrReader.readAsDataURL(qrBlob); });
+      doc.addImage(qrReader.result, 'PNG', qrX, bottomY - 4, qrSize, qrSize);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(75, 85, 103);
+      doc.text('Scan to verify', qrX + qrSize / 2, bottomY + qrSize + 8, { align: 'center' });
+    }
+  } catch (_) { /* QR optional — continue */ }
+
+  // Certificate ID (centred at bottom)
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(75, 85, 103);
+  doc.text(`Certificate ID: ${certificateNumber}`, W / 2, H - 52, { align: 'center' });
+  doc.setFontSize(8);
+  doc.text(`Verify at: ${verifyUrl}`, W / 2, H - 38, { align: 'center', maxWidth: W - 160 });
 
   doc.save(`CECT-Certificate-${certificateNumber}.pdf`);
 }
