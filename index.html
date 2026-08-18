@@ -1388,11 +1388,11 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // verify-payment Edge Function's environment (Supabase secrets).
 const PAYSTACK_PUBLIC_KEY = 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY';
 
-let supabase = null;
+let sbClient = null;
 let supabaseReady = false;
 try {
   if (SUPABASE_URL.startsWith('http') && SUPABASE_ANON_KEY.length > 20) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     supabaseReady = true;
   }
 } catch (e) {
@@ -1525,7 +1525,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
   clearAllFormMessages();
 
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await sbClient.auth.signUp({
       email, password,
       options: { data: { full_name: name } }
     });
@@ -1560,7 +1560,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   clearAllFormMessages();
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
     showToast('Welcome back!', 'success');
@@ -1590,7 +1590,7 @@ document.getElementById('forgotForm').addEventListener('submit', async (e) => {
   clearAllFormMessages();
 
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await sbClient.auth.resetPasswordForEmail(email, {
       redirectTo: window.location.origin + window.location.pathname
     });
     if (error) throw error;
@@ -1607,11 +1607,11 @@ document.getElementById('forgotForm').addEventListener('submit', async (e) => {
 --------------------------------------------------------------- */
 async function refreshSession() {
   if (!supabaseReady) return;
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await sbClient.auth.getSession();
   currentUser = session?.user || null;
 
   if (currentUser) {
-    const { data: profile } = await supabase
+    const { data: profile } = await sbClient
       .from('profiles')
       .select('full_name, role, avatar_url')
       .eq('id', currentUser.id)
@@ -1656,7 +1656,7 @@ function renderNavActions() {
 
 async function logout() {
   if (!supabaseReady) return;
-  await supabase.auth.signOut();
+  await sbClient.auth.signOut();
   currentUser = null;
   currentProfile = null;
   renderNavActions();
@@ -1664,7 +1664,7 @@ async function logout() {
 }
 
 if (supabaseReady) {
-  supabase.auth.onAuthStateChange((_event, _session) => {
+  sbClient.auth.onAuthStateChange((_event, _session) => {
     refreshSession();
   });
 }
@@ -1694,10 +1694,10 @@ async function loadStats() {
   }
   try {
     const [{ count: courseCount }, { count: studentCount }, { count: instructorCount }, { count: certCount }] = await Promise.all([
-      supabase.from('courses').select('*', { count: 'exact', head: true }).eq('status', 'published'),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'instructor'),
-      supabase.from('certificates').select('*', { count: 'exact', head: true }),
+      sbClient.from('courses').select('*', { count: 'exact', head: true }).eq('status', 'published'),
+      sbClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
+      sbClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'instructor'),
+      sbClient.from('certificates').select('*', { count: 'exact', head: true }),
     ]);
     const values = [courseCount ?? 0, studentCount ?? 0, instructorCount ?? 0, '—', certCount ?? 0];
     cells.forEach((c, i) => c.textContent = values[i]);
@@ -1713,7 +1713,7 @@ async function loadCourses() {
     return;
   }
   try {
-    const { data: courses, error } = await supabase
+    const { data: courses, error } = await sbClient
       .from('courses')
       .select('id, title, slug, subtitle, thumbnail_url, price, discount_price, level, duration, featured, status')
       .eq('status', 'published')
@@ -1763,7 +1763,7 @@ async function loadWebinars() {
   if (!supabaseReady) return; // static empty state already in markup
   const grid = document.getElementById('webinarGrid');
   try {
-    const { data: webinars, error } = await supabase
+    const { data: webinars, error } = await sbClient
       .from('webinars')
       .select('id, title, slug, description, date, time, speaker_id, price, status')
       .eq('status', 'upcoming')
@@ -1797,7 +1797,7 @@ async function loadTestimonials() {
   if (!supabaseReady) return;
   const grid = document.getElementById('testiGrid');
   try {
-    const { data: rows, error } = await supabase
+    const { data: rows, error } = await sbClient
       .from('testimonials')
       .select('id, name, role, quote, rating')
       .eq('status', 'approved')
@@ -1824,7 +1824,7 @@ async function loadInstructors() {
   if (!supabaseReady) return;
   const grid = document.getElementById('instrGrid');
   try {
-    const { data: rows, error } = await supabase
+    const { data: rows, error } = await sbClient
       .from('profiles')
       .select('id, full_name, avatar_url, bio')
       .eq('role', 'instructor')
@@ -2049,10 +2049,10 @@ async function loadCourseDetail(courseId) {
   list.innerHTML = `<div class="admin-empty-note">Loading curriculum…</div>`;
 
   try {
-    const { data: course } = await supabase.from('courses').select('title').eq('id', courseId).single();
+    const { data: course } = await sbClient.from('courses').select('title').eq('id', courseId).single();
     if (course) { currentCourseDetailTitle = course.title; document.getElementById('cdCourseTitle').textContent = course.title; document.getElementById('adminTabTitle').textContent = course.title; }
 
-    const { data: modules, error } = await supabase
+    const { data: modules, error } = await sbClient
       .from('course_modules')
       .select('id, title, sort_order, lessons(id, title, lesson_type, is_preview, sort_order, resources(id, title, resource_type, file_url))')
       .eq('course_id', courseId)
@@ -2093,12 +2093,12 @@ async function loadCourseDetail(courseId) {
     list.querySelectorAll('[data-add-resource]').forEach(btn => btn.addEventListener('click', () => openResourceBuilder(btn.dataset.addResource)));
     list.querySelectorAll('[data-delete-module]').forEach(btn => btn.addEventListener('click', async () => {
       if (!confirm('Delete this module and all its lessons?')) return;
-      await supabase.from('course_modules').delete().eq('id', btn.dataset.deleteModule);
+      await sbClient.from('course_modules').delete().eq('id', btn.dataset.deleteModule);
       loadCourseDetail(courseId);
     }));
     list.querySelectorAll('[data-delete-lesson]').forEach(btn => btn.addEventListener('click', async () => {
       if (!confirm('Delete this lesson?')) return;
-      await supabase.from('lessons').delete().eq('id', btn.dataset.deleteLesson);
+      await sbClient.from('lessons').delete().eq('id', btn.dataset.deleteLesson);
       loadCourseDetail(courseId);
     }));
   } catch (err) {
@@ -2112,9 +2112,9 @@ document.getElementById('newModuleForm').addEventListener('submit', async (e) =>
   const title = input.value.trim();
   if (!title || !currentCourseDetailId) return;
   try {
-    const { data: existing } = await supabase.from('course_modules').select('sort_order').eq('course_id', currentCourseDetailId).order('sort_order', { ascending: false }).limit(1);
+    const { data: existing } = await sbClient.from('course_modules').select('sort_order').eq('course_id', currentCourseDetailId).order('sort_order', { ascending: false }).limit(1);
     const nextOrder = existing && existing[0] ? existing[0].sort_order + 1 : 0;
-    const { error } = await supabase.from('course_modules').insert({ course_id: currentCourseDetailId, title, sort_order: nextOrder });
+    const { error } = await sbClient.from('course_modules').insert({ course_id: currentCourseDetailId, title, sort_order: nextOrder });
     if (error) throw error;
     input.value = '';
     loadCourseDetail(currentCourseDetailId);
@@ -2139,7 +2139,7 @@ document.getElementById('lessonBuilderForm').addEventListener('submit', async (e
   const moduleId = document.getElementById('lbModuleId').value;
   const title = document.getElementById('lbTitle').value.trim();
   try {
-    const { data: existing } = await supabase.from('lessons').select('sort_order').eq('module_id', moduleId).order('sort_order', { ascending: false }).limit(1);
+    const { data: existing } = await sbClient.from('lessons').select('sort_order').eq('module_id', moduleId).order('sort_order', { ascending: false }).limit(1);
     const nextOrder = existing && existing[0] ? existing[0].sort_order + 1 : 0;
     const payload = {
       module_id: moduleId,
@@ -2151,7 +2151,7 @@ document.getElementById('lessonBuilderForm').addEventListener('submit', async (e
       is_preview: document.getElementById('lbPreview').checked,
       sort_order: nextOrder,
     };
-    const { error } = await supabase.from('lessons').insert(payload);
+    const { error } = await sbClient.from('lessons').insert(payload);
     if (error) throw error;
     lessonBuilderOverlay.classList.remove('open');
     document.body.style.overflow = '';
@@ -2186,7 +2186,7 @@ document.getElementById('resourceBuilderForm').addEventListener('submit', async 
       resource_type: document.getElementById('rbType').value,
       file_url: document.getElementById('rbFileUrl').value.trim(),
     };
-    const { error } = await supabase.from('resources').insert(payload);
+    const { error } = await sbClient.from('resources').insert(payload);
     if (error) throw error;
     resourceBuilderOverlay.classList.remove('open');
     document.body.style.overflow = '';
@@ -2204,10 +2204,10 @@ async function loadAdminStats() {
   const grid = document.getElementById('adminStatsGrid');
   try {
     const [{ count: courses }, { count: students }, { count: enrolments }, { count: webinarRegs }] = await Promise.all([
-      supabase.from('courses').select('*', { count: 'exact', head: true }),
-      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
-      supabase.from('enrollments').select('*', { count: 'exact', head: true }),
-      supabase.from('webinar_registrations').select('*', { count: 'exact', head: true }),
+      sbClient.from('courses').select('*', { count: 'exact', head: true }),
+      sbClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'student'),
+      sbClient.from('enrollments').select('*', { count: 'exact', head: true }),
+      sbClient.from('webinar_registrations').select('*', { count: 'exact', head: true }),
     ]);
     const cards = [
       ['Total Courses', courses ?? 0],
@@ -2227,7 +2227,7 @@ async function loadAdminStats() {
 async function loadAdminCourses() {
   const tbody = document.getElementById('adminCourseRows');
   try {
-    const { data, error } = await supabase
+    const { data, error } = await sbClient
       .from('courses')
       .select('id, title, slug, price, discount_price, status, featured, categories(name)')
       .order('created_at', { ascending: false });
@@ -2263,7 +2263,7 @@ async function loadAdminCourses() {
       btn.addEventListener('click', async () => {
         const id = btn.dataset.toggleStatus;
         const newStatus = btn.dataset.current === 'published' ? 'unpublished' : 'published';
-        const { error } = await supabase.from('courses').update({ status: newStatus }).eq('id', id);
+        const { error } = await sbClient.from('courses').update({ status: newStatus }).eq('id', id);
         if (error) { showToast(error.message, 'error'); return; }
         showToast(`Course ${newStatus}.`, 'success');
         loadAdminCourses(); loadCourses();
@@ -2272,7 +2272,7 @@ async function loadAdminCourses() {
     tbody.querySelectorAll('[data-delete-course]').forEach(btn => {
       btn.addEventListener('click', async () => {
         if (!confirm('Delete this course permanently? This cannot be undone.')) return;
-        const { error } = await supabase.from('courses').delete().eq('id', btn.dataset.deleteCourse);
+        const { error } = await sbClient.from('courses').delete().eq('id', btn.dataset.deleteCourse);
         if (error) { showToast(error.message, 'error'); return; }
         showToast('Course deleted.', 'success');
         loadAdminCourses(); loadCourses();
@@ -2287,7 +2287,7 @@ async function loadAdminCourses() {
 async function loadAdminCategories() {
   const tbody = document.getElementById('adminCategoryRows');
   try {
-    const { data, error } = await supabase.from('categories').select('*').order('name');
+    const { data, error } = await sbClient.from('categories').select('*').order('name');
     if (error) throw error;
     categoriesCache = data || [];
     populateCategorySelect();
@@ -2303,7 +2303,7 @@ async function loadAdminCategories() {
     tbody.querySelectorAll('[data-delete-cat]').forEach(btn => {
       btn.addEventListener('click', async () => {
         if (!confirm('Delete this category?')) return;
-        const { error } = await supabase.from('categories').delete().eq('id', btn.dataset.deleteCat);
+        const { error } = await sbClient.from('categories').delete().eq('id', btn.dataset.deleteCat);
         if (error) { showToast(error.message, 'error'); return; }
         loadAdminCategories();
       });
@@ -2327,7 +2327,7 @@ document.getElementById('newCategoryForm').addEventListener('submit', async (e) 
   const name = input.value.trim();
   if (!name) return;
   try {
-    const { error } = await supabase.from('categories').insert({ name, slug: slugify(name) });
+    const { error } = await sbClient.from('categories').insert({ name, slug: slugify(name) });
     if (error) throw error;
     input.value = '';
     showToast('Category added.', 'success');
@@ -2347,7 +2347,7 @@ function populateCategorySelect() {
 async function loadAdminStudents() {
   const tbody = document.getElementById('adminStudentRows');
   try {
-    const { data, error } = await supabase.from('profiles').select('full_name, email, role, created_at').order('created_at', { ascending: false }).limit(100);
+    const { data, error } = await sbClient.from('profiles').select('full_name, email, role, created_at').order('created_at', { ascending: false }).limit(100);
     if (error) throw error;
     if (!data || data.length === 0) {
       tbody.innerHTML = `<tr><td colspan="4"><div class="admin-empty-note">No registered users yet.</div></td></tr>`;
@@ -2365,7 +2365,7 @@ async function loadAdminStudents() {
 async function loadAdminWebinars() {
   const tbody = document.getElementById('adminWebinarRows');
   try {
-    const { data, error } = await supabase.from('webinars').select('*').order('date', { ascending: false });
+    const { data, error } = await sbClient.from('webinars').select('*').order('date', { ascending: false });
     if (error) throw error;
     if (!data || data.length === 0) {
       tbody.innerHTML = `<tr><td colspan="5"><div class="admin-empty-note">No webinars yet — click "New Webinar" to create one.</div></td></tr>`;
@@ -2383,7 +2383,7 @@ async function loadAdminWebinars() {
     tbody.querySelectorAll('[data-delete-webinar]').forEach(btn => {
       btn.addEventListener('click', async () => {
         if (!confirm('Delete this webinar?')) return;
-        const { error } = await supabase.from('webinars').delete().eq('id', btn.dataset.deleteWebinar);
+        const { error } = await sbClient.from('webinars').delete().eq('id', btn.dataset.deleteWebinar);
         if (error) { showToast(error.message, 'error'); return; }
         showToast('Webinar deleted.', 'success');
         loadAdminWebinars(); loadWebinars();
@@ -2399,7 +2399,7 @@ async function loadAdminWebinars() {
 async function loadAdminCertificates() {
   const tbody = document.getElementById('adminCertRows');
   try {
-    const { data, error } = await supabase
+    const { data, error } = await sbClient
       .from('certificates')
       .select('id, certificate_number, verification_code, issued_at, status, profiles(full_name), courses(title)')
       .order('issued_at', { ascending: false });
@@ -2424,11 +2424,11 @@ async function loadAdminCertificates() {
     `).join('');
     tbody.querySelectorAll('[data-revoke-cert]').forEach(btn => btn.addEventListener('click', async () => {
       if (!confirm('Revoke this certificate? It will no longer verify publicly.')) return;
-      await supabase.from('certificates').update({ status: 'revoked' }).eq('id', btn.dataset.revokeCert);
+      await sbClient.from('certificates').update({ status: 'revoked' }).eq('id', btn.dataset.revokeCert);
       loadAdminCertificates();
     }));
     tbody.querySelectorAll('[data-restore-cert]').forEach(btn => btn.addEventListener('click', async () => {
-      await supabase.from('certificates').update({ status: 'active' }).eq('id', btn.dataset.restoreCert);
+      await sbClient.from('certificates').update({ status: 'active' }).eq('id', btn.dataset.restoreCert);
       loadAdminCertificates();
     }));
   } catch (err) {
@@ -2439,7 +2439,7 @@ async function loadAdminCertificates() {
 async function loadAdminTestimonials() {
   const tbody = document.getElementById('adminTestiRows');
   try {
-    const { data, error } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
+    const { data, error } = await sbClient.from('testimonials').select('*').order('created_at', { ascending: false });
     if (error) throw error;
     if (!data || data.length === 0) {
       tbody.innerHTML = `<tr><td colspan="4"><div class="admin-empty-note">No testimonials submitted yet.</div></td></tr>`;
@@ -2457,16 +2457,16 @@ async function loadAdminTestimonials() {
       </tr>
     `).join('');
     tbody.querySelectorAll('[data-approve-testi]').forEach(btn => btn.addEventListener('click', async () => {
-      await supabase.from('testimonials').update({ status: 'approved' }).eq('id', btn.dataset.approveTesti);
+      await sbClient.from('testimonials').update({ status: 'approved' }).eq('id', btn.dataset.approveTesti);
       loadAdminTestimonials(); loadTestimonials();
     }));
     tbody.querySelectorAll('[data-hide-testi]').forEach(btn => btn.addEventListener('click', async () => {
-      await supabase.from('testimonials').update({ status: 'hidden' }).eq('id', btn.dataset.hideTesti);
+      await sbClient.from('testimonials').update({ status: 'hidden' }).eq('id', btn.dataset.hideTesti);
       loadAdminTestimonials(); loadTestimonials();
     }));
     tbody.querySelectorAll('[data-delete-testi]').forEach(btn => btn.addEventListener('click', async () => {
       if (!confirm('Delete this testimonial?')) return;
-      await supabase.from('testimonials').delete().eq('id', btn.dataset.deleteTesti);
+      await sbClient.from('testimonials').delete().eq('id', btn.dataset.deleteTesti);
       loadAdminTestimonials(); loadTestimonials();
     }));
   } catch (err) {
@@ -2542,7 +2542,7 @@ document.getElementById('courseBuilderForm').addEventListener('submit', async (e
   };
 
   try {
-    const { error } = await supabase.from('courses').insert(payload);
+    const { error } = await sbClient.from('courses').insert(payload);
     if (error) throw error;
     showToast('Course created successfully.', 'success');
     closeCourseBuilder();
@@ -2590,7 +2590,7 @@ document.getElementById('webinarBuilderForm').addEventListener('submit', async (
   };
 
   try {
-    const { error } = await supabase.from('webinars').insert(payload);
+    const { error } = await sbClient.from('webinars').insert(payload);
     if (error) throw error;
     showToast('Webinar created.', 'success');
     closeWebinarBuilder();
@@ -2623,7 +2623,7 @@ async function loadCourseLanding(slug) {
   await refreshSession();
 
   try {
-    const { data: course, error } = await supabase
+    const { data: course, error } = await sbClient
       .from('courses')
       .select('*, categories(name), profiles!courses_instructor_id_fkey(full_name), course_modules(id, title, sort_order, lessons(id, title, lesson_type, is_preview, sort_order))')
       .eq('slug', slug)
@@ -2632,7 +2632,7 @@ async function loadCourseLanding(slug) {
 
     let enrolled = false;
     if (currentUser) {
-      const { data: enr } = await supabase.from('enrollments').select('id').eq('course_id', course.id).eq('student_id', currentUser.id).eq('status', 'active').maybeSingle();
+      const { data: enr } = await sbClient.from('enrollments').select('id').eq('course_id', course.id).eq('student_id', currentUser.id).eq('status', 'active').maybeSingle();
       enrolled = !!enr;
     }
 
@@ -2701,7 +2701,7 @@ async function loadCourseLanding(slug) {
       if (!currentUser) { openAuth('login'); return; }
       btnFree.disabled = true; btnFree.textContent = 'Enrolling…';
       try {
-        const { error } = await supabase.from('enrollments').insert({ student_id: currentUser.id, course_id: course.id });
+        const { error } = await sbClient.from('enrollments').insert({ student_id: currentUser.id, course_id: course.id });
         if (error) throw error;
         showToast('Enrolled! Redirecting to your course…', 'success');
         window.location.hash = `#learn/${slug}`;
@@ -2755,7 +2755,7 @@ function startCheckout(course, amountNaira, slug) {
 async function verifyAndEnroll(reference, courseId, slug) {
   showToast('Verifying your payment…', 'default');
   try {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sbClient.auth.getSession();
     const res = await fetch(`${SUPABASE_URL}/functions/v1/verify-payment`, {
       method: 'POST',
       headers: {
@@ -2782,14 +2782,14 @@ async function loadLearningPlayer(slug, lessonId) {
   main.innerHTML = `<div class="skel" style="height:400px"></div>`;
 
   try {
-    const { data: course, error } = await supabase
+    const { data: course, error } = await sbClient
       .from('courses')
       .select('id, title, certificate_enabled, course_modules(id, title, sort_order, lessons(id, title, lesson_type, video_url, description, is_preview, sort_order, resources(id, title, resource_type, file_url)))')
       .eq('slug', slug)
       .single();
     if (error || !course) { main.innerHTML = `<div class="empty-state"><p>Course unavailable.</p></div>`; return; }
 
-    const { data: enr } = await supabase.from('enrollments').select('id').eq('course_id', course.id).eq('student_id', currentUser.id).eq('status', 'active').maybeSingle();
+    const { data: enr } = await sbClient.from('enrollments').select('id').eq('course_id', course.id).eq('student_id', currentUser.id).eq('status', 'active').maybeSingle();
     if (!enr) {
       main.innerHTML = `<div class="empty-state"><div class="ee-icon">🔒</div><p>You do not have permission to access this page.</p><a href="#course-${slug}" class="btn btn-primary btn-sm">View Course</a></div>`;
       document.getElementById('playerCurriculum').innerHTML = '';
@@ -2800,7 +2800,7 @@ async function loadLearningPlayer(slug, lessonId) {
     const modules = (course.course_modules || []).sort((a,b) => a.sort_order - b.sort_order);
     const allLessons = modules.flatMap(m => (m.lessons||[]).sort((a,b)=>a.sort_order-b.sort_order));
 
-    const { data: progressRows } = await supabase.from('lesson_progress').select('lesson_id, completed').eq('student_id', currentUser.id);
+    const { data: progressRows } = await sbClient.from('lesson_progress').select('lesson_id, completed').eq('student_id', currentUser.id);
     const completedSet = new Set((progressRows||[]).filter(p=>p.completed).map(p=>p.lesson_id));
 
     const pct = allLessons.length ? Math.round((completedSet.size / allLessons.length) * 100) : 0;
@@ -2866,13 +2866,13 @@ async function loadLearningPlayer(slug, lessonId) {
       </div>
     `;
 
-    await supabase.from('lesson_progress').upsert({
+    await sbClient.from('lesson_progress').upsert({
       student_id: currentUser.id, lesson_id: activeLesson.id, last_accessed_at: new Date().toISOString()
     }, { onConflict: 'student_id,lesson_id' });
 
     document.getElementById('btnMarkComplete').addEventListener('click', async () => {
       try {
-        await supabase.from('lesson_progress').upsert({
+        await sbClient.from('lesson_progress').upsert({
           student_id: currentUser.id, lesson_id: activeLesson.id,
           completed: true, completed_at: new Date().toISOString(), last_accessed_at: new Date().toISOString()
         }, { onConflict: 'student_id,lesson_id' });
@@ -2896,13 +2896,13 @@ async function loadDashboard() {
 
   try {
     const [{ data: enrollments }, { data: certs }, { data: webinarRegs }] = await Promise.all([
-      supabase.from('enrollments')
+      sbClient.from('enrollments')
         .select('id, status, enrolled_at, courses(id, title, slug, thumbnail_url, certificate_enabled, course_modules(lessons(id)))')
         .eq('student_id', currentUser.id).eq('status', 'active'),
-      supabase.from('certificates')
+      sbClient.from('certificates')
         .select('id, certificate_number, verification_code, issued_at, status, courses(title)')
         .eq('student_id', currentUser.id).order('issued_at', { ascending: false }),
-      supabase.from('webinar_registrations')
+      sbClient.from('webinar_registrations')
         .select('id, registered_at, webinars(id, title, slug, date, time)')
         .eq('user_id', currentUser.id).order('registered_at', { ascending: false }),
     ]);
@@ -2914,7 +2914,7 @@ async function loadDashboard() {
       const lessonIds = (course.course_modules || []).flatMap(m => (m.lessons || []).map(l => l.id));
       let completed = 0;
       if (lessonIds.length) {
-        const { count } = await supabase.from('lesson_progress')
+        const { count } = await sbClient.from('lesson_progress')
           .select('id', { count: 'exact', head: true })
           .eq('student_id', currentUser.id).eq('completed', true).in('lesson_id', lessonIds);
         completed = count || 0;
@@ -2998,7 +2998,7 @@ async function loadDashboard() {
 // so an ineligible student never sees a broken banner.
 async function ensureCertificate(courseId) {
   try {
-    const { data, error } = await supabase.rpc('issue_certificate', { p_course_id: courseId });
+    const { data, error } = await sbClient.rpc('issue_certificate', { p_course_id: courseId });
     if (error) { console.warn('issue_certificate:', error.message); return null; }
     return Array.isArray(data) ? data[0] : data;
   } catch (err) {
@@ -3011,7 +3011,7 @@ async function loadCertificateView(code) {
   const el = document.getElementById('certificateContent');
   el.innerHTML = `<div class="skel" style="height:40px;width:60%;margin-bottom:16px"></div><div class="skel" style="height:320px"></div>`;
   try {
-    const { data: cert, error } = await supabase
+    const { data: cert, error } = await sbClient
       .from('certificates')
       .select('id, certificate_number, verification_code, issued_at, status, student_id, courses(title, profiles(full_name))')
       .eq('verification_code', code)
@@ -3115,7 +3115,7 @@ async function runCertificateVerification(code) {
   const resultEl = document.getElementById('verifyCertResult');
   resultEl.innerHTML = `<div class="skel" style="height:140px"></div>`;
   try {
-    const { data, error } = await supabase.rpc('verify_certificate', { p_code: code.trim() });
+    const { data, error } = await sbClient.rpc('verify_certificate', { p_code: code.trim() });
     const row = Array.isArray(data) ? data[0] : data;
     if (error || !row) {
       resultEl.innerHTML = `<div class="empty-state"><div class="ee-icon">✕</div><p>No certificate found for that ID.</p></div>`;
