@@ -613,9 +613,9 @@ section{padding:96px 0;}
 
       <!-- LEFT: Copy -->
       <div class="hero-content">
-        <div class="eyebrow">
+        <div class="eyebrow" id="heroEyebrow">
           <span class="dot"></span>
-          Enrolment open for August cohort
+          <span id="heroAnnouncementText">Enrolment open for August cohort</span>
         </div>
 
         <h1>
@@ -629,11 +629,6 @@ section{padding:96px 0;}
         <div class="hero-ctas">
           <a href="#courses" class="btn btn-primary"><span class="btn-label">Explore Courses</span></a>
           <a href="#webinars" class="btn btn-glass"><span class="btn-label">Upcoming Webinars</span></a>
-        </div>
-
-        <div class="hero-proof">
-          <span class="stars">★★★★★</span>
-          <span>Rated by learners across Nigeria and beyond</span>
         </div>
       </div>
 
@@ -741,8 +736,8 @@ section{padding:96px 0;}
     <div class="wrap">
       <div class="section-head center" style="margin-left:auto;margin-right:auto">
         <div class="section-eyebrow">Why CECT Academy</div>
-        <h2>Everything you need to<br>grow your career</h2>
-        <p>Built for professionals balancing work, life and ambition — learn at your pace, on any device, and walk away with credentials that prove it.</p>
+        <h2 id="whyHeading">Everything you need to<br>grow your career</h2>
+        <p id="whySubtext">Built for professionals balancing work, life and ambition — learn at your pace, on any device, and walk away with credentials that prove it.</p>
       </div>
       <div class="benefit-grid">
         <div class="benefit-card">
@@ -896,15 +891,33 @@ section{padding:96px 0;}
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
-        <ul>
-          <li>hello@cectacademy.com</li>
-          <li>+234 000 000 0000</li>
+        <ul style="display:flex;flex-direction:column;gap:10px">
+          <li style="display:flex;align-items:flex-start;gap:8px">
+            <svg style="width:14px;height:14px;flex-shrink:0;margin-top:2px;opacity:.6" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+            <a id="footerEmail" href="mailto:hello@cectacademy.com" style="font-size:13.5px;word-break:break-all">hello@cectacademy.com</a>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:8px">
+            <svg style="width:14px;height:14px;flex-shrink:0;margin-top:2px;opacity:.6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+            <a id="footerPhone" href="tel:+2347085447462" style="font-size:13.5px">+234 708 544 7462</a>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:8px" id="footerAddressRow">
+            <svg style="width:14px;height:14px;flex-shrink:0;margin-top:2px;opacity:.6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+            <span id="footerAddress" style="font-size:13.5px;line-height:1.5">30 Boundary Road, Opposite Oni Okpaku Villa, G.R.A, Benin City, Edo State.</span>
+          </li>
         </ul>
-        <div class="social-row" style="margin-top:14px">
-          <a href="#" aria-label="Facebook">f</a>
-          <a href="#" aria-label="Twitter / X">x</a>
-          <a href="#" aria-label="Instagram">ig</a>
-          <a href="#" aria-label="LinkedIn">in</a>
+        <div class="social-row" style="margin-top:18px">
+          <a id="socialFb" href="#" aria-label="Facebook" title="Facebook" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.883v2.27h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+          </a>
+          <a id="socialIg" href="#" aria-label="Instagram" title="Instagram" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a id="socialTw" href="#" aria-label="Twitter / X" title="Twitter / X" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a id="socialLi" href="#" aria-label="LinkedIn" title="LinkedIn" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
         </div>
       </div>
     </div>
@@ -1020,6 +1033,7 @@ section{padding:96px 0;}
         <a href="#admin/webinars" data-admin-tab="webinars" class="admin-nav-link">Webinars</a>
         <a href="#admin/certificates" data-admin-tab="certificates" class="admin-nav-link">Certificates</a>
         <a href="#admin/testimonials" data-admin-tab="testimonials" class="admin-nav-link">Testimonials</a>
+        <a href="#admin/settings" data-admin-tab="settings" class="admin-nav-link">⚙ Site Settings</a>
       </nav>
       <a href="#home" class="admin-exit">← Back to site</a>
     </aside>
@@ -1126,6 +1140,84 @@ section{padding:96px 0;}
               <tbody id="adminTestiRows"><tr><td colspan="4"><div class="admin-empty-note">Loading testimonials…</div></td></tr></tbody>
             </table>
           </div>
+        </section>
+
+        <!-- SITE SETTINGS — route #admin/settings -->
+        <section id="adminTab-settings" class="admin-panel" style="display:none">
+          <div class="admin-panel-head">
+            <div><h3>Site Settings</h3><p>Edit contact info, social links, and homepage content. Changes go live instantly.</p></div>
+          </div>
+
+          <div id="settingsSaveMsg" class="form-msg" style="max-width:560px"></div>
+
+          <!-- Hero Announcement -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">Hero Announcement</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">The short pill text that appears at the top of the homepage hero section.</p>
+            <div class="field" style="margin-bottom:0">
+              <label for="setHeroAnnouncement">Announcement Text</label>
+              <input type="text" id="setHeroAnnouncement" placeholder="e.g. Enrolment open for August cohort" maxlength="80">
+            </div>
+          </div>
+
+          <!-- Why Section -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">Why CECT Academy — Headline</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">The heading and supporting text in the "Why" section of the homepage.</p>
+            <div class="field">
+              <label for="setWhyHeading">Section Heading</label>
+              <input type="text" id="setWhyHeading" placeholder="e.g. Everything you need to grow your career" maxlength="80">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label for="setWhySubtext">Supporting Text</label>
+              <input type="text" id="setWhySubtext" placeholder="Describe what makes the academy unique" maxlength="200">
+            </div>
+          </div>
+
+          <!-- Contact Info -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">Contact Information</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">Displayed in the footer. Visible to all visitors.</p>
+            <div class="field">
+              <label for="setContactEmail">Email Address</label>
+              <input type="email" id="setContactEmail" placeholder="hello@cectacademy.com">
+            </div>
+            <div class="field">
+              <label for="setContactPhone">Phone Number</label>
+              <input type="tel" id="setContactPhone" placeholder="+234 800 000 0000">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label for="setContactAddress">Office Address</label>
+              <input type="text" id="setContactAddress" placeholder="e.g. 12 Innovation Drive, Lagos, Nigeria">
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:28px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">Social Media Links</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">Paste the full URL for each platform. Leave blank to hide the icon.</p>
+            <div class="field">
+              <label for="setSocialFacebook">Facebook URL</label>
+              <input type="url" id="setSocialFacebook" placeholder="https://facebook.com/cectacademy">
+            </div>
+            <div class="field">
+              <label for="setSocialInstagram">Instagram URL</label>
+              <input type="url" id="setSocialInstagram" placeholder="https://instagram.com/cectacademy">
+            </div>
+            <div class="field">
+              <label for="setSocialTwitter">Twitter / X URL</label>
+              <input type="url" id="setSocialTwitter" placeholder="https://x.com/cectacademy">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label for="setSocialLinkedin">LinkedIn URL</label>
+              <input type="url" id="setSocialLinkedin" placeholder="https://linkedin.com/company/cectacademy">
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="btnSaveSettings">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="btn-label">Save All Settings</span>
+          </button>
         </section>
 
         <!-- COURSE DETAIL (curriculum editor) — route #admin/course/:id -->
@@ -1931,8 +2023,129 @@ window.addEventListener('scroll', updateActiveNav, { passive: true });
 --------------------------------------------------------------- */
 document.getElementById('year').textContent = new Date().getFullYear();
 
+/* ============================================================
+   SITE SETTINGS — load, apply, save
+   ============================================================ */
+const SETTING_KEYS = [
+  'hero_announcement','why_heading','why_subtext',
+  'contact_email','contact_phone','contact_address',
+  'social_facebook','social_instagram','social_twitter','social_linkedin'
+];
+
+async function loadSiteSettings() {
+  if (!supabaseReady) { applySettings({}); return; }
+  try {
+    const { data } = await sbClient.from('site_settings').select('key,value').in('key', SETTING_KEYS);
+    const map = {};
+    (data || []).forEach(r => { map[r.key] = r.value; });
+    applySettings(map);
+    populateSettingsForm(map);
+  } catch(e) {
+    console.warn('site_settings not yet created — using defaults.', e.message);
+    applySettings({});
+  }
+}
+
+function applySettings(s) {
+  // Hero announcement
+  const annoEl = document.getElementById('heroAnnouncementText');
+  if (annoEl && s.hero_announcement) annoEl.textContent = s.hero_announcement;
+
+  // Why section
+  const whyH = document.getElementById('whyHeading');
+  const whySub = document.getElementById('whySubtext');
+  if (whyH && s.why_heading) whyH.innerHTML = s.why_heading;
+  if (whySub && s.why_subtext) whySub.textContent = s.why_subtext;
+
+  // Footer contact
+  const emailEl = document.getElementById('footerEmail');
+  const phoneEl = document.getElementById('footerPhone');
+  const addrEl  = document.getElementById('footerAddress');
+  const addrRow  = document.getElementById('footerAddressRow');
+  if (emailEl && s.contact_email) { emailEl.textContent = s.contact_email; emailEl.href = 'mailto:' + s.contact_email; }
+  if (phoneEl && s.contact_phone) { phoneEl.textContent = s.contact_phone; phoneEl.href = 'tel:' + s.contact_phone.replace(/\s/g,''); }
+  if (addrEl)  { addrEl.textContent = s.contact_address || ''; if(addrRow) addrRow.style.display = s.contact_address ? 'flex' : 'none'; }
+
+  // Social icons — show only if URL provided
+  const socials = {
+    socialFb: s.social_facebook,
+    socialIg: s.social_instagram,
+    socialTw: s.social_twitter,
+    socialLi: s.social_linkedin,
+  };
+  Object.entries(socials).forEach(([id, url]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (url) { el.href = url; el.style.display = 'flex'; }
+    else { el.style.display = 'none'; }
+  });
+}
+
+function populateSettingsForm(s) {
+  const fields = {
+    setHeroAnnouncement: s.hero_announcement,
+    setWhyHeading:       s.why_heading,
+    setWhySubtext:       s.why_subtext,
+    setContactEmail:     s.contact_email,
+    setContactPhone:     s.contact_phone,
+    setContactAddress:   s.contact_address,
+    setSocialFacebook:   s.social_facebook,
+    setSocialInstagram:  s.social_instagram,
+    setSocialTwitter:    s.social_twitter,
+    setSocialLinkedin:   s.social_linkedin,
+  };
+  Object.entries(fields).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el && val) el.value = val;
+  });
+}
+
+async function saveSettings() {
+  if (!supabaseReady) { showToast('Database not connected.', 'error'); return; }
+  const btn = document.getElementById('btnSaveSettings');
+  const msg = document.getElementById('settingsSaveMsg');
+  btn.classList.add('is-loading'); btn.disabled = true;
+
+  const rows = [
+    { key:'hero_announcement', value: document.getElementById('setHeroAnnouncement')?.value.trim() || '' },
+    { key:'why_heading',       value: document.getElementById('setWhyHeading')?.value.trim() || '' },
+    { key:'why_subtext',       value: document.getElementById('setWhySubtext')?.value.trim() || '' },
+    { key:'contact_email',     value: document.getElementById('setContactEmail')?.value.trim() || '' },
+    { key:'contact_phone',     value: document.getElementById('setContactPhone')?.value.trim() || '' },
+    { key:'contact_address',   value: document.getElementById('setContactAddress')?.value.trim() || '' },
+    { key:'social_facebook',   value: document.getElementById('setSocialFacebook')?.value.trim() || '' },
+    { key:'social_instagram',  value: document.getElementById('setSocialInstagram')?.value.trim() || '' },
+    { key:'social_twitter',    value: document.getElementById('setSocialTwitter')?.value.trim() || '' },
+    { key:'social_linkedin',   value: document.getElementById('setSocialLinkedin')?.value.trim() || '' },
+  ];
+
+  try {
+    const { error } = await sbClient.from('site_settings').upsert(rows, { onConflict: 'key' });
+    if (error) throw error;
+    // Re-apply immediately to live page
+    const map = {};
+    rows.forEach(r => { map[r.key] = r.value; });
+    applySettings(map);
+    msg.className = 'form-msg show success'; msg.textContent = '✓ Settings saved and applied to the live site.';
+    showToast('Settings saved!', 'success');
+  } catch(e) {
+    msg.className = 'form-msg show error';
+    // If table doesn't exist yet, show helpful Supabase SQL
+    if (e.message && e.message.includes('relation')) {
+      msg.innerHTML = 'Table missing. Run this in Supabase SQL Editor:<br><code style="font-size:11px;word-break:break-all">CREATE TABLE site_settings (key TEXT PRIMARY KEY, value TEXT, updated_at TIMESTAMPTZ DEFAULT NOW());</code>';
+    } else {
+      msg.textContent = 'Error: ' + e.message;
+    }
+  } finally {
+    btn.classList.remove('is-loading'); btn.disabled = false;
+  }
+}
+
+document.getElementById('btnSaveSettings')?.addEventListener('click', saveSettings);
+
 (async function init() {
   await refreshSession();
+  loadSiteSettings();
   loadStats();
   loadCourses();
   loadWebinars();
@@ -2104,6 +2317,7 @@ function showAdminTab(tab) {
   if (tab === 'webinars') loadAdminWebinars();
   if (tab === 'certificates') loadAdminCertificates();
   if (tab === 'testimonials') loadAdminTestimonials();
+  if (tab === 'settings') { loadSiteSettings(); }
 }
 
 document.getElementById('btnBackToCourses').addEventListener('click', () => { window.location.hash = '#admin/courses'; });
