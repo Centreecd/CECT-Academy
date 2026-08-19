@@ -809,7 +809,7 @@ section{padding:96px 0;}
         <h2>Programs built for<br>real-world impact</h2>
         <p>From short courses to executive programmes — every offering is designed to build practical skills and career-ready credentials.</p>
       </div>
-      <div class="programs-grid">
+      <div class="programs-grid" id="programsGrid">
         <div class="program-card">
           <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=700&h=420&fit=crop&auto=format" alt="Communication & Leadership" loading="lazy">
           <div class="program-card-overlay"></div>
@@ -890,7 +890,7 @@ section{padding:96px 0;}
     <div class="wrap">
       <div class="about-split">
         <div class="about-img-wrap">
-          <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&fit=crop&auto=format" alt="CECT Academy training session" loading="lazy">
+          <img id="aboutSectionImg" src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&fit=crop&auto=format" alt="CECT Academy training session" loading="lazy">
           <div class="about-badge">
             <div class="about-badge-icon">🏆</div>
             <div class="about-badge-text">
@@ -921,7 +921,7 @@ section{padding:96px 0;}
           <a href="#courses" class="btn btn-glass">Start Learning Today</a>
         </div>
         <div class="video-frame" id="videoFrame">
-          <div class="video-frame-cover" id="videoCover" onclick="loadVideo()">
+          <div class="video-frame-cover" id="videoCover" data-video-url="https://www.youtube.com/embed/8aGhZQkoFbQ" onclick="loadVideo()">
             <div class="play-btn">
               <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             </div>
@@ -989,7 +989,7 @@ section{padding:96px 0;}
         <h2>Learning in action</h2>
         <p>A glimpse into the CECT Academy experience — workshops, webinars, graduation ceremonies, and the community behind it all.</p>
       </div>
-      <div class="gallery-strip">
+      <div class="gallery-strip" id="galleryStrip">
         <div class="gallery-item" style="min-height:280px">
           <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop&auto=format" alt="Training workshop" loading="lazy">
         </div>
@@ -1443,6 +1443,83 @@ section{padding:96px 0;}
             </div>
           </div>
 
+          <!-- Homepage Video -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">Homepage Video</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">Paste a YouTube embed URL — use the format <code style="font-size:11px;background:var(--canvas);padding:2px 6px;border-radius:4px">https://www.youtube.com/embed/VIDEO_ID</code>. Shown in the dark video section on the homepage.</p>
+            <div class="field" style="margin-bottom:0">
+              <label for="setVideoUrl">YouTube Embed URL</label>
+              <input type="url" id="setVideoUrl" placeholder="https://www.youtube.com/embed/8aGhZQkoFbQ">
+            </div>
+          </div>
+
+          <!-- About Section Image -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">About Section Image</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">Photo shown in the About split section. Recommended size: 800×600.</p>
+            <div class="upload-zone" id="aboutImgZone" style="margin-bottom:10px">
+              <input type="file" id="aboutImgInput" accept="image/jpeg,image/png,image/webp">
+              <div class="uz-icon">🖼️</div>
+              <div class="uz-label">Tap to upload About image</div>
+              <div class="uz-sub">JPG, PNG or WebP · Recommended 800×600</div>
+            </div>
+            <div class="upload-bar" id="aboutImgBar"><div class="upload-bar-fill" id="aboutImgBarFill"></div></div>
+            <input type="hidden" id="setAboutImageUrl">
+            <div id="aboutImgPreview" style="display:none;margin-top:10px">
+              <img id="aboutImgPreviewImg" src="" alt="About image preview" style="max-height:120px;border-radius:8px;object-fit:cover">
+              <p style="font-size:12px;color:var(--success);margin-top:6px">✓ Image ready</p>
+            </div>
+          </div>
+
+          <!-- Programs Grid Editor -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">Programs Grid</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:20px">The 6 large program cards shown below the hero. Upload a photo and fill in the text for each card.</p>
+            <div id="programsEditor">
+              ${[1,2,3,4,5,6].map(i => `
+              <div style="border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px">
+                <p style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--navy)">Card ${i}</p>
+                <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin-bottom:12px">
+                  <div style="position:relative;width:80px;height:60px;border-radius:8px;overflow:hidden;background:var(--canvas);border:1.5px dashed var(--line);cursor:pointer" onclick="document.getElementById('progImgInput${i}').click()">
+                    <img id="progImgPreview${i}" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+                    <div id="progImgPlaceholder${i}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px">🖼️</div>
+                    <input type="file" id="progImgInput${i}" accept="image/*" style="display:none">
+                  </div>
+                  <div>
+                    <div class="upload-bar" id="progBar${i}" style="margin-bottom:6px"><div class="upload-bar-fill" id="progBarFill${i}"></div></div>
+                    <input type="hidden" id="progImgUrl${i}">
+                    <input type="text" id="progCat${i}" placeholder="Category label (e.g. Executive Programme)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;margin-bottom:6px">
+                    <input type="text" id="progTitle${i}" placeholder="Card title" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;margin-bottom:6px">
+                    <input type="text" id="progTag${i}" placeholder="Tag badge (e.g. ⚡ Most Popular)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px">
+                  </div>
+                </div>
+              </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Gallery Editor -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:28px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">Gallery Strip</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:20px">5 photos shown in the "Learning in action" gallery section. The first photo is displayed larger.</p>
+            <div id="galleryEditor">
+              ${[1,2,3,4,5].map(i => `
+              <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;margin-bottom:12px">
+                <div style="position:relative;width:80px;height:60px;border-radius:8px;overflow:hidden;background:var(--canvas);border:1.5px dashed var(--line);cursor:pointer" onclick="document.getElementById('galleryImgInput${i}').click()">
+                  <img id="galleryImgPreview${i}" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+                  <div id="galleryImgPlaceholder${i}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px">📷</div>
+                  <input type="file" id="galleryImgInput${i}" accept="image/*" style="display:none">
+                </div>
+                <div>
+                  <div class="upload-bar" id="galleryBar${i}" style="margin-bottom:6px"><div class="upload-bar-fill" id="galleryBarFill${i}"></div></div>
+                  <input type="hidden" id="galleryImgUrl${i}">
+                  <input type="text" id="galleryAlt${i}" placeholder="Photo description (e.g. Training workshop)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px">
+                </div>
+              </div>
+              `).join('')}
+            </div>
+          </div>
+
           <button class="btn btn-primary" id="btnSaveSettings">
             <span class="spinner" aria-hidden="true"></span>
             <span class="btn-label">Save All Settings</span>
@@ -1857,11 +1934,12 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && authOver
 function loadVideo() {
   const frame = document.getElementById('videoFrame');
   const cover = document.getElementById('videoCover');
+  const videoUrl = cover.dataset.videoUrl || 'https://www.youtube.com/embed/8aGhZQkoFbQ';
   if (!frame || !cover) return;
   cover.style.display = 'none';
   // Uses CECT / Center-ECD YouTube channel if available; otherwise a general intro
   const iframe = document.createElement('iframe');
-  iframe.src = 'https://www.youtube.com/embed/8aGhZQkoFbQ?autoplay=1&rel=0&modestbranding=1';
+  iframe.src = videoUrl + (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1&rel=0&modestbranding=1';
   iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
   iframe.allowFullscreen = true;
   iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;';
@@ -2152,6 +2230,32 @@ function renderCourseCards(courses) {
     }).join('');
 }
 
+function renderProgramsGrid(programs) {
+  const grid = document.getElementById('programsGrid');
+  if (!grid || !programs || programs.length === 0) return;
+  grid.innerHTML = programs.map(p => `
+    <div class="program-card">
+      ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy">` : '<div style="width:100%;height:100%;background:var(--grad-brand)"></div>'}
+      <div class="program-card-overlay"></div>
+      <div class="program-card-body">
+        <div class="program-card-cat">${escapeHtml(p.cat || '')}</div>
+        <div class="program-card-title">${escapeHtml(p.title || '')}</div>
+        ${p.tag ? `<span class="program-card-tag">${escapeHtml(p.tag)}</span>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderGalleryStrip(gallery) {
+  const strip = document.getElementById('galleryStrip');
+  if (!strip || !gallery || gallery.length === 0) return;
+  strip.innerHTML = gallery.map((g, i) => `
+    <div class="gallery-item"${i === 0 ? ' style="min-height:280px"' : ''}>
+      <img src="${escapeHtml(g.image_url)}" alt="${escapeHtml(g.alt || '')}" loading="lazy">
+    </div>
+  `).join('');
+}
+
 async function loadCourses() {
   const grid = document.getElementById('courseGrid');
   if (!supabaseReady) {
@@ -2325,7 +2429,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
 const SETTING_KEYS = [
   'hero_announcement','why_heading','why_subtext',
   'contact_email','contact_phone','contact_address',
-  'social_facebook','social_instagram','social_twitter','social_linkedin'
+  'social_facebook','social_instagram','social_twitter','social_linkedin',
+  'video_url','about_image_url','programs_json','gallery_json'
 ];
 
 async function loadSiteSettings() {
@@ -2362,6 +2467,34 @@ function applySettings(s) {
   if (phoneEl && s.contact_phone) { phoneEl.textContent = s.contact_phone; phoneEl.href = 'tel:' + s.contact_phone.replace(/\s/g,''); }
   if (addrEl)  { addrEl.textContent = s.contact_address || ''; if(addrRow) addrRow.style.display = s.contact_address ? 'flex' : 'none'; }
 
+  // Video URL
+  if (s.video_url) {
+    const cover = document.getElementById('videoCover');
+    if (cover) cover.dataset.videoUrl = s.video_url;
+  }
+
+  // About image
+  if (s.about_image_url) {
+    const img = document.getElementById('aboutSectionImg');
+    if (img) img.src = s.about_image_url;
+  }
+
+  // Programs grid
+  if (s.programs_json) {
+    try {
+      const programs = JSON.parse(s.programs_json);
+      renderProgramsGrid(programs);
+    } catch(e) { /* keep defaults */ }
+  }
+
+  // Gallery
+  if (s.gallery_json) {
+    try {
+      const gallery = JSON.parse(s.gallery_json);
+      renderGalleryStrip(gallery);
+    } catch(e) { /* keep defaults */ }
+  }
+
   // Social icons — show only if URL provided
   const socials = {
     socialFb: s.social_facebook,
@@ -2389,11 +2522,56 @@ function populateSettingsForm(s) {
     setSocialInstagram:  s.social_instagram,
     setSocialTwitter:    s.social_twitter,
     setSocialLinkedin:   s.social_linkedin,
+    setVideoUrl:         s.video_url,
   };
   Object.entries(fields).forEach(([id, val]) => {
     const el = document.getElementById(id);
     if (el && val) el.value = val;
   });
+
+  // About image preview
+  if (s.about_image_url) {
+    const hidden = document.getElementById('setAboutImageUrl');
+    const preview = document.getElementById('aboutImgPreview');
+    const previewImg = document.getElementById('aboutImgPreviewImg');
+    if (hidden) hidden.value = s.about_image_url;
+    if (previewImg) previewImg.src = s.about_image_url;
+    if (preview) preview.style.display = 'block';
+  }
+
+  // Programs — populate editors
+  if (s.programs_json) {
+    try {
+      const programs = JSON.parse(s.programs_json);
+      programs.forEach((p, i) => {
+        const idx = i + 1;
+        const catEl  = document.getElementById(`progCat${idx}`);
+        const titleEl= document.getElementById(`progTitle${idx}`);
+        const tagEl  = document.getElementById(`progTag${idx}`);
+        const urlEl  = document.getElementById(`progImgUrl${idx}`);
+        const prev   = document.getElementById(`progImgPreview${idx}`);
+        if (catEl)   catEl.value   = p.cat   || '';
+        if (titleEl) titleEl.value = p.title || '';
+        if (tagEl)   tagEl.value   = p.tag   || '';
+        if (urlEl)   urlEl.value   = p.image_url || '';
+        if (prev && p.image_url) { prev.src = p.image_url; prev.style.display = 'block'; }
+      });
+    } catch(e) {}
+  }
+
+  // Gallery — populate previews
+  if (s.gallery_json) {
+    try {
+      const gallery = JSON.parse(s.gallery_json);
+      gallery.forEach((g, i) => {
+        const idx = i + 1;
+        const urlEl = document.getElementById(`galleryImgUrl${idx}`);
+        const prev  = document.getElementById(`galleryImgPreview${idx}`);
+        if (urlEl) urlEl.value = g.image_url || '';
+        if (prev && g.image_url) { prev.src = g.image_url; prev.style.display = 'block'; }
+      });
+    } catch(e) {}
+  }
 }
 
 async function saveSettings() {
@@ -2401,6 +2579,26 @@ async function saveSettings() {
   const btn = document.getElementById('btnSaveSettings');
   const msg = document.getElementById('settingsSaveMsg');
   btn.classList.add('is-loading'); btn.disabled = true;
+
+  // Build programs JSON from editor fields
+  const programsArr = Array.from({length:6}, (_,i) => {
+    const idx = i + 1;
+    return {
+      image_url: document.getElementById(`progImgUrl${idx}`)?.value.trim() || '',
+      cat:       document.getElementById(`progCat${idx}`)?.value.trim() || '',
+      title:     document.getElementById(`progTitle${idx}`)?.value.trim() || '',
+      tag:       document.getElementById(`progTag${idx}`)?.value.trim() || '',
+    };
+  });
+
+  // Build gallery JSON from editor fields
+  const galleryArr = Array.from({length:5}, (_,i) => {
+    const idx = i + 1;
+    return {
+      image_url: document.getElementById(`galleryImgUrl${idx}`)?.value.trim() || '',
+      alt:       document.getElementById(`galleryAlt${idx}`)?.value.trim() || '',
+    };
+  });
 
   const rows = [
     { key:'hero_announcement', value: document.getElementById('setHeroAnnouncement')?.value.trim() || '' },
@@ -2413,6 +2611,10 @@ async function saveSettings() {
     { key:'social_instagram',  value: document.getElementById('setSocialInstagram')?.value.trim() || '' },
     { key:'social_twitter',    value: document.getElementById('setSocialTwitter')?.value.trim() || '' },
     { key:'social_linkedin',   value: document.getElementById('setSocialLinkedin')?.value.trim() || '' },
+    { key:'video_url',         value: document.getElementById('setVideoUrl')?.value.trim() || '' },
+    { key:'about_image_url',   value: document.getElementById('setAboutImageUrl')?.value.trim() || '' },
+    { key:'programs_json',     value: JSON.stringify(programsArr) },
+    { key:'gallery_json',      value: JSON.stringify(galleryArr) },
   ];
 
   try {
@@ -2971,6 +3173,63 @@ document.getElementById('thumbRemove').addEventListener('click', () => {
   document.getElementById('cbThumbnail').value = '';
   document.getElementById('thumbPreview').style.display = 'none';
   document.getElementById('thumbFileInput').value = '';
+});
+
+/* ---- About section image uploader ---- */
+document.addEventListener('change', async function(e) {
+  if (e.target.id !== 'aboutImgInput') return;
+  const file = e.target.files[0];
+  if (!file) return;
+  await uploadToCloudinary(file, {
+    barEl: document.getElementById('aboutImgBar'),
+    barFillEl: document.getElementById('aboutImgBarFill'),
+    onSuccess: (url) => {
+      document.getElementById('setAboutImageUrl').value = url;
+      document.getElementById('aboutImgPreviewImg').src = url;
+      document.getElementById('aboutImgPreview').style.display = 'block';
+    },
+    onError: (msg) => showToast('About image upload failed: ' + msg, 'error'),
+  });
+});
+
+/* ---- Programs grid image uploaders ---- */
+[1,2,3,4,5,6].forEach(i => {
+  document.addEventListener('change', async function(e) {
+    if (e.target.id !== `progImgInput${i}`) return;
+    const file = e.target.files[0];
+    if (!file) return;
+    await uploadToCloudinary(file, {
+      barEl: document.getElementById(`progBar${i}`),
+      barFillEl: document.getElementById(`progBarFill${i}`),
+      onSuccess: (url) => {
+        document.getElementById(`progImgUrl${i}`).value = url;
+        const prev = document.getElementById(`progImgPreview${i}`);
+        prev.src = url; prev.style.display = 'block';
+        document.getElementById(`progImgPlaceholder${i}`).style.display = 'none';
+      },
+      onError: (msg) => showToast(`Program ${i} image upload failed: ` + msg, 'error'),
+    });
+  });
+});
+
+/* ---- Gallery image uploaders ---- */
+[1,2,3,4,5].forEach(i => {
+  document.addEventListener('change', async function(e) {
+    if (e.target.id !== `galleryImgInput${i}`) return;
+    const file = e.target.files[0];
+    if (!file) return;
+    await uploadToCloudinary(file, {
+      barEl: document.getElementById(`galleryBar${i}`),
+      barFillEl: document.getElementById(`galleryBarFill${i}`),
+      onSuccess: (url) => {
+        document.getElementById(`galleryImgUrl${i}`).value = url;
+        const prev = document.getElementById(`galleryImgPreview${i}`);
+        prev.src = url; prev.style.display = 'block';
+        document.getElementById(`galleryImgPlaceholder${i}`).style.display = 'none';
+      },
+      onError: (msg) => showToast(`Gallery image ${i} upload failed: ` + msg, 'error'),
+    });
+  });
 });
 
 /* ---- Lesson video/file uploader ---- */
