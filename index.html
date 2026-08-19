@@ -350,6 +350,24 @@ section{padding:96px 0;}
 .instr-card p{font-size:12.5px;color:var(--navy-soft);}
 @media(max-width:900px){.instr-grid{grid-template-columns:repeat(2,1fr);}}
 
+/* Testimonial submission form */
+.testi-submit-wrap{margin-top:40px;background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-md);padding:28px;max-width:560px;}
+.testi-submit-wrap h3{font-size:17px;font-weight:700;margin-bottom:4px;}
+.testi-submit-wrap p{font-size:13px;color:var(--navy-soft);margin-bottom:20px;}
+.star-rating{display:flex;gap:6px;margin-bottom:16px;}
+.star-rating button{background:none;border:none;font-size:24px;cursor:pointer;color:#ddd;padding:0;transition:color .15s;}
+.star-rating button.active,.star-rating button:hover{color:var(--gold);}
+
+/* Instructor admin editor */
+.instr-editor-card{background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-md);padding:20px;display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:center;margin-bottom:12px;}
+.instr-editor-avatar{width:64px;height:64px;border-radius:50%;overflow:hidden;background:var(--grad-brand);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:800;cursor:pointer;position:relative;flex-shrink:0;}
+.instr-editor-avatar img{width:100%;height:100%;object-fit:cover;display:none;}
+.instr-editor-avatar .upload-badge{position:absolute;bottom:0;right:0;background:var(--blue);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;}
+.instr-editor-fields{display:flex;flex-direction:column;gap:8px;}
+.instr-editor-fields input{padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13.5px;width:100%;}
+.instr-editor-fields input:focus{border-color:var(--blue);outline:none;}
+.instr-editor-actions{display:flex;flex-direction:column;gap:6px;}
+
 /* === CTA BAND === */
 .cta-band{
   background:var(--ink);border-radius:24px;
@@ -1057,6 +1075,40 @@ section{padding:96px 0;}
           <p>Learner testimonials will appear here once submitted and approved.</p>
         </div>
       </div>
+
+      <!-- Submission form -->
+      <div class="testi-submit-wrap">
+        <h3>Share your experience</h3>
+        <p>Completed a course or attended a training? Tell others what you gained.</p>
+        <div class="form-msg" id="testiFormMsg"></div>
+        <div class="field">
+          <label for="testiName">Your full name</label>
+          <input type="text" id="testiName" placeholder="e.g. Chisom Nwosu" maxlength="80">
+        </div>
+        <div class="field">
+          <label for="testiRole">Role &amp; location</label>
+          <input type="text" id="testiRole" placeholder="e.g. HR Professional, Lagos" maxlength="100">
+        </div>
+        <div class="field">
+          <label for="testiQuote">What changed for you?</label>
+          <textarea id="testiQuote" rows="3" placeholder="Tell others what you learned or how it helped your career…" maxlength="400" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical;background:var(--canvas)"></textarea>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Rating</label>
+          <div class="star-rating" id="testiStarRating">
+            <button type="button" data-star="1">★</button>
+            <button type="button" data-star="2">★</button>
+            <button type="button" data-star="3">★</button>
+            <button type="button" data-star="4">★</button>
+            <button type="button" data-star="5">★</button>
+          </div>
+          <input type="hidden" id="testiRating" value="5">
+        </div>
+        <button class="btn btn-primary" id="btnSubmitTesti" style="margin-top:20px">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-label">Submit Testimonial</span>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -1262,6 +1314,7 @@ section{padding:96px 0;}
         <a href="#admin/webinars" data-admin-tab="webinars" class="admin-nav-link">Webinars</a>
         <a href="#admin/certificates" data-admin-tab="certificates" class="admin-nav-link">Certificates</a>
         <a href="#admin/testimonials" data-admin-tab="testimonials" class="admin-nav-link">Testimonials</a>
+        <a href="#admin/instructors" data-admin-tab="instructors" class="admin-nav-link">Instructors</a>
         <a href="#admin/settings" data-admin-tab="settings" class="admin-nav-link">⚙ Site Settings</a>
       </nav>
       <a href="#home" class="admin-exit">← Back to site</a>
@@ -1369,6 +1422,16 @@ section{padding:96px 0;}
               <tbody id="adminTestiRows"><tr><td colspan="4"><div class="admin-empty-note">Loading testimonials…</div></td></tr></tbody>
             </table>
           </div>
+        </section>
+
+        <!-- INSTRUCTORS TAB -->
+        <section id="adminTab-instructors" class="admin-panel" style="display:none">
+          <div class="admin-panel-head">
+            <div><h3>Instructors</h3><p>Manage tutor profiles shown on the homepage. Photos upload to Cloudinary.</p></div>
+            <button class="btn btn-primary btn-sm" id="btnAddInstructor">+ Add Instructor</button>
+          </div>
+          <div class="form-msg" id="instrAdminMsg" style="max-width:680px;margin-bottom:16px"></div>
+          <div id="instrEditorList"></div>
         </section>
 
         <!-- SITE SETTINGS — route #admin/settings -->
@@ -2802,7 +2865,7 @@ function showAdminTab(tab) {
   panel.style.display = 'block';
   if (link) link.classList.add('active');
 
-  const titles = { overview: 'Overview', courses: 'Courses', categories: 'Categories', students: 'Students', webinars: 'Webinars', certificates: 'Certificates', testimonials: 'Testimonials', courseDetail: currentCourseDetailTitle || 'Course' };
+  const titles = { overview: 'Overview', courses: 'Courses', categories: 'Categories', students: 'Students', webinars: 'Webinars', certificates: 'Certificates', testimonials: 'Testimonials', instructors: 'Instructors', courseDetail: currentCourseDetailTitle || 'Course' };
   document.getElementById('adminTabTitle').textContent = titles[tab] || 'Overview';
 
   const chip = document.getElementById('adminUserChip');
@@ -2815,6 +2878,7 @@ function showAdminTab(tab) {
   if (tab === 'webinars') loadAdminWebinars();
   if (tab === 'certificates') loadAdminCertificates();
   if (tab === 'testimonials') loadAdminTestimonials();
+  if (tab === 'instructors') loadAdminInstructors();
   if (tab === 'settings') { loadSiteSettings(); }
 }
 
@@ -3441,6 +3505,204 @@ async function loadAdminTestimonials() {
     tbody.innerHTML = `<tr><td colspan="4"><div class="admin-empty-note">${escapeHtml(err.message)}</div></td></tr>`;
   }
 }
+
+/* ---------------------------------------------------------------
+   TESTIMONIAL SUBMISSION (public form)
+--------------------------------------------------------------- */
+(function() {
+  let selectedRating = 5;
+
+  // Star rating interaction
+  const starWrap = document.getElementById('testiStarRating');
+  if (starWrap) {
+    const stars = starWrap.querySelectorAll('button');
+    function setStars(n) {
+      selectedRating = n;
+      document.getElementById('testiRating').value = n;
+      stars.forEach((s, i) => s.classList.toggle('active', i < n));
+    }
+    setStars(5);
+    stars.forEach(s => {
+      s.addEventListener('click', () => setStars(+s.dataset.star));
+      s.addEventListener('mouseover', () => stars.forEach((b, i) => b.classList.toggle('active', i < +s.dataset.star)));
+    });
+    starWrap.addEventListener('mouseleave', () => setStars(selectedRating));
+  }
+
+  document.getElementById('btnSubmitTesti')?.addEventListener('click', async () => {
+    if (!supabaseReady) { showToast('Not connected to database.', 'error'); return; }
+    const name  = document.getElementById('testiName')?.value.trim();
+    const role  = document.getElementById('testiRole')?.value.trim();
+    const quote = document.getElementById('testiQuote')?.value.trim();
+    const rating = parseInt(document.getElementById('testiRating')?.value || '5');
+    const msg   = document.getElementById('testiFormMsg');
+    const btn   = document.getElementById('btnSubmitTesti');
+
+    if (!name || !quote) {
+      msg.className = 'form-msg show error'; msg.textContent = 'Please fill in your name and what you learned.'; return;
+    }
+    btn.classList.add('is-loading'); btn.disabled = true;
+    try {
+      const { error } = await sbClient.from('testimonials').insert({ name, role, quote, rating, status: 'pending' });
+      if (error) throw error;
+      msg.className = 'form-msg show success';
+      msg.textContent = '✓ Thank you! Your testimonial has been submitted and will appear once approved.';
+      document.getElementById('testiName').value = '';
+      document.getElementById('testiRole').value = '';
+      document.getElementById('testiQuote').value = '';
+    } catch(e) {
+      msg.className = 'form-msg show error'; msg.textContent = 'Error: ' + e.message;
+    } finally {
+      btn.classList.remove('is-loading'); btn.disabled = false;
+    }
+  });
+})();
+
+/* ---------------------------------------------------------------
+   INSTRUCTOR ADMIN — list, add, edit, delete
+--------------------------------------------------------------- */
+let instrEditorState = []; // tracks in-memory edits before save
+
+async function loadAdminInstructors() {
+  const list = document.getElementById('instrEditorList');
+  const msg  = document.getElementById('instrAdminMsg');
+  list.innerHTML = '<div class="admin-empty-note">Loading instructors…</div>';
+
+  try {
+    const { data, error } = await sbClient
+      .from('profiles')
+      .select('id, full_name, email, bio, avatar_url, role')
+      .eq('role', 'instructor')
+      .order('full_name');
+    if (error) throw error;
+
+    instrEditorState = (data || []).map(p => ({ ...p }));
+    renderInstrEditorList();
+  } catch(e) {
+    list.innerHTML = `<div class="admin-empty-note">${escapeHtml(e.message)}</div>`;
+  }
+}
+
+function renderInstrEditorList() {
+  const list = document.getElementById('instrEditorList');
+  if (instrEditorState.length === 0) {
+    list.innerHTML = `<div class="admin-empty-note" style="padding:32px 0">No instructors yet. Click "+ Add Instructor" to add the first one.</div>`;
+    return;
+  }
+  list.innerHTML = instrEditorState.map((p, idx) => `
+    <div class="instr-editor-card" id="instrCard${idx}">
+      <div class="instr-editor-avatar" onclick="document.getElementById('instrAvatarInput${idx}').click()" title="Click to change photo">
+        <img id="instrAvatarImg${idx}" src="${escapeHtml(p.avatar_url || '')}" style="${p.avatar_url ? 'display:block' : 'display:none'}">
+        <span id="instrAvatarInit${idx}" style="${p.avatar_url ? 'display:none' : ''}">${escapeHtml((p.full_name||'?').split(' ').map(w=>w[0]).slice(0,2).join(''))}</span>
+        <div class="upload-badge">✏</div>
+        <input type="file" id="instrAvatarInput${idx}" accept="image/*" style="display:none">
+      </div>
+      <div class="instr-editor-fields">
+        <div class="upload-bar" id="instrBar${idx}"><div class="upload-bar-fill" id="instrBarFill${idx}"></div></div>
+        <input type="text"  id="instrName${idx}"  value="${escapeHtml(p.full_name||'')}"  placeholder="Full name">
+        <input type="text"  id="instrBio${idx}"   value="${escapeHtml(p.bio||'')}"         placeholder="Short bio / title (e.g. Public Speaking Coach)">
+        <input type="email" id="instrEmail${idx}" value="${escapeHtml(p.email||'')}"       placeholder="Email address" ${p.id ? 'readonly style="color:var(--navy-soft);background:var(--canvas)"' : ''}>
+      </div>
+      <div class="instr-editor-actions">
+        <button class="btn btn-primary btn-sm" onclick="saveInstructor(${idx})">
+          <span class="spinner dark" aria-hidden="true"></span>
+          <span class="btn-label">Save</span>
+        </button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--danger)" onclick="removeInstructor(${idx}, '${escapeHtml(p.id||'')}')">Remove</button>
+      </div>
+    </div>
+  `).join('');
+
+  // Wire avatar uploaders
+  instrEditorState.forEach((_, idx) => {
+    document.getElementById(`instrAvatarInput${idx}`)?.addEventListener('change', async function() {
+      const file = this.files[0];
+      if (!file) return;
+      await uploadToCloudinary(file, {
+        barEl: document.getElementById(`instrBar${idx}`),
+        barFillEl: document.getElementById(`instrBarFill${idx}`),
+        onSuccess: (url) => {
+          instrEditorState[idx].avatar_url = url;
+          const img  = document.getElementById(`instrAvatarImg${idx}`);
+          const init = document.getElementById(`instrAvatarInit${idx}`);
+          img.src = url; img.style.display = 'block';
+          if (init) init.style.display = 'none';
+        },
+        onError: (m) => showToast('Avatar upload failed: ' + m, 'error'),
+      });
+    });
+  });
+}
+
+async function saveInstructor(idx) {
+  const p   = instrEditorState[idx];
+  const msg = document.getElementById('instrAdminMsg');
+  const btn = document.querySelector(`#instrCard${idx} .btn-primary`);
+  const name  = document.getElementById(`instrName${idx}`)?.value.trim();
+  const bio   = document.getElementById(`instrBio${idx}`)?.value.trim();
+  const email = document.getElementById(`instrEmail${idx}`)?.value.trim();
+
+  if (!name) { showToast('Name is required.', 'error'); return; }
+  btn.classList.add('is-loading'); btn.disabled = true;
+
+  try {
+    if (p.id) {
+      // Existing profile — update name, bio, avatar
+      const { error } = await sbClient.from('profiles').update({
+        full_name: name, bio, avatar_url: p.avatar_url || null
+      }).eq('id', p.id);
+      if (error) throw error;
+      instrEditorState[idx] = { ...p, full_name: name, bio, };
+    } else {
+      // New instructor — find existing profile by email or create one
+      if (!email) { showToast('Email required for new instructors.', 'error'); btn.classList.remove('is-loading'); btn.disabled = false; return; }
+      const { data: existing } = await sbClient.from('profiles').select('id').eq('email', email).maybeSingle();
+      if (existing) {
+        const { error } = await sbClient.from('profiles').update({
+          full_name: name, bio, avatar_url: p.avatar_url || null, role: 'instructor'
+        }).eq('id', existing.id);
+        if (error) throw error;
+        instrEditorState[idx] = { ...p, id: existing.id, full_name: name, bio, email };
+      } else {
+        showToast('No account found for that email. Ask the instructor to register on the site first.', 'error');
+        btn.classList.remove('is-loading'); btn.disabled = false; return;
+      }
+    }
+    msg.className = 'form-msg show success'; msg.textContent = `✓ ${name} saved.`;
+    setTimeout(() => msg.className = 'form-msg', 3000);
+    loadInstructors(); // refresh homepage cards
+  } catch(e) {
+    msg.className = 'form-msg show error'; msg.textContent = 'Error: ' + e.message;
+  } finally {
+    btn.classList.remove('is-loading'); btn.disabled = false;
+  }
+}
+
+async function removeInstructor(idx, profileId) {
+  if (!confirm('Remove this instructor from the homepage? Their account is kept — only the instructor role is removed.')) return;
+  const msg = document.getElementById('instrAdminMsg');
+  try {
+    if (profileId) {
+      const { error } = await sbClient.from('profiles').update({ role: 'student' }).eq('id', profileId);
+      if (error) throw error;
+    }
+    instrEditorState.splice(idx, 1);
+    renderInstrEditorList();
+    loadInstructors();
+    msg.className = 'form-msg show success'; msg.textContent = '✓ Instructor removed from homepage.';
+    setTimeout(() => msg.className = 'form-msg', 3000);
+  } catch(e) {
+    msg.className = 'form-msg show error'; msg.textContent = 'Error: ' + e.message;
+  }
+}
+
+document.getElementById('btnAddInstructor')?.addEventListener('click', () => {
+  instrEditorState.push({ id: null, full_name: '', bio: '', email: '', avatar_url: '', role: 'instructor' });
+  renderInstrEditorList();
+  // Scroll to the new card
+  const cards = document.querySelectorAll('.instr-editor-card');
+  cards[cards.length - 1]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
 
 /* ---------------------------------------------------------------
    COURSE BUILDER (multi-step modal)
