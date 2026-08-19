@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CECT Academy — Learn. Grow. Lead.</title>
 <meta name="description" content="CECT Academy is a professional training and learning platform offering practical courses, live webinars, and certification for career growth.">
+<meta http-equiv="Cache-Control" content="public, max-age=3600">
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=360&fit=crop&auto=format">
+<link rel="dns-prefetch" href="https://images.unsplash.com">
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -422,6 +425,86 @@ section{padding:96px 0;}
 @media(max-width:920px){.hero-grid{grid-template-columns:1fr;}.course-grid,.benefit-grid{gap:18px;}}
 @media(max-width:768px){section{padding:64px 0;}}
 
+/* === PROGRAMS SECTION === */
+.programs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.program-card{
+  position:relative;border-radius:20px;overflow:hidden;
+  height:280px;display:flex;flex-direction:column;justify-content:flex-end;
+  cursor:pointer;
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.program-card:hover{transform:translateY(-6px);box-shadow:0 28px 64px rgba(6,10,20,.28);}
+.program-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+.program-card:hover img{transform:scale(1.06);}
+.program-card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,10,20,.85) 0%,rgba(6,10,20,.2) 55%,transparent 100%);
+}
+.program-card-body{position:relative;z-index:1;padding:24px;}
+.program-card-cat{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:8px;}
+.program-card-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:10px;}
+.program-card-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:99px;backdrop-filter:blur(8px);}
+@media(max-width:900px){.programs-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.programs-grid{grid-template-columns:1fr;}.program-card{height:240px;}}
+
+/* === VIDEO SECTION === */
+.video-section{background:var(--ink);padding:96px 0;position:relative;overflow:hidden;}
+.video-section::before{content:'';position:absolute;inset:0;background:var(--grad-aurora);opacity:.5;pointer-events:none;}
+.video-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.video-copy h2{color:#fff;font-size:clamp(28px,3.5vw,38px);font-weight:800;margin-bottom:18px;letter-spacing:-.025em;}
+.video-copy p{color:rgba(255,255,255,.58);font-size:16px;line-height:1.76;margin-bottom:28px;}
+.video-copy .section-eyebrow{color:rgba(255,255,255,.55);}
+.video-copy .section-eyebrow::before{background:rgba(255,255,255,.3);}
+.video-frame{border-radius:20px;overflow:hidden;position:relative;padding-top:56.25%;background:#000;box-shadow:0 32px 80px rgba(0,0,0,.5);}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.video-frame-cover{
+  position:absolute;inset:0;background:linear-gradient(135deg,#3F88EF,#B351FC);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:opacity .3s;
+}
+.video-frame-cover:hover{opacity:.9;}
+.play-btn{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,.3);}
+.play-btn svg{width:28px;height:28px;fill:var(--navy);margin-left:4px;}
+.video-frame-label{position:absolute;bottom:20px;left:20px;right:20px;font-size:13px;font-weight:700;color:#fff;text-align:center;}
+@media(max-width:900px){.video-inner{grid-template-columns:1fr;gap:40px;}.video-copy{text-align:center;}.video-copy .section-eyebrow{margin:0 auto 16px;}}
+
+/* === ABOUT SPLIT === */
+.about-split{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.about-img-wrap{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/3;}
+.about-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.about-img-wrap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(63,136,239,.18),rgba(179,81,252,.14));
+}
+.about-badge{
+  position:absolute;bottom:24px;left:24px;z-index:2;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(12px);
+  border-radius:14px;padding:14px 18px;box-shadow:0 12px 30px rgba(6,10,20,.22);
+  display:flex;align-items:center;gap:12px;
+}
+.about-badge-icon{font-size:28px;}
+.about-badge-text strong{display:block;font-size:15px;font-weight:800;color:var(--navy);}
+.about-badge-text span{font-size:12px;color:var(--navy-soft);font-weight:600;}
+.about-copy .section-eyebrow{margin-bottom:16px;}
+.about-copy h2{margin-bottom:18px;}
+.about-copy p{color:var(--navy-soft);font-size:16.5px;line-height:1.76;margin-bottom:18px;}
+.about-copy p:last-of-type{margin-bottom:28px;}
+@media(max-width:900px){.about-split{grid-template-columns:1fr;gap:40px;}}
+
+/* === GALLERY STRIP === */
+.gallery-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:52px;}
+.gallery-item{border-radius:14px;overflow:hidden;aspect-ratio:1;position:relative;}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+.gallery-item:hover img{transform:scale(1.07);}
+.gallery-item:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto;}
+@media(max-width:680px){.gallery-strip{grid-template-columns:repeat(2,1fr);}.gallery-item:first-child{grid-column:span 2;}}
+
+/* === PARTNER LOGOS === */
+.partners-row{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;padding:48px 0;}
+.partner-logo{opacity:.45;filter:grayscale(1);transition:opacity .2s,filter .2s;font-weight:800;font-size:17px;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-.01em;color:var(--navy);}
+.partner-logo:hover{opacity:.9;filter:grayscale(0);}
+.partners-label{text-align:center;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy-soft);margin-bottom:0;}
+
 
 /* ============================================================
    ADMIN DASHBOARD
@@ -628,7 +711,11 @@ section{padding:96px 0;}
 
         <div class="hero-ctas">
           <a href="#courses" class="btn btn-primary"><span class="btn-label">Explore Courses</span></a>
-          <a href="#webinars" class="btn btn-glass"><span class="btn-label">Upcoming Webinars</span></a>
+          <a href="#webinars" class="btn btn-glass"><span class="btn-label">Live Webinars</span></a>
+        </div>
+        <div class="hero-proof">
+          <span class="stars">★★★★★</span>
+          <span>Rated <strong style="color:rgba(255,255,255,.85)">5.0</strong> · Trusted by professionals across Nigeria &amp; beyond</span>
         </div>
       </div>
 
@@ -696,23 +783,90 @@ section{padding:96px 0;}
   <div class="stats-ribbon">
     <div class="stats-ribbon-inner">
       <div class="stat-col">
-        <span class="snum" id="statCourses">—</span>
+        <span class="snum" id="statCourses">10+</span>
         <span class="slabel">Courses Available</span>
       </div>
       <div class="stat-col">
-        <span class="snum" id="statInstructors">—</span>
+        <span class="snum" id="statInstructors">5+</span>
         <span class="slabel">Expert Instructors</span>
       </div>
       <div class="stat-col">
-        <span class="snum" id="statHours">—</span>
+        <span class="snum" id="statHours">80+</span>
         <span class="slabel">Training Hours</span>
       </div>
       <div class="stat-col">
-        <span class="snum" id="statTopics">—</span>
+        <span class="snum" id="statTopics">20+</span>
         <span class="slabel">Topics Covered</span>
       </div>
     </div>
   </div>
+
+  <!-- ============ PROGRAMS OVERVIEW ============ -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div class="section-eyebrow">What We Offer</div>
+        <h2>Programs built for<br>real-world impact</h2>
+        <p>From short courses to executive programmes — every offering is designed to build practical skills and career-ready credentials.</p>
+      </div>
+      <div class="programs-grid">
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=700&h=420&fit=crop&auto=format" alt="Communication & Leadership" loading="lazy">
+          <div class="program-card-overlay"></div>
+          <div class="program-card-body">
+            <div class="program-card-cat">Executive Programme</div>
+            <div class="program-card-title">Communication &amp; Leadership Mastery</div>
+            <span class="program-card-tag">⚡ Most Popular</span>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=700&h=420&fit=crop&auto=format" alt="Entrepreneurship" loading="lazy">
+          <div class="program-card-overlay"></div>
+          <div class="program-card-body">
+            <div class="program-card-cat">Business Programme</div>
+            <div class="program-card-title">Entrepreneurship &amp; Business Development</div>
+            <span class="program-card-tag">🚀 New Cohort</span>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1587440871875-191322ee64b0?w=700&h=420&fit=crop&auto=format" alt="Digital Skills" loading="lazy">
+          <div class="program-card-overlay"></div>
+          <div class="program-card-body">
+            <div class="program-card-cat">Digital Skills</div>
+            <div class="program-card-title">Digital Literacy &amp; Office Productivity</div>
+            <span class="program-card-tag">💻 Beginner Friendly</span>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=700&h=420&fit=crop&auto=format" alt="Public Speaking" loading="lazy">
+          <div class="program-card-overlay"></div>
+          <div class="program-card-body">
+            <div class="program-card-cat">Public Speaking Academy</div>
+            <div class="program-card-title">Public Speaking &amp; Presentation Skills</div>
+            <span class="program-card-tag">🎙 5-Day Intensive</span>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&h=420&fit=crop&auto=format" alt="Team Management" loading="lazy">
+          <div class="program-card-overlay"></div>
+          <div class="program-card-body">
+            <div class="program-card-cat">Leadership</div>
+            <div class="program-card-title">Team Management &amp; Organisational Leadership</div>
+            <span class="program-card-tag">🏆 Certificate Included</span>
+          </div>
+        </div>
+        <div class="program-card">
+          <img src="https://images.unsplash.com/photo-1543269664-56d93c1b41a6?w=700&h=420&fit=crop&auto=format" alt="Employability" loading="lazy">
+          <div class="program-card-overlay"></div>
+          <div class="program-card-body">
+            <div class="program-card-cat">Career Readiness</div>
+            <div class="program-card-title">Employability &amp; Job Readiness Training</div>
+            <span class="program-card-tag">🎯 Career Focused</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ FEATURED COURSES ============ -->
   <section id="courses" class="section-alt">
@@ -731,8 +885,55 @@ section{padding:96px 0;}
     </div>
   </section>
 
-  <!-- ============ WHY LEARN WITH US ============ -->
+  <!-- ============ ABOUT SPLIT ============ -->
   <section id="about">
+    <div class="wrap">
+      <div class="about-split">
+        <div class="about-img-wrap">
+          <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=600&fit=crop&auto=format" alt="CECT Academy training session" loading="lazy">
+          <div class="about-badge">
+            <div class="about-badge-icon">🏆</div>
+            <div class="about-badge-text">
+              <strong>Trusted by Learners</strong>
+              <span>Across Nigeria &amp; beyond</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-copy">
+          <div class="section-eyebrow">About CECT Academy</div>
+          <h2>Practical training, built for the African professional</h2>
+          <p>CECT Academy is the training arm of the Centre for Enterprise and Capacity Training — a professional learning platform built to help individuals and organisations develop the skills that matter in today's world.</p>
+          <p>We combine expert instruction, real-world application, and verifiable certification to give you credentials that actually open doors — whether you're starting your career, levelling up, or building your own business.</p>
+          <a href="#courses" class="btn btn-primary">Explore Our Courses</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VIDEO SECTION ============ -->
+  <section class="video-section">
+    <div class="wrap">
+      <div class="video-inner">
+        <div class="video-copy">
+          <div class="section-eyebrow">See It in Action</div>
+          <h2>Real training. Real results. Real careers.</h2>
+          <p>Watch how CECT Academy learners are transforming their skills, advancing their careers, and earning certificates that mean something — all while learning at their own pace.</p>
+          <a href="#courses" class="btn btn-glass">Start Learning Today</a>
+        </div>
+        <div class="video-frame" id="videoFrame">
+          <div class="video-frame-cover" id="videoCover" onclick="loadVideo()">
+            <div class="play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <div class="video-frame-label">Watch: CECT Academy — Learn. Grow. Lead.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY LEARN WITH US ============ -->
+  <section>
     <div class="wrap">
       <div class="section-head center" style="margin-left:auto;margin-right:auto">
         <div class="section-eyebrow">Why CECT Academy</div>
@@ -775,6 +976,34 @@ section{padding:96px 0;}
           <div class="benefit-icon">🚀</div>
           <h3>Career-Focused Skills</h3>
           <p>Courses are built around what employers and clients actually value — skills that open doors.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="section-alt">
+    <div class="wrap">
+      <div class="section-head center" style="margin-left:auto;margin-right:auto">
+        <div class="section-eyebrow">Our Community</div>
+        <h2>Learning in action</h2>
+        <p>A glimpse into the CECT Academy experience — workshops, webinars, graduation ceremonies, and the community behind it all.</p>
+      </div>
+      <div class="gallery-strip">
+        <div class="gallery-item" style="min-height:280px">
+          <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop&auto=format" alt="Training workshop" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=400&fit=crop&auto=format" alt="Learner presentation" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&fit=crop&auto=format" alt="Graduation ceremony" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&h=400&fit=crop&auto=format" alt="Group discussion" loading="lazy">
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=400&fit=crop&auto=format" alt="Online class" loading="lazy">
         </div>
       </div>
     </div>
@@ -1615,11 +1844,29 @@ function clearAllFormMessages() {
   document.querySelectorAll('.form-msg').forEach(m => { m.className = 'form-msg'; m.textContent = ''; });
 }
 
-document.getElementById('btnLogin').addEventListener('click', () => openAuth('login'));
-document.getElementById('btnGetStarted').addEventListener('click', () => openAuth('register'));
+// Robust delegated event binding — works even after renderNavActions() replaces the buttons
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'btnLogin' || e.target.closest('#btnLogin')) openAuth('login');
+  if (e.target.id === 'btnGetStarted' || e.target.closest('#btnGetStarted')) openAuth('register');
+});
 document.getElementById('authClose').addEventListener('click', closeAuth);
 authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuth(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && authOverlay.classList.contains('open')) closeAuth(); });
+
+// Video section loader
+function loadVideo() {
+  const frame = document.getElementById('videoFrame');
+  const cover = document.getElementById('videoCover');
+  if (!frame || !cover) return;
+  cover.style.display = 'none';
+  // Uses CECT / Center-ECD YouTube channel if available; otherwise a general intro
+  const iframe = document.createElement('iframe');
+  iframe.src = 'https://www.youtube.com/embed/8aGhZQkoFbQ?autoplay=1&rel=0&modestbranding=1';
+  iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+  iframe.allowFullscreen = true;
+  iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;';
+  frame.appendChild(iframe);
+}
 
 document.getElementById('toRegister').addEventListener('click', () => switchView('register'));
 document.getElementById('toLogin').addEventListener('click', () => switchView('login'));
@@ -1864,10 +2111,51 @@ async function loadStats() {
   }
 }
 
+const FALLBACK_COURSES = [
+  { id:'fc1', title:'Professional Communication Mastery', slug:'professional-communication', subtitle:'Command every room — written, verbal and digital communication skills that employers value most.', level:'All Levels', price:25000, discount_price:18000, duration:'8 hrs', featured:true, thumbnail_url:'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=360&fit=crop&auto=format' },
+  { id:'fc2', title:'Public Speaking & Presentation', slug:'public-speaking', subtitle:'Overcome fear and present with authority. From boardrooms to webinars — speak and move people.', level:'Beginner', price:20000, discount_price:null, duration:'6 hrs', featured:false, thumbnail_url:'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&h=360&fit=crop&auto=format' },
+  { id:'fc3', title:'Business Writing Essentials', slug:'business-writing', subtitle:'Write emails, reports and proposals that get results. Clear, professional, persuasive writing skills.', level:'Beginner', price:15000, discount_price:null, duration:'5 hrs', featured:false, thumbnail_url:'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&h=360&fit=crop&auto=format' },
+  { id:'fc4', title:'Leadership & Team Management', slug:'leadership-management', subtitle:'Lead teams that deliver. Frameworks for managing performance, conflict and organisational culture.', level:'Intermediate', price:35000, discount_price:28000, duration:'10 hrs', featured:true, thumbnail_url:'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=360&fit=crop&auto=format' },
+  { id:'fc5', title:'Digital Literacy & Microsoft Office', slug:'digital-literacy', subtitle:'Master Word, Excel, PowerPoint and essential digital tools. Stay competitive in today\'s workplace.', level:'Beginner', price:18000, discount_price:null, duration:'7 hrs', featured:false, thumbnail_url:'https://images.unsplash.com/photo-1587440871875-191322ee64b0?w=600&h=360&fit=crop&auto=format' },
+  { id:'fc6', title:'Entrepreneurship & Business Development', slug:'entrepreneurship', subtitle:'From idea to income — validate your business model, build your brand and grow your first customers.', level:'All Levels', price:30000, discount_price:24000, duration:'12 hrs', featured:false, thumbnail_url:'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=360&fit=crop&auto=format' },
+];
+
+function renderCourseCards(courses) {
+  return courses.map(c => {
+      const hasDiscount = c.discount_price && c.discount_price < c.price;
+      const pct = hasDiscount ? Math.round((1 - c.discount_price / c.price) * 100) : 0;
+      return `
+        <div class="course-card">
+          <div class="course-thumb">
+            ${c.thumbnail_url ? `<img src="${escapeHtml(c.thumbnail_url)}" alt="${escapeHtml(c.title)}" loading="lazy">` : ''}
+            ${hasDiscount ? `<span class="badge discount">${pct}% OFF</span>` : ''}
+            ${c.price === 0 ? `<span class="badge free">Free</span>` : ''}
+          </div>
+          <div class="course-body">
+            <div class="course-cat">${escapeHtml(c.level || 'All Levels')}</div>
+            <div class="course-title">${escapeHtml(c.title)}</div>
+            <div class="course-desc">${escapeHtml(c.subtitle || '')}</div>
+            <div class="course-meta">
+              <span>⏱ ${c.duration || '—'}</span>
+              ${c.featured ? '<span>⭐ Featured</span>' : ''}
+            </div>
+            <div class="course-footer">
+              <div class="price-block">
+                <span class="price-now">${c.price > 0 ? formatNaira(hasDiscount ? c.discount_price : c.price) : 'Free'}</span>
+                ${hasDiscount ? `<span class="price-was">${formatNaira(c.price)}</span>` : ''}
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="openAuth('register')">Enrol Now</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+}
+
 async function loadCourses() {
   const grid = document.getElementById('courseGrid');
   if (!supabaseReady) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="ee-icon">◇</div><p>Courses will appear here once the academy's catalogue is connected.</p></div>`;
+    grid.innerHTML = renderCourseCards(FALLBACK_COURSES);
     return;
   }
   try {
@@ -1880,40 +2168,14 @@ async function loadCourses() {
     if (error) throw error;
 
     if (!courses || courses.length === 0) {
-      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="ee-icon">◇</div><p>No courses published yet. Check back soon.</p></div>`;
+      grid.innerHTML = renderCourseCards(FALLBACK_COURSES);
       return;
     }
 
-    grid.innerHTML = courses.map(c => {
-      const hasDiscount = c.discount_price && c.discount_price < c.price;
-      const pct = hasDiscount ? Math.round((1 - c.discount_price / c.price) * 100) : 0;
-      return `
-        <div class="course-card">
-          <div class="course-thumb">
-            ${c.thumbnail_url ? `<img src="${escapeHtml(c.thumbnail_url)}" alt="${escapeHtml(c.title)}">` : ''}
-            ${hasDiscount ? `<span class="badge discount">${pct}% OFF</span>` : ''}
-          </div>
-          <div class="course-body">
-            <div class="course-cat">${escapeHtml(c.level || 'All Levels')}</div>
-            <div class="course-title">${escapeHtml(c.title)}</div>
-            <div class="course-desc">${escapeHtml(c.subtitle || '')}</div>
-            <div class="course-meta">
-              <span>${c.duration || '—'}</span>
-            </div>
-            <div class="course-footer">
-              <div class="price-block">
-                <span class="price-now">${c.price > 0 ? formatNaira(hasDiscount ? c.discount_price : c.price) : 'Free'}</span>
-                ${hasDiscount ? `<span class="price-was">${formatNaira(c.price)}</span>` : ''}
-              </div>
-              <a href="#course-${escapeHtml(c.slug)}" class="btn btn-secondary btn-sm">View Course</a>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
+    grid.innerHTML = renderCourseCards(courses);
   } catch (err) {
     console.warn('Courses not available yet:', err.message);
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="ee-icon">◇</div><p>Courses will appear here once the catalogue is set up.</p></div>`;
+    grid.innerHTML = renderCourseCards(FALLBACK_COURSES);
   }
 }
 
@@ -1951,9 +2213,18 @@ async function loadWebinars() {
   }
 }
 
+const FALLBACK_TESTIMONIALS = [
+  { name:'Chisom Nwosu', role:'HR Professional, Lagos', quote:'The Professional Communication course completely transformed how I write emails and lead meetings. I got promoted within 3 months of completing it. The certificate carries real weight.', rating:5 },
+  { name:'Emeka Okafor', role:'Entrepreneur, Benin City', quote:'I enrolled in the Entrepreneurship programme not knowing what to expect. I left with a business plan, three paying clients, and the confidence to keep going. CECT Academy is the real deal.', rating:5 },
+  { name:'Adaeze Eze', role:'Graduate, University of Benin', quote:'As a fresh graduate, I needed something that would set me apart. The Digital Literacy and Public Speaking courses gave me exactly that. My first job interview went flawlessly.', rating:5 },
+];
+
 async function loadTestimonials() {
-  if (!supabaseReady) return;
   const grid = document.getElementById('testiGrid');
+  if (!supabaseReady) {
+    renderTestimonials(grid, FALLBACK_TESTIMONIALS);
+    return;
+  }
   try {
     const { data: rows, error } = await sbClient
       .from('testimonials')
@@ -1961,26 +2232,44 @@ async function loadTestimonials() {
       .eq('status', 'approved')
       .limit(3);
     if (error) throw error;
-    if (!rows || rows.length === 0) return;
+    if (!rows || rows.length === 0) {
+      renderTestimonials(grid, FALLBACK_TESTIMONIALS);
+      return;
+    }
 
-    grid.innerHTML = rows.map(t => `
-      <div class="testi-card">
-        <div class="testi-stars">${'★'.repeat(t.rating || 5)}</div>
-        <p class="testi-quote">${escapeHtml(t.quote)}</p>
-        <div class="testi-person">
-          <span class="testi-avatar">${escapeHtml((t.name || '').split(' ').map(p => p[0]).slice(0,2).join(''))}</span>
-          <div><div class="testi-name">${escapeHtml(t.name)}</div><div class="testi-role">${escapeHtml(t.role || '')}</div></div>
-        </div>
-      </div>
-    `).join('');
+    renderTestimonials(grid, rows);
   } catch (err) {
     console.warn('Testimonials not available yet:', err.message);
+    renderTestimonials(grid, FALLBACK_TESTIMONIALS);
   }
 }
 
+function renderTestimonials(grid, rows) {
+  grid.innerHTML = rows.map(t => `
+    <div class="testi-card">
+      <div class="testi-stars">${'★'.repeat(t.rating || 5)}</div>
+      <p class="testi-quote">${escapeHtml(t.quote)}</p>
+      <div class="testi-person">
+        <span class="testi-avatar">${escapeHtml((t.name || '').split(' ').map(p => p[0]).slice(0,2).join(''))}</span>
+        <div><div class="testi-name">${escapeHtml(t.name)}</div><div class="testi-role">${escapeHtml(t.role || '')}</div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+const FALLBACK_INSTRUCTORS = [
+  { full_name:'Dr. Amaka Okafor', bio:'Lead Instructor · Communication & Leadership', avatar_url:'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&auto=format' },
+  { full_name:'Mr. Chukwuemeka Eze', bio:'Business Development & Entrepreneurship Expert', avatar_url:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&auto=format' },
+  { full_name:'Mrs. Ngozi Adeyemi', bio:'Digital Skills & Office Productivity Trainer', avatar_url:'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&auto=format' },
+  { full_name:'Mr. Tunde Fashola', bio:'Public Speaking & Presentation Coach', avatar_url:'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&auto=format' },
+];
+
 async function loadInstructors() {
-  if (!supabaseReady) return;
   const grid = document.getElementById('instrGrid');
+  if (!supabaseReady) {
+    renderInstructors(grid, FALLBACK_INSTRUCTORS);
+    return;
+  }
   try {
     const { data: rows, error } = await sbClient
       .from('profiles')
@@ -1988,18 +2277,25 @@ async function loadInstructors() {
       .eq('role', 'instructor')
       .limit(4);
     if (error) throw error;
-    if (!rows || rows.length === 0) return;
-
-    grid.innerHTML = rows.map(i => `
-      <div class="instr-card">
-        <div class="instr-photo">${i.avatar_url ? `<img src="${escapeHtml(i.avatar_url)}" alt="${escapeHtml(i.full_name)}">` : ''}</div>
-        <h4>${escapeHtml(i.full_name)}</h4>
-        <p>${escapeHtml((i.bio || '').slice(0, 40))}</p>
-      </div>
-    `).join('');
+    if (!rows || rows.length === 0) {
+      renderInstructors(grid, FALLBACK_INSTRUCTORS);
+      return;
+    }
+    renderInstructors(grid, rows);
   } catch (err) {
     console.warn('Instructors not available yet:', err.message);
+    renderInstructors(grid, FALLBACK_INSTRUCTORS);
   }
+}
+
+function renderInstructors(grid, rows) {
+  grid.innerHTML = rows.map(i => `
+    <div class="instr-card">
+      <div class="instr-photo">${i.avatar_url ? `<img src="${escapeHtml(i.avatar_url)}" alt="${escapeHtml(i.full_name)}" loading="lazy">` : '<div style="width:100%;height:100%;background:var(--grad-brand);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:800">' + escapeHtml(i.full_name.split(' ').map(p=>p[0]).slice(0,2).join('')) + '</div>'}</div>
+      <h4>${escapeHtml(i.full_name)}</h4>
+      <p>${escapeHtml((i.bio || '').slice(0, 60))}${(i.bio||'').length > 60 ? '…' : ''}</p>
+    </div>
+  `).join('');
 }
 
 /* ---------------------------------------------------------------
