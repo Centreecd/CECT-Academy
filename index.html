@@ -617,6 +617,36 @@ section{padding:96px 0;}
 .assignment-upload-zone{border:2px dashed var(--gold);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:background .15s;background:rgba(232,160,32,.04);}
 .assignment-upload-zone:hover{background:rgba(232,160,32,.09);}
 
+/* Text lesson copy-protection */
+.text-lesson-content{
+  background:#fff;border-radius:var(--radius-md);border:1px solid var(--line);
+  padding:28px 32px;line-height:1.82;font-size:15.5px;color:var(--navy);
+  user-select:none;-webkit-user-select:none;-moz-user-select:none;
+  -webkit-touch-callout:none;
+}
+.text-lesson-content h1,.text-lesson-content h2,.text-lesson-content h3{
+  font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:14px;margin-top:24px;
+}
+.text-lesson-content p{margin-bottom:14px;}
+.text-lesson-content ul,.text-lesson-content ol{margin:0 0 14px 22px;}
+
+/* Submission status pills */
+.sub-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:99px;font-size:12px;font-weight:700;}
+.sub-pill.submitted{background:#EFF6FF;color:var(--blue-dark);}
+.sub-pill.reviewed{background:#FFF7ED;color:var(--warn);}
+.sub-pill.accepted{background:#F0FDF4;color:var(--success);}
+.sub-pill.returned{background:#FEF2F2;color:var(--danger);}
+
+/* Worksheet download button */
+.worksheet-download-btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:11px 20px;border-radius:10px;font-weight:700;font-size:14px;
+  background:linear-gradient(135deg,#FFF7ED,#FEF3C7);
+  border:1.5px solid var(--gold);color:#92400E;
+  transition:background .15s;cursor:pointer;margin-bottom:16px;
+}
+.worksheet-download-btn:hover{background:linear-gradient(135deg,#FEF3C7,#FDE68A);}
+
 /* Player — module section labels in curriculum sidebar */
 .pcurr-module-header{
   display:flex;align-items:center;gap:8px;padding:12px 0 8px;
@@ -1452,6 +1482,7 @@ section{padding:96px 0;}
         <a href="#admin/students" data-admin-tab="students" class="admin-nav-link">Students</a>
         <a href="#admin/webinars" data-admin-tab="webinars" class="admin-nav-link">Webinars</a>
         <a href="#admin/certificates" data-admin-tab="certificates" class="admin-nav-link">Certificates</a>
+        <a href="#admin/submissions" data-admin-tab="submissions" class="admin-nav-link">Submissions</a>
         <a href="#admin/testimonials" data-admin-tab="testimonials" class="admin-nav-link">Testimonials</a>
         <a href="#admin/instructors" data-admin-tab="instructors" class="admin-nav-link">Instructors</a>
         <a href="#admin/settings" data-admin-tab="settings" class="admin-nav-link">⚙ Site Settings</a>
@@ -1559,6 +1590,19 @@ section{padding:96px 0;}
             <table class="admin-table">
               <thead><tr><th>Name</th><th>Quote</th><th>Status</th><th></th></tr></thead>
               <tbody id="adminTestiRows"><tr><td colspan="4"><div class="admin-empty-note">Loading testimonials…</div></td></tr></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- SUBMISSIONS TAB -->
+        <section id="adminTab-submissions" class="admin-panel" style="display:none">
+          <div class="admin-panel-head">
+            <div><h3>Assignment Submissions</h3><p>Review student submissions and update their status.</p></div>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Student</th><th>Course</th><th>Assignment</th><th>Submitted</th><th>Status</th><th>File</th><th></th></tr></thead>
+              <tbody id="adminSubmissionRows"><tr><td colspan="7"><div class="admin-empty-note">Loading submissions…</div></td></tr></tbody>
             </table>
           </div>
         </section>
@@ -1799,6 +1843,23 @@ section{padding:96px 0;}
       <label for="asgDescription">Description / Instructions</label>
       <textarea id="asgDescription" rows="4" placeholder="Describe what learners should do and how to submit…" maxlength="600" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical;background:var(--canvas)"></textarea>
     </div>
+    <div class="field">
+      <label>Worksheet file <span style="font-weight:400;color:var(--navy-soft)">(PDF / DOCX / PPTX — optional)</span></label>
+      <div class="upload-zone" id="asgWorksheetZone">
+        <input type="file" id="asgWorksheetInput" accept="application/pdf,.docx,.doc,.pptx,.ppt">
+        <div class="uz-icon">📋</div>
+        <div class="uz-label">Tap to upload worksheet</div>
+        <div class="uz-sub">PDF, DOCX or PPTX · Students can download this</div>
+      </div>
+      <div class="upload-bar" id="asgWorksheetBar"><div class="upload-bar-fill" id="asgWorksheetBarFill"></div></div>
+      <div id="asgWorksheetPreview" style="display:none" class="upload-preview">
+        <div style="font-size:24px">📋</div>
+        <div><div class="up-name" id="asgWorksheetPreviewName"></div><div class="up-status" style="color:var(--success)">✓ Uploaded</div></div>
+        <button type="button" class="up-remove" id="asgWorksheetRemove">✕</button>
+      </div>
+      <input type="hidden" id="asgWorksheetUrl">
+    </div>
+
     <label style="display:flex;align-items:center;gap:10px;margin-bottom:22px;font-size:14px;font-weight:600">
       <input type="checkbox" id="asgOptional" style="width:auto"> Optional (not required to complete the module)
     </label>
@@ -1831,7 +1892,15 @@ section{padding:96px 0;}
           <option value="text">Text</option>
         </select>
       </div>
-      <div class="field">
+      <!-- Text content area (shown when type=text) -->
+      <div class="field" id="lbContentField" style="display:none">
+        <label for="lbContent">Lesson content <span style="font-weight:400;color:var(--navy-soft)">(rendered read-only in the player)</span></label>
+        <textarea id="lbContent" rows="10" placeholder="Type or paste your lesson content here. Students will see it protected — no copy, no right-click, no print." style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical;background:var(--canvas)"></textarea>
+        <p style="font-size:12px;color:var(--navy-soft);margin-top:6px">💡 Tip: Use blank lines to separate paragraphs. Students cannot copy this text.</p>
+      </div>
+
+      <!-- Media area (hidden when type=text) -->
+      <div class="field" id="lbMediaField">
         <label>Video / Content file</label>
         <div class="upload-zone" id="lessonUploadZone">
           <input type="file" id="lessonFileInput" accept="video/mp4,video/webm,application/pdf,.pptx,.ppt">
@@ -3211,7 +3280,7 @@ function showAdminTab(tab) {
   panel.style.display = 'block';
   if (link) link.classList.add('active');
 
-  const titles = { overview: 'Overview', courses: 'Courses', categories: 'Categories', students: 'Students', webinars: 'Webinars', certificates: 'Certificates', testimonials: 'Testimonials', instructors: 'Instructors', courseDetail: currentCourseDetailTitle || 'Course' };
+  const titles = { overview: 'Overview', courses: 'Courses', categories: 'Categories', students: 'Students', webinars: 'Webinars', certificates: 'Certificates', testimonials: 'Testimonials', instructors: 'Instructors', submissions: 'Submissions', courseDetail: currentCourseDetailTitle || 'Course' };
   document.getElementById('adminTabTitle').textContent = titles[tab] || 'Overview';
 
   const chip = document.getElementById('adminUserChip');
@@ -3226,6 +3295,7 @@ function showAdminTab(tab) {
   if (tab === 'testimonials') loadAdminTestimonials();
   if (tab === 'instructors') loadAdminInstructors();
   if (tab === 'settings') { loadSiteSettings(); }
+  if (tab === 'submissions') loadAdminSubmissions();
 }
 
 document.getElementById('btnBackToCourses').addEventListener('click', () => { window.location.hash = '#admin/courses'; });
@@ -3345,12 +3415,22 @@ document.getElementById('newModuleForm').addEventListener('submit', async (e) =>
 
 /* ---------- Lesson builder ---------- */
 const lessonBuilderOverlay = document.getElementById('lessonBuilderOverlay');
+function lbToggleTypeFields() {
+  const type = document.getElementById('lbType').value;
+  const isText = type === 'text';
+  document.getElementById('lbContentField').style.display = isText ? 'block' : 'none';
+  document.getElementById('lbMediaField').style.display = isText ? 'none' : 'block';
+}
+document.getElementById('lbType').addEventListener('change', lbToggleTypeFields);
+
 function openLessonBuilder(moduleId) {
   document.getElementById('lessonBuilderForm').reset();
   document.getElementById('lbModuleId').value = moduleId;
   document.getElementById('lbVideoUrlFinal').value = '';
+  document.getElementById('lbContent').value = '';
   document.getElementById('lessonFilePreview').style.display = 'none';
   document.getElementById('lessonFileInput').value = '';
+  lbToggleTypeFields();
   lessonBuilderOverlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -3366,14 +3446,16 @@ document.getElementById('lessonBuilderForm').addEventListener('submit', async (e
   try {
     const { data: existing } = await sbClient.from('lessons').select('sort_order').eq('module_id', moduleId).order('sort_order', { ascending: false }).limit(1);
     const nextOrder = existing && existing[0] ? existing[0].sort_order + 1 : 0;
+    const lessonType = document.getElementById('lbType').value;
     const payload = {
       module_id: moduleId,
       title,
       slug: slugify(title) + '-' + Math.random().toString(36).slice(2, 6),
-      lesson_type: document.getElementById('lbType').value,
-      video_url: document.getElementById('lbVideoUrlFinal').value.trim()
+      lesson_type: lessonType,
+      video_url: lessonType !== 'text' ? (document.getElementById('lbVideoUrlFinal').value.trim()
                  || document.getElementById('lbVideoUrl').value.trim()
-                 || null,
+                 || null) : null,
+      content: lessonType === 'text' ? (document.getElementById('lbContent').value.trim() || null) : null,
       description: document.getElementById('lbDescription').value.trim() || null,
       is_preview: document.getElementById('lbPreview').checked,
       sort_order: nextOrder,
@@ -3550,6 +3632,17 @@ function openAssignmentBuilder(moduleId, existing) {
   document.getElementById('asgOptional').checked = existing ? !!existing.optional : false;
   document.getElementById('asgMsg').className = 'form-msg';
   document.getElementById('asgModalTitle').textContent = existing ? 'Edit Assignment' : 'Add Assignment';
+  // Worksheet
+  const existingUrl = existing ? (existing.worksheet_url || '') : '';
+  document.getElementById('asgWorksheetUrl').value = existingUrl;
+  if (existingUrl) {
+    const fname = decodeURIComponent(existingUrl.split('/').pop().split('?')[0]);
+    document.getElementById('asgWorksheetPreviewName').textContent = fname;
+    document.getElementById('asgWorksheetPreview').style.display = 'flex';
+  } else {
+    document.getElementById('asgWorksheetPreview').style.display = 'none';
+  }
+  document.getElementById('asgWorksheetInput').value = '';
   // Show/hide Remove button
   document.getElementById('asgRemove').style.display = existing ? 'inline-flex' : 'none';
   assignmentBuilderOverlay.classList.add('open');
@@ -3573,7 +3666,8 @@ document.getElementById('asgSubmit').addEventListener('click', async () => {
   const btn = document.getElementById('asgSubmit');
   btn.classList.add('is-loading'); btn.disabled = true;
 
-  const assignment = { title, description, optional };
+  const worksheetUrl = document.getElementById('asgWorksheetUrl').value.trim() || null;
+  const assignment = { title, description, optional, worksheet_url: worksheetUrl };
   try {
     const { error } = await sbClient.from('course_modules').update({ assignment }).eq('id', moduleId);
     if (error) throw error;
@@ -3602,6 +3696,63 @@ document.getElementById('asgRemove').addEventListener('click', async () => {
     document.getElementById('asgMsg').textContent = err.message;
   }
 });
+
+/* ---------- Assignment Submissions (admin) ---------- */
+async function loadAdminSubmissions() {
+  const tbody = document.getElementById('adminSubmissionRows');
+  try {
+    const { data, error } = await sbClient
+      .from('assignment_submissions')
+      .select('id, file_url, file_name, status, admin_note, submitted_at, module_id, course_id, profiles(full_name, email), courses(title), course_modules(title)')
+      .order('submitted_at', { ascending: false })
+      .limit(100);
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="admin-empty-note">No submissions yet.</div></td></tr>`;
+      return;
+    }
+    const statusColors = { submitted: 'upcoming', reviewed: 'draft', accepted: 'published', returned: 'danger' };
+    tbody.innerHTML = data.map(s => `
+      <tr>
+        <td><strong>${escapeHtml(s.profiles?.full_name || '—')}</strong><br><span style="font-size:11.5px;color:var(--navy-soft)">${escapeHtml(s.profiles?.email || '')}</span></td>
+        <td>${escapeHtml(s.courses?.title || '—')}</td>
+        <td>${escapeHtml(s.course_modules?.title || '—')}</td>
+        <td>${new Date(s.submitted_at).toLocaleDateString()}</td>
+        <td><span class="status-pill ${statusColors[s.status]||'draft'}">${escapeHtml(s.status)}</span></td>
+        <td>${s.file_url ? `<a href="${escapeHtml(s.file_url)}" target="_blank" rel="noopener" style="color:var(--blue-dark);font-weight:700">↗ View</a>` : '—'}</td>
+        <td style="min-width:200px">
+          <select data-sub-status="${s.id}" style="padding:5px 9px;border:1.5px solid var(--line);border-radius:7px;font-family:inherit;font-size:12px;background:var(--canvas)">
+            <option value="submitted" ${s.status==='submitted'?'selected':''}>Submitted</option>
+            <option value="reviewed" ${s.status==='reviewed'?'selected':''}>Reviewed</option>
+            <option value="accepted" ${s.status==='accepted'?'selected':''}>Accepted</option>
+            <option value="returned" ${s.status==='returned'?'selected':''}>Returned</option>
+          </select>
+          <input type="text" data-sub-note="${s.id}" value="${escapeHtml(s.admin_note||'')}" placeholder="Instructor note…"
+            style="margin-top:4px;width:100%;padding:5px 9px;border:1.5px solid var(--line);border-radius:7px;font-family:inherit;font-size:12px;background:var(--canvas)">
+          <button data-sub-save="${s.id}" class="btn btn-primary btn-sm" style="margin-top:6px;font-size:12px;padding:6px 12px">Save</button>
+        </td>
+      </tr>
+    `).join('');
+
+    tbody.querySelectorAll('[data-sub-save]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.subSave;
+        const newStatus = tbody.querySelector(`[data-sub-status="${id}"]`).value;
+        const newNote = tbody.querySelector(`[data-sub-note="${id}"]`).value.trim();
+        try {
+          const { error } = await sbClient.from('assignment_submissions')
+            .update({ status: newStatus, admin_note: newNote || null, reviewed_at: new Date().toISOString() })
+            .eq('id', id);
+          if (error) throw error;
+          showToast('Submission updated.', 'success');
+          loadAdminSubmissions();
+        } catch(err) { showToast(err.message, 'error'); }
+      });
+    });
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="admin-empty-note">Could not load submissions: ${escapeHtml(err.message)}</div></td></tr>`;
+  }
+}
 
 /* ---------- Overview stats ---------- */
 async function loadAdminStats() {
@@ -3900,6 +4051,29 @@ document.getElementById('resourceFileRemove').addEventListener('click', () => {
 // Manual URL paste fallback for resources
 document.getElementById('rbFileUrlManual').addEventListener('input', function() {
   document.getElementById('rbFileUrl').value = this.value;
+});
+
+/* ---- Assignment worksheet uploader ---- */
+document.getElementById('asgWorksheetInput').addEventListener('change', async function() {
+  const file = this.files[0];
+  if (!file) return;
+  document.getElementById('asgWorksheetPreview').style.display = 'none';
+  document.getElementById('asgWorksheetUrl').value = '';
+  await uploadToCloudinary(file, {
+    barEl: document.getElementById('asgWorksheetBar'),
+    barFillEl: document.getElementById('asgWorksheetBarFill'),
+    onSuccess: (url, name) => {
+      document.getElementById('asgWorksheetUrl').value = url;
+      document.getElementById('asgWorksheetPreviewName').textContent = name;
+      document.getElementById('asgWorksheetPreview').style.display = 'flex';
+    },
+    onError: (msg) => showToast('Worksheet upload failed: ' + msg, 'error'),
+  });
+});
+document.getElementById('asgWorksheetRemove').addEventListener('click', () => {
+  document.getElementById('asgWorksheetUrl').value = '';
+  document.getElementById('asgWorksheetPreview').style.display = 'none';
+  document.getElementById('asgWorksheetInput').value = '';
 });
 
 function slugify(str) {
@@ -4599,7 +4773,7 @@ async function loadLearningPlayer(slug, lessonId) {
   try {
     const { data: course, error } = await sbClient
       .from('courses')
-      .select('id, title, certificate_enabled, course_modules(id, title, sort_order, lessons(id, title, lesson_type, video_url, description, is_preview, sort_order, resources(id, title, resource_type, file_url)))')
+      .select('id, title, certificate_enabled, course_modules(id, title, sort_order, assessment, assignment, lessons(id, title, lesson_type, video_url, content, description, is_preview, sort_order, resources(id, title, resource_type, file_url)))')
       .eq('slug', slug)
       .single();
     if (error || !course) { main.innerHTML = `<div class="empty-state"><p>Course unavailable.</p></div>`; return; }
@@ -4675,12 +4849,35 @@ async function loadLearningPlayer(slug, lessonId) {
     const nextLesson = allLessons[idx+1];
     const isCompleted = completedSet.has(activeLesson.id);
 
+    // Build lesson media/content area
+    let lessonTopHtml = '';
+    if (activeLesson.lesson_type === 'text') {
+      // Text lesson — copy-protected rendering
+      const textParagraphs = (activeLesson.content || '')
+        .split(/\n\n+/)
+        .map(p => p.trim())
+        .filter(Boolean)
+        .map(p => `<p>${escapeHtml(p).replace(/\n/g,'<br>')}</p>`)
+        .join('');
+      lessonTopHtml = `<div class="text-lesson-content" id="textLessonBody"
+          oncontextmenu="return false"
+          onselectstart="return false"
+          ondragstart="return false">
+        ${textParagraphs || '<p style="color:var(--navy-soft)">No content added yet.</p>'}
+      </div>`;
+    } else if (activeLesson.lesson_type === 'video' && activeLesson.video_url) {
+      lessonTopHtml = embedForVideo(activeLesson.video_url);
+    } else {
+      const icons = { pdf:'📄', slides:'📊', text:'📝' };
+      lessonTopHtml = `<div class="player-placeholder">${icons[activeLesson.lesson_type]||'📝'} ${escapeHtml(activeLesson.lesson_type)} lesson</div>`;
+    }
+
     main.innerHTML = `
       ${certBannerHtml}
-      ${activeLesson.lesson_type === 'video' && activeLesson.video_url ? embedForVideo(activeLesson.video_url) : `<div class="player-placeholder">${activeLesson.lesson_type === 'pdf' ? '📄' : activeLesson.lesson_type === 'slides' ? '📊' : '📝'} ${escapeHtml(activeLesson.lesson_type)} lesson</div>`}
+      ${lessonTopHtml}
       <div class="player-lesson-body">
         <h2 style="font-size:22px;margin-bottom:10px">${escapeHtml(activeLesson.title)}</h2>
-        <p style="color:var(--navy-soft);margin-bottom:20px">${escapeHtml(activeLesson.description || '')}</p>
+        ${activeLesson.description ? `<p style="color:var(--navy-soft);margin-bottom:20px">${escapeHtml(activeLesson.description)}</p>` : ''}
 
         ${(activeLesson.resources||[]).length ? `
           <h4 style="font-size:14px;margin-bottom:10px">Resources</h4>
@@ -4698,6 +4895,18 @@ async function loadLearningPlayer(slug, lessonId) {
         <div id="playerModuleExtras"></div>
       </div>
     `;
+
+    // Block keyboard copy shortcuts on text lessons
+    if (activeLesson.lesson_type === 'text') {
+      const textBody = document.getElementById('textLessonBody');
+      if (textBody) {
+        textBody.addEventListener('keydown', e => {
+          if ((e.ctrlKey || e.metaKey) && ['c','a','p','s','u'].includes(e.key.toLowerCase())) {
+            e.preventDefault();
+          }
+        });
+      }
+    }
 
     await sbClient.from('lesson_progress').upsert({
       student_id: currentUser.id, lesson_id: activeLesson.id, last_accessed_at: new Date().toISOString()
@@ -4726,20 +4935,103 @@ async function loadLearningPlayer(slug, lessonId) {
       }
       if (activeModuleForLesson.assignment) {
         const as = activeModuleForLesson.assignment;
+        const moduleId = activeModuleForLesson.id;
+        // Fetch existing submission for this student/module
+        let submission = null;
+        try {
+          const { data: sub } = await sbClient
+            .from('assignment_submissions')
+            .select('id, file_url, file_name, status, admin_note, submitted_at')
+            .eq('student_id', currentUser.id)
+            .eq('module_id', moduleId)
+            .order('submitted_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          submission = sub;
+        } catch(e) { /* table may not exist yet — silently skip */ }
+
+        const statusLabels = { submitted:'📤 Submitted', reviewed:'👀 Under Review', accepted:'✅ Accepted', returned:'↩ Returned for revision' };
+        const submissionStatusHtml = submission ? `
+          <div style="margin-bottom:14px">
+            <span class="sub-pill ${submission.status}">${statusLabels[submission.status] || submission.status}</span>
+            <div style="font-size:12px;color:var(--navy-soft);margin-top:6px">Submitted: ${new Date(submission.submitted_at).toLocaleDateString()}</div>
+            ${submission.file_url ? `<a href="${escapeHtml(submission.file_url)}" target="_blank" rel="noopener" style="font-size:12px;color:var(--blue-dark);font-weight:700;margin-top:4px;display:inline-block">↗ View your file</a>` : ''}
+            ${submission.admin_note ? `<div style="font-size:13px;background:#FFF7ED;border:1px solid var(--gold);border-radius:8px;padding:10px 12px;margin-top:10px"><strong>Instructor note:</strong> ${escapeHtml(submission.admin_note)}</div>` : ''}
+          </div>` : '';
+
+        const canResubmit = !submission || submission.status === 'returned';
+        const uploadZoneHtml = canResubmit ? `
+          <div class="assignment-upload-zone" id="asgUploadZone-${moduleId}" style="cursor:pointer;position:relative;">
+            <input type="file" id="asgFileInput-${moduleId}" accept="application/pdf,.docx,.doc,.pptx,.ppt" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">
+            <div style="font-size:24px;margin-bottom:6px">📎</div>
+            <div style="font-weight:700;font-size:14px">${submission ? 'Upload revised submission' : 'Upload your submission'}</div>
+            <div style="font-size:12px;color:var(--navy-soft);margin-top:4px">PDF, DOCX or PPTX</div>
+          </div>
+          <div class="upload-bar" id="asgBar-${moduleId}" style="margin-top:8px"><div class="upload-bar-fill" id="asgBarFill-${moduleId}"></div></div>
+          <div id="asgUploadMsg-${moduleId}" style="font-size:13px;margin-top:8px;display:none"></div>
+        ` : (submission && submission.status !== 'returned' ? `
+          <p style="font-size:13px;color:var(--navy-soft);margin-top:4px">Your submission is ${submission.status === 'accepted' ? 'accepted ✅ — no further action needed.' : 'under review. Check back soon.'}</p>
+        ` : '');
+
         extrasHtml += `
-          <div class="assignment-card">
+          <div class="assignment-card" id="asgCard-${moduleId}">
             <div class="assignment-badge">📌 ${as.optional?'Optional Assignment':'Assignment'}</div>
             <div class="assignment-title">${escapeHtml(as.title)}</div>
             <div class="assignment-desc">${escapeHtml(as.description||'')}</div>
             ${as.optional?`<div class="assignment-optional">✦ This assignment is optional — complete it for extra practice</div>`:''}
-            <div class="assignment-upload-zone" onclick="alert('Assignment upload coming soon — connect your Supabase storage bucket to enable file submissions.')">
-              <div style="font-size:24px;margin-bottom:6px">📎</div>
-              <div style="font-weight:700;font-size:14px">Tap to upload your submission</div>
-              <div style="font-size:12px;color:var(--navy-soft);margin-top:4px">PDF, DOCX, PPTX, XLSX or image</div>
-            </div>
+            ${as.worksheet_url ? `
+              <a href="${escapeHtml(as.worksheet_url)}" target="_blank" rel="noopener" class="worksheet-download-btn">
+                📥 Download Worksheet
+              </a>` : ''}
+            ${submissionStatusHtml}
+            ${uploadZoneHtml}
           </div>`;
       }
       extrasEl.innerHTML = extrasHtml;
+
+      // Wire up submission file inputs after render
+      if (activeModuleForLesson.assignment) {
+        const moduleId = activeModuleForLesson.id;
+        const fileInput = document.getElementById(`asgFileInput-${moduleId}`);
+        if (fileInput) {
+          fileInput.addEventListener('change', async function() {
+            const file = this.files[0];
+            if (!file) return;
+            const msgEl = document.getElementById(`asgUploadMsg-${moduleId}`);
+            msgEl.style.display = 'block';
+            msgEl.style.color = 'var(--navy-soft)';
+            msgEl.textContent = 'Uploading…';
+            await uploadToCloudinary(file, {
+              barEl: document.getElementById(`asgBar-${moduleId}`),
+              barFillEl: document.getElementById(`asgBarFill-${moduleId}`),
+              onSuccess: async (url, name) => {
+                try {
+                  await sbClient.from('assignment_submissions').upsert({
+                    student_id: currentUser.id,
+                    module_id: moduleId,
+                    course_id: course.id,
+                    file_url: url,
+                    file_name: name,
+                    status: 'submitted',
+                    submitted_at: new Date().toISOString(),
+                  }, { onConflict: 'student_id,module_id' });
+                  msgEl.style.color = 'var(--success)';
+                  msgEl.textContent = '✓ Submission uploaded successfully!';
+                  showToast('Assignment submitted!', 'success');
+                  setTimeout(() => loadLearningPlayer(slug, activeLesson.id), 1800);
+                } catch(err) {
+                  msgEl.style.color = 'var(--danger)';
+                  msgEl.textContent = 'Could not save submission: ' + err.message;
+                }
+              },
+              onError: (msg) => {
+                msgEl.style.color = 'var(--danger)';
+                msgEl.textContent = 'Upload failed: ' + msg;
+              },
+            });
+          });
+        }
+      }
     }
 
     document.getElementById('btnMarkComplete').addEventListener('click', async () => {
