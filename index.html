@@ -266,6 +266,15 @@ section{padding:96px 0;}
 .stat-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:32px;font-weight:800;background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;color:transparent;}
 .stat-label{font-size:13px;color:var(--navy-soft);font-weight:600;margin-top:6px;}
 
+/* === CATEGORY FILTER TABS === */
+.cat-filter-btn{
+  padding:8px 18px;border-radius:99px;font-size:13.5px;font-weight:600;
+  border:1.5px solid var(--line);background:#fff;color:var(--navy-soft);
+  cursor:pointer;transition:all .15s;
+}
+.cat-filter-btn:hover{border-color:var(--blue);color:var(--blue-dark);}
+.cat-filter-btn.active{background:var(--grad-brand);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(63,136,239,.3);}
+
 /* === COURSE CARDS — premium === */
 .course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
 .course-card{
@@ -894,7 +903,7 @@ section{padding:96px 0;}
           <span class="line">Transformation.</span>
         </h1>
 
-        <p class="hero-sub">Center-ECD Academy gives you practical, professional training — real skills, expert instructors, and certificates that mean something for your career.</p>
+        <p class="hero-sub" id="heroSubText">African Center for Enterprise and Capacity Development (CENTER-ECD) — Empowering Leaders, Building Enterprises, and Driving Sustainable Development Across Africa through Practical Skills, Expert Instructors, and Recognised Certifications that Help You Thrive in Today's Economy.</p>
 
         <div class="hero-ctas">
           <a href="#courses" class="btn btn-primary"><span class="btn-label">Explore Courses</span></a>
@@ -1063,6 +1072,7 @@ section{padding:96px 0;}
         <h2>Practical training, built<br>for real outcomes</h2>
         <p>Every course is designed with clear learning outcomes, downloadable resources, and a certificate on completion.</p>
       </div>
+      <div id="courseCategoryFilter" style="display:none;flex-wrap:wrap;gap:8px;margin-bottom:28px"></div>
       <div class="course-grid" id="courseGrid">
         <!-- Loading skeletons; replaced by loadCourses() -->
         <div class="course-card"><div class="skel" style="height:160px"></div><div class="course-body"><div class="skel" style="height:14px;width:60%"></div><div class="skel" style="height:20px"></div><div class="skel" style="height:40px"></div></div></div>
@@ -1088,9 +1098,9 @@ section{padding:96px 0;}
         </div>
         <div class="about-copy">
           <div class="section-eyebrow">About Center-ECD Academy</div>
-          <h2>Practical training, built for the African professional</h2>
-          <p>Center-ECD Academy is the training arm of the Center for Enterprise and Capacity Development — a professional learning platform built to help individuals and organisations develop the skills that matter in today's world.</p>
-          <p>We combine expert instruction, real-world application, and verifiable certification to give you credentials that actually open doors — whether you're starting your career, levelling up, or building your own business.</p>
+          <h2 id="aboutHeading">Practical training, built for the African professional</h2>
+          <p id="aboutPara1">Center-ECD Academy is the training arm of the Center for Enterprise and Capacity Development — a professional learning platform built to help individuals and organisations develop the skills that matter in today's world.</p>
+          <p id="aboutPara2">We combine expert instruction, real-world application, and verifiable certification to give you credentials that actually open doors — whether you're starting your career, levelling up, or building your own business.</p>
           <a href="#courses" class="btn btn-primary">Explore Our Courses</a>
         </div>
       </div>
@@ -1632,6 +1642,34 @@ section{padding:96px 0;}
             <div class="field" style="margin-bottom:0">
               <label for="setHeroAnnouncement">Announcement Text</label>
               <input type="text" id="setHeroAnnouncement" placeholder="e.g. Enrolment open for August cohort" maxlength="80">
+            </div>
+          </div>
+
+          <!-- Hero Subtext -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">Hero Subtext</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">The paragraph of text shown below the main headline on the homepage.</p>
+            <div class="field" style="margin-bottom:0">
+              <label for="setHeroSubtext">Hero Paragraph</label>
+              <textarea id="setHeroSubtext" rows="3" placeholder="Describe what the academy stands for…" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical"></textarea>
+            </div>
+          </div>
+
+          <!-- About Section -->
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
+            <h4 style="font-size:15px;margin-bottom:4px">About Section</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">The heading and body text in the About split section of the homepage.</p>
+            <div class="field">
+              <label for="setAboutHeading">Heading</label>
+              <input type="text" id="setAboutHeading" placeholder="e.g. Practical training, built for the African professional" maxlength="100">
+            </div>
+            <div class="field">
+              <label for="setAboutPara1">Paragraph 1</label>
+              <textarea id="setAboutPara1" rows="3" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical" placeholder="First paragraph about the academy…"></textarea>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label for="setAboutPara2">Paragraph 2</label>
+              <textarea id="setAboutPara2" rows="3" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical" placeholder="Second paragraph about the academy…"></textarea>
             </div>
           </div>
 
@@ -2677,13 +2715,11 @@ function getFallbackModules(slug) {
 
 function renderCourseCards(courses) {
   return courses.map(c => {
-      const hasDiscount = c.discount_price && c.discount_price < c.price;
-      const pct = hasDiscount ? Math.round((1 - c.discount_price / c.price) * 100) : 0;
+      const effectivePrice = (c.discount_price && c.discount_price < c.price) ? c.discount_price : c.price;
       return `
         <div class="course-card">
           <div class="course-thumb">
             ${c.thumbnail_url ? `<img src="${escapeHtml(c.thumbnail_url)}" alt="${escapeHtml(c.title)}" loading="lazy">` : ''}
-            ${hasDiscount ? `<span class="badge discount">${pct}% OFF</span>` : ''}
             ${c.price === 0 ? `<span class="badge free">Free</span>` : ''}
           </div>
           <div class="course-body">
@@ -2697,8 +2733,7 @@ function renderCourseCards(courses) {
             </div>
             <div class="course-footer">
               <div class="price-block">
-                <span class="price-now">${c.price > 0 ? formatNaira(hasDiscount ? c.discount_price : c.price) : 'Free'}</span>
-                ${hasDiscount ? `<span class="price-was">${formatNaira(c.price)}</span>` : ''}
+                <span class="price-now">${c.price > 0 ? formatNaira(effectivePrice) : 'Free'}</span>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="openAuth('register')">Enrol Now</button>
             </div>
@@ -2736,22 +2771,46 @@ function renderGalleryStrip(gallery) {
 
 async function loadCourses() {
   const grid = document.getElementById('courseGrid');
+  const filterBar = document.getElementById('courseCategoryFilter');
   if (!supabaseReady) {
     grid.innerHTML = renderCourseCards(FALLBACK_COURSES);
     return;
   }
   try {
-    const { data: courses, error } = await sbClient
-      .from('courses')
-      .select('id, title, slug, subtitle, thumbnail_url, price, discount_price, level, duration, featured, status')
-      .eq('status', 'published')
-      .order('featured', { ascending: false })
-      .limit(6);
+    const [{ data: courses, error }, { data: cats }] = await Promise.all([
+      sbClient.from('courses')
+        .select('id, title, slug, subtitle, thumbnail_url, price, discount_price, level, duration, featured, status, category_id, categories(name)')
+        .eq('status', 'published')
+        .order('featured', { ascending: false }),
+      sbClient.from('categories').select('id, name').order('name')
+    ]);
     if (error) throw error;
 
     if (!courses || courses.length === 0) {
       grid.innerHTML = renderCourseCards(FALLBACK_COURSES);
       return;
+    }
+
+    // Build category filter tabs
+    if (filterBar && cats && cats.length > 0) {
+      const usedCatIds = new Set(courses.map(c => c.category_id).filter(Boolean));
+      const usedCats = cats.filter(c => usedCatIds.has(c.id));
+      if (usedCats.length > 1) {
+        filterBar.innerHTML = `
+          <button class="cat-filter-btn active" data-cat="all">All</button>
+          ${usedCats.map(c => `<button class="cat-filter-btn" data-cat="${c.id}">${escapeHtml(c.name)}</button>`).join('')}
+        `;
+        filterBar.style.display = 'flex';
+        filterBar.querySelectorAll('.cat-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            filterBar.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cat = btn.dataset.cat;
+            const filtered = cat === 'all' ? courses : courses.filter(c => String(c.category_id) === String(cat));
+            grid.innerHTML = renderCourseCards(filtered);
+          });
+        });
+      }
     }
 
     grid.innerHTML = renderCourseCards(courses);
@@ -2795,16 +2854,10 @@ async function loadWebinars() {
   }
 }
 
-const FALLBACK_TESTIMONIALS = [
-  { name:'Chisom Nwosu', role:'HR Professional, Lagos', quote:'The Professional Communication course completely transformed how I write emails and lead meetings. I got promoted within 3 months of completing it. The certificate carries real weight.', rating:5 },
-  { name:'Emeka Okafor', role:'Entrepreneur, Benin City', quote:'I enrolled in the Entrepreneurship programme not knowing what to expect. I left with a business plan, three paying clients, and the confidence to keep going. Center-ECD Academy is the real deal.', rating:5 },
-  { name:'Adaeze Eze', role:'Graduate, University of Benin', quote:'As a fresh graduate, I needed something that would set me apart. The Digital Literacy and Public Speaking courses gave me exactly that. My first job interview went flawlessly.', rating:5 },
-];
-
 async function loadTestimonials() {
   const grid = document.getElementById('testiGrid');
   if (!supabaseReady) {
-    renderTestimonials(grid, FALLBACK_TESTIMONIALS);
+    grid.innerHTML = `<p style="color:var(--navy-soft);grid-column:1/-1">Learner testimonials will appear here once submitted and approved.</p>`;
     return;
   }
   try {
@@ -2812,17 +2865,17 @@ async function loadTestimonials() {
       .from('testimonials')
       .select('id, name, role, quote, rating')
       .eq('status', 'approved')
-      .limit(3);
+      .order('created_at', { ascending: false })
+      .limit(6);
     if (error) throw error;
     if (!rows || rows.length === 0) {
-      renderTestimonials(grid, FALLBACK_TESTIMONIALS);
+      grid.innerHTML = `<p style="color:var(--navy-soft);grid-column:1/-1">Learner testimonials will appear here once submitted and approved.</p>`;
       return;
     }
-
     renderTestimonials(grid, rows);
   } catch (err) {
     console.warn('Testimonials not available yet:', err.message);
-    renderTestimonials(grid, FALLBACK_TESTIMONIALS);
+    grid.innerHTML = `<p style="color:var(--navy-soft);grid-column:1/-1">Learner testimonials will appear here once submitted and approved.</p>`;
   }
 }
 
@@ -2857,7 +2910,7 @@ async function loadInstructors() {
       .from('profiles')
       .select('id, full_name, avatar_url, bio')
       .eq('role', 'instructor')
-      .limit(4);
+      .limit(8);
     if (error) throw error;
     if (!rows || rows.length === 0) {
       renderInstructors(grid, FALLBACK_INSTRUCTORS);
@@ -2905,7 +2958,9 @@ document.getElementById('year').textContent = new Date().getFullYear();
    SITE SETTINGS — load, apply, save
    ============================================================ */
 const SETTING_KEYS = [
-  'hero_announcement','why_heading','why_subtext',
+  'hero_announcement','hero_subtext',
+  'why_heading','why_subtext',
+  'about_heading','about_para1','about_para2',
   'contact_email','contact_phone','contact_address',
   'social_facebook','social_instagram','social_twitter','social_linkedin',
   'video_url','about_image_url','programs_json','gallery_json'
@@ -2929,6 +2984,18 @@ function applySettings(s) {
   // Hero announcement
   const annoEl = document.getElementById('heroAnnouncementText');
   if (annoEl && s.hero_announcement) annoEl.textContent = s.hero_announcement;
+
+  // Hero subtext
+  const heroSub = document.getElementById('heroSubText');
+  if (heroSub && s.hero_subtext) heroSub.textContent = s.hero_subtext;
+
+  // About section
+  const aboutH = document.getElementById('aboutHeading');
+  const aboutP1 = document.getElementById('aboutPara1');
+  const aboutP2 = document.getElementById('aboutPara2');
+  if (aboutH && s.about_heading) aboutH.textContent = s.about_heading;
+  if (aboutP1 && s.about_para1) aboutP1.textContent = s.about_para1;
+  if (aboutP2 && s.about_para2) aboutP2.textContent = s.about_para2;
 
   // Why section
   const whyH = document.getElementById('whyHeading');
@@ -2991,6 +3058,10 @@ function applySettings(s) {
 function populateSettingsForm(s) {
   const fields = {
     setHeroAnnouncement: s.hero_announcement,
+    setHeroSubtext:      s.hero_subtext,
+    setAboutHeading:     s.about_heading,
+    setAboutPara1:       s.about_para1,
+    setAboutPara2:       s.about_para2,
     setWhyHeading:       s.why_heading,
     setWhySubtext:       s.why_subtext,
     setContactEmail:     s.contact_email,
@@ -3080,6 +3151,10 @@ async function saveSettings() {
 
   const rows = [
     { key:'hero_announcement', value: document.getElementById('setHeroAnnouncement')?.value.trim() || '' },
+    { key:'hero_subtext',      value: document.getElementById('setHeroSubtext')?.value.trim() || '' },
+    { key:'about_heading',     value: document.getElementById('setAboutHeading')?.value.trim() || '' },
+    { key:'about_para1',       value: document.getElementById('setAboutPara1')?.value.trim() || '' },
+    { key:'about_para2',       value: document.getElementById('setAboutPara2')?.value.trim() || '' },
     { key:'why_heading',       value: document.getElementById('setWhyHeading')?.value.trim() || '' },
     { key:'why_subtext',       value: document.getElementById('setWhySubtext')?.value.trim() || '' },
     { key:'contact_email',     value: document.getElementById('setContactEmail')?.value.trim() || '' },
