@@ -1777,50 +1777,15 @@ section{padding:96px 0;}
           <!-- Programs Grid Editor -->
           <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
             <h4 style="font-size:15px;margin-bottom:4px">Programs Grid</h4>
-            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:20px">The 6 large program cards shown below the hero. Upload a photo and fill in the text for each card.</p>
-            <div id="programsEditor">
-              ${[1,2,3,4,5,6].map(i => `
-              <div style="border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px">
-                <p style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--navy)">Card ${i}</p>
-                <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin-bottom:12px">
-                  <div style="position:relative;width:80px;height:60px;border-radius:8px;overflow:hidden;background:var(--canvas);border:1.5px dashed var(--line);cursor:pointer" onclick="document.getElementById('progImgInput${i}').click()">
-                    <img id="progImgPreview${i}" src="" style="display:none;width:100%;height:100%;object-fit:cover">
-                    <div id="progImgPlaceholder${i}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px">🖼️</div>
-                    <input type="file" id="progImgInput${i}" accept="image/*" style="display:none">
-                  </div>
-                  <div>
-                    <div class="upload-bar" id="progBar${i}" style="margin-bottom:6px"><div class="upload-bar-fill" id="progBarFill${i}"></div></div>
-                    <input type="hidden" id="progImgUrl${i}">
-                    <input type="text" id="progCat${i}" placeholder="Category label (e.g. Executive Programme)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;margin-bottom:6px">
-                    <input type="text" id="progTitle${i}" placeholder="Card title" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;margin-bottom:6px">
-                    <input type="text" id="progTag${i}" placeholder="Tag badge (e.g. ⚡ Most Popular)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px">
-                  </div>
-                </div>
-              </div>
-              `).join('')}
-            </div>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:20px">The 8 large program cards shown below the hero. Upload a photo and fill in the text for each card.</p>
+            <div id="programsEditor"><!-- built by buildSettingsEditors() --></div>
           </div>
 
           <!-- Gallery Editor -->
           <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:28px;max-width:680px">
             <h4 style="font-size:15px;margin-bottom:4px">Gallery Strip</h4>
             <p style="font-size:13px;color:var(--navy-soft);margin-bottom:20px">5 photos shown in the "Learning in action" gallery section. The first photo is displayed larger.</p>
-            <div id="galleryEditor">
-              ${[1,2,3,4,5].map(i => `
-              <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;margin-bottom:12px">
-                <div style="position:relative;width:80px;height:60px;border-radius:8px;overflow:hidden;background:var(--canvas);border:1.5px dashed var(--line);cursor:pointer" onclick="document.getElementById('galleryImgInput${i}').click()">
-                  <img id="galleryImgPreview${i}" src="" style="display:none;width:100%;height:100%;object-fit:cover">
-                  <div id="galleryImgPlaceholder${i}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px">📷</div>
-                  <input type="file" id="galleryImgInput${i}" accept="image/*" style="display:none">
-                </div>
-                <div>
-                  <div class="upload-bar" id="galleryBar${i}" style="margin-bottom:6px"><div class="upload-bar-fill" id="galleryBarFill${i}"></div></div>
-                  <input type="hidden" id="galleryImgUrl${i}">
-                  <input type="text" id="galleryAlt${i}" placeholder="Photo description (e.g. Training workshop)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px">
-                </div>
-              </div>
-              `).join('')}
-            </div>
+            <div id="galleryEditor"><!-- built by buildSettingsEditors() --></div>
           </div>
 
           <button class="btn btn-primary" id="btnSaveSettings">
@@ -3142,6 +3107,52 @@ function populateSettingsForm(s) {
   }
 }
 
+/* Build the program-card and gallery editor fields into the DOM.
+   Must be called once before the settings form is used.
+   Template literals cannot live in static HTML — they render as plain text. */
+function buildSettingsEditors() {
+  const pe = document.getElementById('programsEditor');
+  if (pe && pe.children.length === 0) {
+    pe.innerHTML = [1,2,3,4,5,6,7,8].map(i => `
+      <div style="border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px">
+        <p style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--navy)">Card ${i}</p>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin-bottom:12px">
+          <div style="position:relative;width:80px;height:60px;border-radius:8px;overflow:hidden;background:var(--canvas);border:1.5px dashed var(--line);cursor:pointer"
+               onclick="document.getElementById('progImgInput${i}').click()">
+            <img id="progImgPreview${i}" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+            <div id="progImgPlaceholder${i}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px">🖼️</div>
+            <input type="file" id="progImgInput${i}" accept="image/*" style="display:none">
+          </div>
+          <div>
+            <div class="upload-bar" id="progBar${i}" style="margin-bottom:6px"><div class="upload-bar-fill" id="progBarFill${i}"></div></div>
+            <input type="hidden" id="progImgUrl${i}">
+            <input type="text" id="progCat${i}" placeholder="Category label (e.g. Financial Literacy)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;margin-bottom:6px">
+            <input type="text" id="progTitle${i}" placeholder="Card title" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;margin-bottom:6px">
+            <input type="text" id="progTag${i}" placeholder="Tag badge (e.g. ⚡ Most Popular)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px">
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  const ge = document.getElementById('galleryEditor');
+  if (ge && ge.children.length === 0) {
+    ge.innerHTML = [1,2,3,4,5].map(i => `
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;margin-bottom:12px">
+        <div style="position:relative;width:80px;height:60px;border-radius:8px;overflow:hidden;background:var(--canvas);border:1.5px dashed var(--line);cursor:pointer"
+             onclick="document.getElementById('galleryImgInput${i}').click()">
+          <img id="galleryImgPreview${i}" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+          <div id="galleryImgPlaceholder${i}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px">📷</div>
+          <input type="file" id="galleryImgInput${i}" accept="image/*" style="display:none">
+        </div>
+        <div>
+          <div class="upload-bar" id="galleryBar${i}" style="margin-bottom:6px"><div class="upload-bar-fill" id="galleryBarFill${i}"></div></div>
+          <input type="hidden" id="galleryImgUrl${i}">
+          <input type="text" id="galleryAlt${i}" placeholder="Photo description (e.g. Training workshop)" style="width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px">
+        </div>
+      </div>`).join('');
+  }
+}
+
 async function saveSettings() {
   if (!supabaseReady) { showToast('Database not connected.', 'error'); return; }
   const btn = document.getElementById('btnSaveSettings');
@@ -3149,7 +3160,7 @@ async function saveSettings() {
   btn.classList.add('is-loading'); btn.disabled = true;
 
   // Build programs JSON from editor fields
-  const programsArr = Array.from({length:6}, (_,i) => {
+  const programsArr = Array.from({length:8}, (_,i) => {
     const idx = i + 1;
     return {
       image_url: document.getElementById(`progImgUrl${idx}`)?.value.trim() || '',
@@ -3196,15 +3207,23 @@ async function saveSettings() {
       .upsert(rows, { onConflict: 'key', ignoreDuplicates: false })
       .select();
     if (error) {
-      // If upsert fails (e.g. RLS only allows UPDATE), fall back to per-row updates
+      // If upsert fails (e.g. RLS only allows UPDATE), fall back to per-row upsert
       if (error.message && (error.message.includes('policy') || error.message.includes('permission') || error.message.includes('violates'))) {
         let fallbackError = null;
         for (const row of rows) {
-          const { error: upErr } = await sbClient
+          // Try UPDATE first; if 0 rows affected the key doesn't exist yet — INSERT it
+          const { data: updated, error: upErr } = await sbClient
             .from('site_settings')
             .update({ value: row.value, updated_at: new Date().toISOString() })
-            .eq('key', row.key);
+            .eq('key', row.key)
+            .select();
           if (upErr) { fallbackError = upErr; break; }
+          if (!updated || updated.length === 0) {
+            const { error: insErr } = await sbClient
+              .from('site_settings')
+              .insert({ key: row.key, value: row.value });
+            if (insErr) { fallbackError = insErr; break; }
+          }
         }
         if (fallbackError) throw fallbackError;
       } else {
@@ -3234,6 +3253,7 @@ document.getElementById('btnSaveSettings')?.addEventListener('click', saveSettin
 
 (async function init() {
   await refreshSession();
+  buildSettingsEditors();
   loadSiteSettings();
   loadStats();
   loadCourses();
@@ -3407,7 +3427,7 @@ function showAdminTab(tab) {
   if (tab === 'certificates') loadAdminCertificates();
   if (tab === 'testimonials') loadAdminTestimonials();
   if (tab === 'instructors') loadAdminInstructors();
-  if (tab === 'settings') { loadSiteSettings(); }
+  if (tab === 'settings') { buildSettingsEditors(); loadSiteSettings(); }
   if (tab === 'submissions') loadAdminSubmissions();
 }
 
@@ -4089,7 +4109,7 @@ document.addEventListener('change', async function(e) {
 });
 
 /* ---- Programs grid image uploaders ---- */
-[1,2,3,4,5,6].forEach(i => {
+[1,2,3,4,5,6,7,8].forEach(i => {
   document.addEventListener('change', async function(e) {
     if (e.target.id !== `progImgInput${i}`) return;
     const file = e.target.files[0];
