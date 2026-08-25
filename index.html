@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Center-ECD Academy — Learn. Grow. Lead.</title>
+<title>Center-ECD Academy — Empowering People for Digital Transformation</title>
 <meta name="description" content="Center-ECD Academy is a professional training and learning platform offering practical courses, live webinars, and certification for career growth.">
 <meta http-equiv="Cache-Control" content="public, max-age=3600">
 <link rel="preload" as="image" href="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=360&fit=crop&auto=format">
@@ -525,6 +525,116 @@ section{padding:96px 0;}
 
 
 /* ============================================================
+   MODULE / ASSESSMENT / ASSIGNMENT — STYLES
+   ============================================================ */
+
+/* Course landing — module accordion */
+.module-accordion{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
+.mod-acc-item{border:1.5px solid var(--line);border-radius:var(--radius-md);overflow:hidden;background:#fff;}
+.mod-acc-header{
+  display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;
+  background:var(--canvas);transition:background .15s;user-select:none;
+}
+.mod-acc-header:hover{background:var(--blue-lt);}
+.mod-acc-num{width:34px;height:34px;border-radius:50%;background:var(--grad-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
+.mod-acc-title{font-weight:700;font-size:15px;flex:1;}
+.mod-acc-meta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--navy-soft);}
+.mod-acc-tag{padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;}
+.mod-acc-tag.assessment{background:#EFF6FF;color:var(--blue-dark);}
+.mod-acc-tag.assignment{background:#FFF7ED;color:var(--warn);}
+.mod-acc-tag.optional{background:#F0FDF4;color:var(--success);}
+.mod-acc-chevron{font-size:12px;color:var(--navy-soft);transition:transform .2s;flex-shrink:0;}
+.mod-acc-item.open .mod-acc-chevron{transform:rotate(180deg);}
+.mod-acc-body{display:none;padding:0 22px 18px;}
+.mod-acc-item.open .mod-acc-body{display:block;}
+.lesson-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px;}
+.lesson-row:last-of-type{border-bottom:none;}
+.lesson-row-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0;}
+.lesson-row-title{flex:1;}
+.lesson-row-dur{font-size:12px;color:var(--navy-soft);}
+.lesson-row-preview{font-size:11px;font-weight:700;color:var(--blue-dark);padding:3px 8px;border-radius:6px;background:var(--blue-lt);}
+.mod-acc-footer{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+
+/* Assessment timed quiz modal */
+.quiz-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(6,10,20,.72);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.quiz-overlay.open{opacity:1;pointer-events:auto;}
+.quiz-box{
+  background:#fff;border-radius:var(--radius-xl);
+  width:100%;max-width:620px;max-height:90vh;overflow-y:auto;
+  box-shadow:var(--shadow-xl);padding:36px 36px 28px;
+  display:flex;flex-direction:column;gap:20px;
+}
+.quiz-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+.quiz-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:21px;font-weight:800;}
+.quiz-timer-wrap{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.quiz-timer{
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;
+  min-width:72px;text-align:right;color:var(--navy);transition:color .3s;
+}
+.quiz-timer.warn{color:var(--warn);}
+.quiz-timer.danger{color:var(--danger);}
+.quiz-timer-label{font-size:11px;color:var(--navy-soft);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+.quiz-progress-bar{height:5px;background:var(--line);border-radius:99px;overflow:hidden;}
+.quiz-progress-fill{height:100%;background:var(--grad-brand);border-radius:99px;transition:width .4s ease;}
+.quiz-q-label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue-dark);margin-bottom:6px;}
+.quiz-question-text{font-size:16.5px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.4;margin-bottom:18px;}
+.quiz-options{display:flex;flex-direction:column;gap:10px;}
+.quiz-option{
+  display:flex;align-items:center;gap:12px;padding:13px 16px;
+  border:1.5px solid var(--line);border-radius:12px;cursor:pointer;
+  transition:border-color .15s,background .15s;font-size:14.5px;font-weight:500;
+}
+.quiz-option:hover{border-color:var(--blue);background:var(--blue-lt);}
+.quiz-option.selected{border-color:var(--blue);background:var(--blue-lt);}
+.quiz-option.correct{border-color:var(--success);background:#F0FDF4;color:var(--success);}
+.quiz-option.wrong{border-color:var(--danger);background:#FEF2F2;color:var(--danger);}
+.quiz-option-key{width:26px;height:26px;border-radius:7px;background:var(--canvas);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.quiz-option.selected .quiz-option-key{background:var(--blue);border-color:var(--blue);color:#fff;}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
+.quiz-result-panel{text-align:center;padding:20px 0;}
+.quiz-score-circle{
+  width:110px;height:110px;border-radius:50%;margin:0 auto 18px;
+  background:conic-gradient(var(--blue) calc(var(--pct)*1%),var(--line) 0);
+  display:flex;align-items:center;justify-content:center;
+}
+.quiz-score-inner{width:86px;height:86px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;}
+
+/* Assignment card in player */
+.assignment-card{
+  border:1.5px solid var(--gold);border-radius:var(--radius-md);
+  background:linear-gradient(135deg,#FFFBF0,#FFF8E1);
+  padding:22px 24px;margin-top:24px;
+}
+.assignment-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:10px;}
+.assignment-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;margin-bottom:8px;}
+.assignment-desc{font-size:14px;color:var(--navy-soft);line-height:1.65;margin-bottom:14px;}
+.assignment-optional{font-size:12px;color:var(--success);font-weight:700;margin-bottom:14px;display:inline-flex;align-items:center;gap:5px;}
+.assignment-upload-zone{border:2px dashed var(--gold);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:background .15s;background:rgba(232,160,32,.04);}
+.assignment-upload-zone:hover{background:rgba(232,160,32,.09);}
+
+/* Player — module section labels in curriculum sidebar */
+.pcurr-module-header{
+  display:flex;align-items:center;gap:8px;padding:12px 0 8px;
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--navy-soft);border-top:1px solid var(--line);margin-top:8px;
+}
+.pcurr-module-header:first-child{border-top:none;margin-top:0;}
+.pcurr-assessment-link,.pcurr-assignment-link{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 12px 9px 22px;border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;margin:2px 0;transition:background .15s;
+}
+.pcurr-assessment-link{color:var(--blue-dark);}
+.pcurr-assessment-link:hover,.pcurr-assessment-link.active{background:var(--blue-lt);}
+.pcurr-assignment-link{color:var(--warn);}
+.pcurr-assignment-link:hover,.pcurr-assignment-link.active{background:#FFF7ED;}
+
+/* ============================================================
    ADMIN DASHBOARD
    ============================================================ */
 .admin-shell{ display:flex; min-height:100vh; background:var(--canvas); }
@@ -604,6 +714,35 @@ section{padding:96px 0;}
 .lesson-type-tag{ font-size:10.5px; font-weight:700; text-transform:uppercase; background:var(--canvas); border:1px solid var(--line); padding:3px 8px; border-radius:6px; color:var(--navy-soft); }
 .lesson-row-title{ font-weight:600; }
 .resource-row{ font-size:12.5px; color:var(--navy-soft); padding:4px 0 4px 20px; }
+
+/* Module extras block (assessment + assignment in curriculum editor) */
+.module-extras{ border-top:1px solid var(--line); padding:14px 20px; display:flex; flex-wrap:wrap; gap:10px; background:#FAFBFE; }
+.module-extra-chip{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 14px; border-radius:10px; font-size:13px; font-weight:600;
+  border:1.5px solid; cursor:pointer; transition:background .15s;
+}
+.module-extra-chip.quiz{ border-color:var(--blue); color:var(--blue-dark); background:var(--blue-lt); }
+.module-extra-chip.quiz:hover{ background:#DBEAFE; }
+.module-extra-chip.quiz.set{ background:var(--blue-dark); color:#fff; }
+.module-extra-chip.asgn{ border-color:var(--gold); color:#92400E; background:#FFF7ED; }
+.module-extra-chip.asgn:hover{ background:#FEF3C7; }
+.module-extra-chip.asgn.set{ background:var(--gold); color:#fff; }
+
+/* Assessment builder modal */
+.qb-question-card{
+  border:1.5px solid var(--line); border-radius:12px; padding:18px; margin-bottom:14px;
+  background:var(--canvas); position:relative;
+}
+.qb-q-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--navy-soft); margin-bottom:8px; }
+.qb-options{ display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+.qb-option-row{ display:flex; align-items:center; gap:8px; }
+.qb-option-row input[type=text]{ flex:1; padding:9px 12px; border:1.5px solid var(--line); border-radius:8px; font-size:13.5px; font-family:inherit; }
+.qb-option-row input[type=radio]{ width:16px; height:16px; accent-color:var(--blue); flex-shrink:0; }
+.qb-option-key{ width:26px; height:26px; background:var(--canvas); border:1.5px solid var(--line); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+.qb-remove-q{ position:absolute; top:12px; right:14px; background:none; border:none; color:var(--danger); font-size:17px; cursor:pointer; font-weight:700; }
+.qb-add-q-btn{ border:2px dashed var(--blue); border-radius:10px; padding:12px; width:100%; text-align:center; font-weight:700; font-size:14px; color:var(--blue-dark); background:var(--blue-lt); cursor:pointer; transition:background .15s; }
+.qb-add-q-btn:hover{ background:#DBEAFE; }
 
 /* ---------- Course landing page (public) ---------- */
 .cland-grid{ display:grid; grid-template-columns:1.6fr 1fr; gap:48px; align-items:start; }
@@ -720,9 +859,9 @@ section{padding:96px 0;}
         </div>
 
         <h1>
-          <span class="line">Learn.</span>
-          <span class="line accent">Grow.</span>
-          <span class="line">Lead.</span>
+          <span class="line">Empowering People</span>
+          <span class="line accent">for Digital</span>
+          <span class="line">Transformation.</span>
         </h1>
 
         <p class="hero-sub">Center-ECD Academy gives you practical, professional training — real skills, expert instructors, and certificates that mean something for your career.</p>
@@ -943,7 +1082,7 @@ section{padding:96px 0;}
             <div class="play-btn">
               <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             </div>
-            <div class="video-frame-label">Watch: Center-ECD Academy — Learn. Grow. Lead.</div>
+            <div class="video-frame-label">Watch: Center-ECD Academy — Empowering People for Digital Transformation</div>
           </div>
         </div>
       </div>
@@ -1150,7 +1289,7 @@ section{padding:96px 0;}
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="#home" class="brand"><img class="brand-mark brand-logo" src="https://res.cloudinary.com/g2ajyskg/image/upload/v1786779146/file_00000000f84081f4b6c4415d9e8735e0.png" alt="Center-ECD Academy logo"> Center-ECD Academy</a>
-        <p>Practical, professional and accessible training designed to help people develop relevant skills and achieve their goals.</p>
+        <p>African Center for Enterprise and Capacity Development (CENTER-ECD) — Empowering Leaders, Building Enterprises, and Driving Sustainable Development Across Africa through Practical Skills, Expert Instructors, and Recognised Certifications that Help You Thrive in Today's Economy.</p>
       </div>
       <div class="footer-col">
         <h4>Explore</h4>
@@ -1609,6 +1748,71 @@ section{padding:96px 0;}
   </div>
 </div>
 
+<!-- ============ ASSESSMENT BUILDER MODAL ============ -->
+<div class="modal-overlay" id="assessmentBuilderOverlay">
+  <div class="modal" style="max-width:660px">
+    <button class="modal-close" id="assessmentBuilderClose" aria-label="Close">×</button>
+    <h3 id="abModalTitle">Module Assessment</h3>
+    <p class="modal-sub">Build a timed quiz for this module. Students need 60% to pass.</p>
+    <div class="form-msg" id="abMsg"></div>
+    <input type="hidden" id="abModuleId">
+
+    <div class="field">
+      <label for="abTitle">Assessment title</label>
+      <input type="text" id="abTitle" placeholder="e.g. Module 1 — Foundations Quiz" required>
+    </div>
+    <div class="field">
+      <label for="abTimeLimit">Time limit (minutes)</label>
+      <input type="number" id="abTimeLimit" min="1" max="120" value="10" style="width:120px;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;background:var(--canvas)">
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <label style="font-size:14px;font-weight:700;color:var(--navy)">Questions</label>
+      <button type="button" class="btn btn-secondary btn-sm" id="abAddQuestion">+ Add Question</button>
+    </div>
+
+    <div id="abQuestionList" style="display:flex;flex-direction:column;gap:16px;max-height:400px;overflow-y:auto;padding-right:4px"></div>
+
+    <div style="margin-top:24px">
+      <button type="button" class="btn btn-primary btn-block" id="abSubmit">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Save Assessment</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ASSIGNMENT BUILDER MODAL ============ -->
+<div class="modal-overlay" id="assignmentBuilderOverlay">
+  <div class="modal">
+    <button class="modal-close" id="assignmentBuilderClose" aria-label="Close">×</button>
+    <h3 id="asgModalTitle">Module Assignment</h3>
+    <p class="modal-sub">Add a practical task learners complete after the module.</p>
+    <div class="form-msg" id="asgMsg"></div>
+    <input type="hidden" id="asgModuleId">
+
+    <div class="field">
+      <label for="asgTitle">Assignment title</label>
+      <input type="text" id="asgTitle" placeholder="e.g. Write a 2-minute self-introduction" required>
+    </div>
+    <div class="field">
+      <label for="asgDescription">Description / Instructions</label>
+      <textarea id="asgDescription" rows="4" placeholder="Describe what learners should do and how to submit…" maxlength="600" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical;background:var(--canvas)"></textarea>
+    </div>
+    <label style="display:flex;align-items:center;gap:10px;margin-bottom:22px;font-size:14px;font-weight:600">
+      <input type="checkbox" id="asgOptional" style="width:auto"> Optional (not required to complete the module)
+    </label>
+
+    <div style="display:flex;gap:10px">
+      <button type="button" class="btn btn-primary" style="flex:1" id="asgSubmit">
+        <span class="spinner" aria-hidden="true"></span>
+        <span class="btn-label">Save Assignment</span>
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm" style="color:var(--danger)" id="asgRemove">Remove Assignment</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============ LESSON EDITOR MODAL ============ -->
 <div class="modal-overlay" id="lessonBuilderOverlay">
   <div class="modal">
@@ -1760,6 +1964,31 @@ section{padding:96px 0;}
       <button type="submit" class="btn btn-primary" id="verifyCertBtn"><span class="btn-label">Verify</span><span class="spinner"></span></button>
     </form>
     <div id="verifyCertResult"></div>
+  </div>
+</div>
+
+<!-- ============ ASSESSMENT / TIMED QUIZ MODAL ============ -->
+<div class="quiz-overlay" id="quizOverlay" role="dialog" aria-modal="true" aria-label="Module Assessment">
+  <div class="quiz-box" id="quizBox">
+    <div class="quiz-header">
+      <div>
+        <div id="quizModLabel" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue-dark);margin-bottom:4px">Module Assessment</div>
+        <div class="quiz-title" id="quizTitle">Assessment</div>
+      </div>
+      <div class="quiz-timer-wrap">
+        <div>
+          <div class="quiz-timer" id="quizTimerDisplay">00:00</div>
+          <div class="quiz-timer-label">remaining</div>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div></div>
+    <div id="quizBody"><!-- rendered by JS --></div>
+    <div class="quiz-nav" id="quizNav">
+      <button class="btn btn-ghost btn-sm" id="quizPrev">← Prev</button>
+      <span id="quizQCounter" style="font-size:13px;color:var(--navy-soft);font-weight:600"></span>
+      <button class="btn btn-primary btn-sm" id="quizNext">Next →</button>
+    </div>
   </div>
 </div>
 
@@ -2261,6 +2490,122 @@ const FALLBACK_COURSES = [
   { id:'fc6', title:'Entrepreneurship & Business Development', slug:'entrepreneurship', subtitle:'From idea to income — validate your business model, build your brand and grow your first customers.', level:'All Levels', price:30000, discount_price:24000, duration:'12 hrs', featured:false, thumbnail_url:'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=360&fit=crop&auto=format' },
 ];
 
+/* ---------- Fallback module/lesson data per course ---------- */
+const FALLBACK_MODULES = {
+  'professional-communication': [
+    { id:'fc1m1', title:'Foundations of Professional Communication', sort_order:1,
+      lessons:[
+        { id:'fc1m1l1', title:'What Makes Communication Professional?', lesson_type:'video', duration:'18 min', is_preview:true },
+        { id:'fc1m1l2', title:'The 7 Cs of Effective Communication', lesson_type:'video', duration:'22 min' },
+        { id:'fc1m1l3', title:'Verbal vs Non-verbal Signals', lesson_type:'pdf', duration:'15 min' },
+      ],
+      assessment:{ id:'fc1m1a', title:'Module 1 Assessment', time_limit:10, questions:[
+        { q:'Which of the 7 Cs means being clear and to the point?', options:['Completeness','Conciseness','Correctness','Concreteness'], answer:1 },
+        { q:'Non-verbal communication accounts for approximately what percentage of the message?', options:['20%','38%','55%','90%'], answer:2 },
+        { q:'Professional communication should always be:', options:['Lengthy and detailed','Audience-centred','Jargon-heavy','Informal'], answer:1 },
+      ]},
+      assignment:{ id:'fc1m1as', title:'Communication Audit', description:'Record a 2-minute introduction of yourself. Identify 3 areas to improve based on the 7 Cs framework.', optional:false },
+    },
+    { id:'fc1m2', title:'Written Communication at Work', sort_order:2,
+      lessons:[
+        { id:'fc1m2l1', title:'Crafting Professional Emails', lesson_type:'video', duration:'20 min', is_preview:false },
+        { id:'fc1m2l2', title:'Report Writing Structure', lesson_type:'video', duration:'25 min' },
+        { id:'fc1m2l3', title:'Writing for Different Audiences', lesson_type:'slides', duration:'18 min' },
+      ],
+      assessment:{ id:'fc1m2a', title:'Module 2 Assessment', time_limit:12, questions:[
+        { q:'An effective email subject line should be:', options:['As short as possible','Descriptive and specific','All capital letters','Optional'], answer:1 },
+        { q:'The executive summary of a report should appear:', options:['At the end','In the appendix','At the beginning','After the recommendations'], answer:0 },
+      ]},
+      assignment:{ id:'fc1m2as', title:'Email Rewrite Exercise', description:'You will receive 3 poorly written work emails. Rewrite each one applying the principles from this module. Submit your rewrites as a PDF.', optional:true },
+    },
+    { id:'fc1m3', title:'Digital & Virtual Communication', sort_order:3,
+      lessons:[
+        { id:'fc1m3l1', title:'Communicating on Video Calls', lesson_type:'video', duration:'20 min' },
+        { id:'fc1m3l2', title:'Messaging Etiquette (Slack, WhatsApp, Email)', lesson_type:'pdf', duration:'12 min' },
+        { id:'fc1m3l3', title:'Building Your Digital Professional Brand', lesson_type:'video', duration:'22 min' },
+      ],
+      assessment:{ id:'fc1m3a', title:'Module 3 Assessment', time_limit:8, questions:[
+        { q:'Before a professional video call you should always:', options:['Check lighting and background','Send a poem','Use phone audio only','Skip preparation'], answer:0 },
+        { q:'Which platform is most appropriate for formal business communication?', options:['TikTok','WhatsApp group','Email','SMS blast'], answer:2 },
+      ]},
+      assignment:null,
+    },
+  ],
+  'leadership-management': [
+    { id:'fc4m1', title:'Leadership Fundamentals', sort_order:1,
+      lessons:[
+        { id:'fc4m1l1', title:'What Makes a Great Leader?', lesson_type:'video', duration:'20 min', is_preview:true },
+        { id:'fc4m1l2', title:'Leadership Styles & When to Use Them', lesson_type:'video', duration:'28 min' },
+        { id:'fc4m1l3', title:'Self-Awareness as a Leader', lesson_type:'pdf', duration:'15 min' },
+      ],
+      assessment:{ id:'fc4m1a', title:'Module 1 Assessment', time_limit:10, questions:[
+        { q:'Which leadership style gives team members the most autonomy?', options:['Autocratic','Democratic','Laissez-faire','Transactional'], answer:2 },
+        { q:'A transformational leader primarily motivates through:', options:['Fear and discipline','Vision and inspiration','Financial rewards','Strict rules'], answer:1 },
+        { q:'Emotional intelligence in leadership involves:', options:['Suppressing emotions','Ignoring team feelings','Recognising and managing emotions','Delegating all decisions'], answer:2 },
+      ]},
+      assignment:{ id:'fc4m1as', title:'Leadership Style Reflection', description:'Write a 500-word reflection on your dominant leadership style. Identify one strength and one area to develop. Include a personal action plan.', optional:false },
+    },
+    { id:'fc4m2', title:'Managing Teams for Performance', sort_order:2,
+      lessons:[
+        { id:'fc4m2l1', title:'Setting Goals and KPIs', lesson_type:'video', duration:'22 min' },
+        { id:'fc4m2l2', title:'Giving Effective Feedback', lesson_type:'video', duration:'18 min' },
+        { id:'fc4m2l3', title:'Managing Conflict in Teams', lesson_type:'slides', duration:'20 min' },
+        { id:'fc4m2l4', title:'Running Productive Team Meetings', lesson_type:'pdf', duration:'12 min' },
+      ],
+      assessment:{ id:'fc4m2a', title:'Module 2 Assessment', time_limit:15, questions:[
+        { q:'SMART goals should be:', options:['Vague and open-ended','Specific, Measurable, Achievable, Relevant, Time-bound','Short and motivational','Set only by management'], answer:1 },
+        { q:'The best time to give corrective feedback is:', options:['Never','Publicly in a team meeting','Privately and as soon as possible','Only in annual reviews'], answer:2 },
+        { q:'When mediating a team conflict you should first:', options:['Take sides','Listen to all parties','Dismiss the issue','Involve HR immediately'], answer:1 },
+      ]},
+      assignment:{ id:'fc4m2as', title:'Team Performance Plan', description:'Create a one-page performance plan for a hypothetical team of 5. Include SMART goals, KPIs, a feedback schedule, and a conflict resolution approach.', optional:true },
+    },
+  ],
+  'digital-literacy': [
+    { id:'fc5m1', title:'Computer & Internet Fundamentals', sort_order:1,
+      lessons:[
+        { id:'fc5m1l1', title:'Navigating the Digital Workspace', lesson_type:'video', duration:'20 min', is_preview:true },
+        { id:'fc5m1l2', title:'File Management & Cloud Storage', lesson_type:'video', duration:'18 min' },
+        { id:'fc5m1l3', title:'Cybersecurity Basics for Professionals', lesson_type:'pdf', duration:'14 min' },
+      ],
+      assessment:{ id:'fc5m1a', title:'Module 1 Assessment', time_limit:10, questions:[
+        { q:'Which of these is an example of cloud storage?', options:['USB flash drive','Google Drive','CD-ROM','Local hard drive'], answer:1 },
+        { q:'A strong password should be:', options:['Your name','12345','At least 12 characters with mixed types','Simple and memorable'], answer:2 },
+      ]},
+      assignment:{ id:'fc5m1as', title:'Digital Organisation Audit', description:'Audit your current digital file structure. Create a new organised folder system and document the before/after. Submit a screenshot comparison.', optional:true },
+    },
+    { id:'fc5m2', title:'Microsoft Word & Excel Essentials', sort_order:2,
+      lessons:[
+        { id:'fc5m2l1', title:'Word: Documents, Styles & Tables', lesson_type:'video', duration:'25 min' },
+        { id:'fc5m2l2', title:'Excel: Formulas, Functions & Charts', lesson_type:'video', duration:'30 min' },
+        { id:'fc5m2l3', title:'Excel: Data Sorting and Filtering', lesson_type:'video', duration:'18 min' },
+      ],
+      assessment:{ id:'fc5m2a', title:'Module 2 Assessment', time_limit:12, questions:[
+        { q:'In Excel, which function calculates the sum of a range?', options:['=TOTAL()','=ADD()','=SUM()','=PLUS()'], answer:2 },
+        { q:'In Word, "Styles" are used to:', options:['Change font colour only','Apply consistent formatting','Insert images','Spell-check text'], answer:1 },
+        { q:'To filter data in Excel you go to:', options:['Insert tab','Home tab','Data tab → Filter','View tab'], answer:2 },
+      ]},
+      assignment:{ id:'fc5m2as', title:'Excel Budget Tracker', description:'Build a simple monthly budget tracker in Excel with at least 10 rows of expense data, SUM formulas, and a bar chart comparing categories. Submit your .xlsx file.', optional:false },
+    },
+    { id:'fc5m3', title:'PowerPoint & Professional Presentations', sort_order:3,
+      lessons:[
+        { id:'fc5m3l1', title:'Slide Design Principles', lesson_type:'video', duration:'20 min' },
+        { id:'fc5m3l2', title:'Animations, Transitions & Presenter View', lesson_type:'video', duration:'16 min' },
+        { id:'fc5m3l3', title:'Delivering Your Presentation Confidently', lesson_type:'pdf', duration:'12 min' },
+      ],
+      assessment:{ id:'fc5m3a', title:'Module 3 Assessment', time_limit:8, questions:[
+        { q:'How many bullet points should a slide generally have?', options:['10 or more','As many as possible','3 to 5 maximum','None at all'], answer:2 },
+        { q:'Presenter View in PowerPoint shows:', options:['The slide on both screens','Speaker notes on your screen only','A video of the audience','Nothing extra'], answer:1 },
+      ]},
+      assignment:{ id:'fc5m3as', title:'5-Minute Pitch Deck', description:'Create a 6-slide PowerPoint pitch for a product or service of your choice. Apply the design principles taught in this module. Submit the .pptx file.', optional:true },
+    },
+  ],
+};
+
+/* Helper — get modules for a course (fallback or DB) */
+function getFallbackModules(slug) {
+  return FALLBACK_MODULES[slug] || [];
+}
+
 function renderCourseCards(courses) {
   return courses.map(c => {
       const hasDiscount = c.discount_price && c.discount_price < c.price;
@@ -2278,6 +2623,7 @@ function renderCourseCards(courses) {
             <div class="course-desc">${escapeHtml(c.subtitle || '')}</div>
             <div class="course-meta">
               <span>⏱ ${c.duration || '—'}</span>
+              ${(FALLBACK_MODULES[c.slug] || c.module_count) ? `<span>📚 ${(FALLBACK_MODULES[c.slug]||[]).length || c.module_count || ''} Modules</span>` : ''}
               ${c.featured ? '<span>⭐ Featured</span>' : ''}
             </div>
             <div class="course-footer">
@@ -2896,7 +3242,7 @@ async function loadCourseDetail(courseId) {
 
     const { data: modules, error } = await sbClient
       .from('course_modules')
-      .select('id, title, sort_order, lessons(id, title, lesson_type, is_preview, sort_order, resources(id, title, resource_type, file_url))')
+      .select('id, title, sort_order, assessment, assignment, lessons(id, title, lesson_type, is_preview, sort_order, resources(id, title, resource_type, file_url))')
       .eq('course_id', courseId)
       .order('sort_order');
     if (error) throw error;
@@ -2906,7 +3252,17 @@ async function loadCourseDetail(courseId) {
       return;
     }
 
-    list.innerHTML = modules.map(m => `
+    list.innerHTML = modules.map(m => {
+      const hasAssessment = !!(m.assessment && m.assessment.title);
+      const hasAssignment = !!(m.assignment && m.assignment.title);
+      const assessmentLabel = hasAssessment
+        ? `✏️ Edit Assessment (${(m.assessment.questions||[]).length} Qs · ${m.assessment.time_limit||10} min)`
+        : `🧠 Add Assessment`;
+      const assignmentLabel = hasAssignment
+        ? `✏️ Edit Assignment ${m.assignment.optional ? '(Optional)' : '(Required)'}`
+        : `📌 Add Assignment`;
+
+      return `
       <div class="module-block">
         <div class="module-head">
           <h4>${escapeHtml(m.title)}</h4>
@@ -2928,8 +3284,20 @@ async function loadCourseDetail(courseId) {
             ${(l.resources || []).map(r => `<div class="resource-row">↳ ${escapeHtml(r.title)} <span style="color:var(--navy-soft)">(${escapeHtml(r.resource_type)})</span></div>`).join('')}
           `).join('') || `<div class="admin-empty-note" style="padding:10px 0">No lessons yet in this module.</div>`}
         </div>
-      </div>
-    `).join('');
+        <div class="module-extras">
+          <button class="module-extra-chip quiz ${hasAssessment ? 'set' : ''}"
+            data-open-assessment="${m.id}"
+            data-assessment='${hasAssessment ? JSON.stringify(m.assessment).replace(/'/g,"&#39;") : ""}'>
+            ${assessmentLabel}
+          </button>
+          <button class="module-extra-chip asgn ${hasAssignment ? 'set' : ''}"
+            data-open-assignment="${m.id}"
+            data-assignment='${hasAssignment ? JSON.stringify(m.assignment).replace(/'/g,"&#39;") : ""}'>
+            ${assignmentLabel}
+          </button>
+        </div>
+      </div>`;
+    }).join('');
 
     list.querySelectorAll('[data-add-lesson]').forEach(btn => btn.addEventListener('click', () => openLessonBuilder(btn.dataset.addLesson)));
     list.querySelectorAll('[data-add-resource]').forEach(btn => btn.addEventListener('click', () => openResourceBuilder(btn.dataset.addResource)));
@@ -2943,6 +3311,18 @@ async function loadCourseDetail(courseId) {
       await sbClient.from('lessons').delete().eq('id', btn.dataset.deleteLesson);
       loadCourseDetail(courseId);
     }));
+    list.querySelectorAll('[data-open-assessment]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const existing = btn.dataset.assessment ? JSON.parse(btn.dataset.assessment) : null;
+        openAssessmentBuilder(btn.dataset.openAssessment, existing);
+      });
+    });
+    list.querySelectorAll('[data-open-assignment]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const existing = btn.dataset.assignment ? JSON.parse(btn.dataset.assignment) : null;
+        openAssignmentBuilder(btn.dataset.openAssignment, existing);
+      });
+    });
   } catch (err) {
     list.innerHTML = `<div class="admin-empty-note">Could not load curriculum: ${escapeHtml(err.message)}</div>`;
   }
@@ -3047,6 +3427,179 @@ document.getElementById('resourceBuilderForm').addEventListener('submit', async 
     setFormMsg('rbMsg', err.message, 'error');
   } finally {
     setButtonLoading('rbSubmit', false);
+  }
+});
+
+/* ---------------------------------------------------------------
+   ASSESSMENT BUILDER
+   Saves to course_modules.assessment (JSON):
+   { title, time_limit, questions: [{q, options:[], answer}] }
+--------------------------------------------------------------- */
+const assessmentBuilderOverlay = document.getElementById('assessmentBuilderOverlay');
+let abQuestions = []; // in-memory question list while modal is open
+
+function openAssessmentBuilder(moduleId, existing) {
+  // Reset state
+  abQuestions = existing && existing.questions ? existing.questions.map(q => ({ ...q, options: [...(q.options||['','','',''])] })) : [];
+  document.getElementById('abModuleId').value = moduleId;
+  document.getElementById('abTitle').value = existing ? (existing.title || '') : '';
+  document.getElementById('abTimeLimit').value = existing ? (existing.time_limit || 10) : 10;
+  document.getElementById('abMsg').className = 'form-msg';
+  document.getElementById('abModalTitle').textContent = existing ? 'Edit Assessment' : 'Add Assessment';
+  renderAbQuestions();
+  assessmentBuilderOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAssessmentBuilder() {
+  assessmentBuilderOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('assessmentBuilderClose').addEventListener('click', closeAssessmentBuilder);
+assessmentBuilderOverlay.addEventListener('click', e => { if (e.target === assessmentBuilderOverlay) closeAssessmentBuilder(); });
+
+function renderAbQuestions() {
+  const container = document.getElementById('abQuestionList');
+  if (abQuestions.length === 0) {
+    container.innerHTML = `<div style="color:var(--navy-soft);font-size:13.5px;padding:12px 0">No questions yet. Click "+ Add Question" to begin.</div>`;
+    return;
+  }
+  container.innerHTML = abQuestions.map((q, qi) => `
+    <div style="border:1.5px solid var(--line);border-radius:12px;padding:16px;background:var(--canvas)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-soft)">Question ${qi+1}</span>
+        <button type="button" onclick="abRemoveQuestion(${qi})" style="background:none;border:none;color:var(--danger);font-size:13px;font-weight:700;cursor:pointer">Remove</button>
+      </div>
+      <input type="text" placeholder="Enter your question…" value="${escapeHtml(q.q||'')}"
+        oninput="abQuestions[${qi}].q=this.value"
+        style="width:100%;padding:10px 13px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;margin-bottom:10px;background:#fff">
+      <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:10px">
+        ${(q.options||['','','','']).map((opt, oi) => `
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;font-weight:700;width:18px;flex-shrink:0;color:var(--navy-soft)">${['A','B','C','D'][oi]}</span>
+            <input type="text" placeholder="Option ${['A','B','C','D'][oi]}" value="${escapeHtml(opt||'')}"
+              oninput="abQuestions[${qi}].options[${oi}]=this.value"
+              style="flex:1;padding:9px 12px;border:1.5px solid var(--line);border-radius:7px;font-family:inherit;font-size:13.5px;background:#fff">
+            <input type="radio" name="abAnswer_${qi}" value="${oi}" ${q.answer===oi?'checked':''}
+              onchange="abQuestions[${qi}].answer=${oi}"
+              title="Mark as correct answer" style="width:16px;height:16px;accent-color:var(--success);flex-shrink:0">
+          </div>
+        `).join('')}
+      </div>
+      <div style="font-size:11.5px;color:var(--navy-soft)">☝️ Select the radio button next to the correct answer.</div>
+    </div>
+  `).join('');
+}
+
+function abRemoveQuestion(qi) {
+  abQuestions.splice(qi, 1);
+  renderAbQuestions();
+}
+
+document.getElementById('abAddQuestion').addEventListener('click', () => {
+  abQuestions.push({ q: '', options: ['', '', '', ''], answer: 0 });
+  renderAbQuestions();
+  // Scroll to new question
+  const items = document.querySelectorAll('#abQuestionList > div');
+  items[items.length-1]?.scrollIntoView({ behavior:'smooth', block:'nearest' });
+});
+
+document.getElementById('abSubmit').addEventListener('click', async () => {
+  const moduleId = document.getElementById('abModuleId').value;
+  const title = document.getElementById('abTitle').value.trim();
+  const timeLimit = parseInt(document.getElementById('abTimeLimit').value) || 10;
+
+  if (!title) { document.getElementById('abMsg').className='form-msg show error'; document.getElementById('abMsg').textContent='Please enter an assessment title.'; return; }
+  if (abQuestions.length === 0) { document.getElementById('abMsg').className='form-msg show error'; document.getElementById('abMsg').textContent='Add at least one question before saving.'; return; }
+
+  // Validate each question
+  for (let i = 0; i < abQuestions.length; i++) {
+    const q = abQuestions[i];
+    if (!q.q.trim()) { document.getElementById('abMsg').className='form-msg show error'; document.getElementById('abMsg').textContent=`Question ${i+1} is empty.`; return; }
+    if ((q.options||[]).some(o => !o.trim())) { document.getElementById('abMsg').className='form-msg show error'; document.getElementById('abMsg').textContent=`Question ${i+1} has an empty option.`; return; }
+  }
+
+  const btn = document.getElementById('abSubmit');
+  btn.classList.add('is-loading'); btn.disabled = true;
+
+  const assessment = { title, time_limit: timeLimit, questions: abQuestions.map(q => ({ q: q.q, options: q.options, answer: q.answer ?? 0 })) };
+  try {
+    const { error } = await sbClient.from('course_modules').update({ assessment }).eq('id', moduleId);
+    if (error) throw error;
+    closeAssessmentBuilder();
+    showToast('Assessment saved.', 'success');
+    loadCourseDetail(currentCourseDetailId);
+  } catch (err) {
+    document.getElementById('abMsg').className='form-msg show error';
+    document.getElementById('abMsg').textContent = err.message;
+  } finally {
+    btn.classList.remove('is-loading'); btn.disabled = false;
+  }
+});
+
+/* ---------------------------------------------------------------
+   ASSIGNMENT BUILDER
+   Saves to course_modules.assignment (JSON):
+   { title, description, optional }
+--------------------------------------------------------------- */
+const assignmentBuilderOverlay = document.getElementById('assignmentBuilderOverlay');
+
+function openAssignmentBuilder(moduleId, existing) {
+  document.getElementById('asgModuleId').value = moduleId;
+  document.getElementById('asgTitle').value = existing ? (existing.title || '') : '';
+  document.getElementById('asgDescription').value = existing ? (existing.description || '') : '';
+  document.getElementById('asgOptional').checked = existing ? !!existing.optional : false;
+  document.getElementById('asgMsg').className = 'form-msg';
+  document.getElementById('asgModalTitle').textContent = existing ? 'Edit Assignment' : 'Add Assignment';
+  // Show/hide Remove button
+  document.getElementById('asgRemove').style.display = existing ? 'inline-flex' : 'none';
+  assignmentBuilderOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeAssignmentBuilder() {
+  assignmentBuilderOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('assignmentBuilderClose').addEventListener('click', closeAssignmentBuilder);
+assignmentBuilderOverlay.addEventListener('click', e => { if (e.target === assignmentBuilderOverlay) closeAssignmentBuilder(); });
+
+document.getElementById('asgSubmit').addEventListener('click', async () => {
+  const moduleId = document.getElementById('asgModuleId').value;
+  const title = document.getElementById('asgTitle').value.trim();
+  const description = document.getElementById('asgDescription').value.trim();
+  const optional = document.getElementById('asgOptional').checked;
+
+  if (!title) { document.getElementById('asgMsg').className='form-msg show error'; document.getElementById('asgMsg').textContent='Please enter an assignment title.'; return; }
+
+  const btn = document.getElementById('asgSubmit');
+  btn.classList.add('is-loading'); btn.disabled = true;
+
+  const assignment = { title, description, optional };
+  try {
+    const { error } = await sbClient.from('course_modules').update({ assignment }).eq('id', moduleId);
+    if (error) throw error;
+    closeAssignmentBuilder();
+    showToast('Assignment saved.', 'success');
+    loadCourseDetail(currentCourseDetailId);
+  } catch (err) {
+    document.getElementById('asgMsg').className='form-msg show error';
+    document.getElementById('asgMsg').textContent = err.message;
+  } finally {
+    btn.classList.remove('is-loading'); btn.disabled = false;
+  }
+});
+
+document.getElementById('asgRemove').addEventListener('click', async () => {
+  if (!confirm('Remove this assignment from the module?')) return;
+  const moduleId = document.getElementById('asgModuleId').value;
+  try {
+    const { error } = await sbClient.from('course_modules').update({ assignment: null }).eq('id', moduleId);
+    if (error) throw error;
+    closeAssignmentBuilder();
+    showToast('Assignment removed.', 'success');
+    loadCourseDetail(currentCourseDetailId);
+  } catch (err) {
+    document.getElementById('asgMsg').className='form-msg show error';
+    document.getElementById('asgMsg').textContent = err.message;
   }
 });
 
@@ -3893,22 +4446,54 @@ async function loadCourseLanding(slug) {
 
           ${course.description ? `<h3 style="font-size:18px;margin-bottom:10px">Course Description</h3><p style="color:var(--navy-soft);margin-bottom:30px;line-height:1.7">${escapeHtml(course.description)}</p>` : ''}
 
-          <h3 style="font-size:18px;margin-bottom:14px">Curriculum</h3>
-          <div class="curriculum-list">
-            ${modules.length === 0 ? `<div class="admin-empty-note">Curriculum is being finalised.</div>` : modules.map(m => `
-              <details class="curr-module" open>
-                <summary>${escapeHtml(m.title)} <span style="color:var(--navy-soft);font-weight:500">(${(m.lessons||[]).length} lessons)</span></summary>
-                <div>
-                  ${(m.lessons||[]).sort((a,b)=>a.sort_order-b.sort_order).map(l => `
-                    <div class="curr-lesson">
-                      <span>${l.is_preview || enrolled ? '▶' : '🔒'}</span>
-                      <span>${escapeHtml(l.title)}</span>
-                      ${l.is_preview ? '<span class="badge free" style="position:static;display:inline-block;margin-left:auto">FREE PREVIEW</span>' : ''}
+          <h3 style="font-size:18px;margin-bottom:6px">Course Curriculum</h3>
+          <p style="font-size:13px;color:var(--navy-soft);margin-bottom:14px">Each module ends with a timed assessment. Some modules include an optional assignment for deeper practice.</p>
+          <div class="module-accordion" id="clandModules">
+            ${(() => {
+              const fallbackMods = getFallbackModules(slug);
+              const allMods = modules.length > 0 ? modules : fallbackMods;
+              if (allMods.length === 0) return `<div class="admin-empty-note">Curriculum is being finalised.</div>`;
+              return allMods.map((m, mi) => {
+                const lessons = (m.lessons||[]).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
+                const hasAssessment = !!(m.assessment || m.has_assessment);
+                const assignment = m.assignment || null;
+                return `
+                <div class="mod-acc-item${mi===0?' open':''}">
+                  <div class="mod-acc-header" onclick="this.closest('.mod-acc-item').classList.toggle('open')">
+                    <div class="mod-acc-num">${mi+1}</div>
+                    <div class="mod-acc-title">${escapeHtml(m.title)}</div>
+                    <div class="mod-acc-meta">
+                      <span>${lessons.length} lesson${lessons.length!==1?'s':''}</span>
+                      ${hasAssessment?`<span class="mod-acc-tag assessment">📝 Quiz</span>`:''}
+                      ${assignment?`<span class="mod-acc-tag ${assignment.optional?'optional':'assignment'}">${assignment.optional?'✦ Optional':'📌 Assignment'}</span>`:''}
                     </div>
-                  `).join('')}
-                </div>
-              </details>
-            `).join('')}
+                    <span class="mod-acc-chevron">▼</span>
+                  </div>
+                  <div class="mod-acc-body">
+                    ${lessons.map(l => `
+                      <div class="lesson-row">
+                        <span class="lesson-row-icon">${l.lesson_type==='video'?'🎬':l.lesson_type==='pdf'?'📄':l.lesson_type==='slides'?'📊':'📝'}</span>
+                        <span class="lesson-row-title">${escapeHtml(l.title)}</span>
+                        ${l.duration?`<span class="lesson-row-dur">${escapeHtml(l.duration)}</span>`:''}
+                        ${l.is_preview?`<span class="lesson-row-preview">Free Preview</span>`:''}
+                      </div>
+                    `).join('')}
+                    ${hasAssessment?`
+                      <div class="lesson-row" style="background:#EFF6FF;border-radius:8px;padding:10px 12px;margin-top:6px">
+                        <span class="lesson-row-icon">🧠</span>
+                        <span class="lesson-row-title" style="font-weight:700">${escapeHtml(m.assessment?.title||'Module Assessment')}</span>
+                        <span class="lesson-row-dur" style="color:var(--blue-dark)">⏱ ${m.assessment?.time_limit||10} min limit</span>
+                      </div>`:''}
+                    ${assignment?`
+                      <div class="lesson-row" style="background:#FFF7ED;border-radius:8px;padding:10px 12px;margin-top:6px">
+                        <span class="lesson-row-icon">📌</span>
+                        <span class="lesson-row-title" style="font-weight:700">${escapeHtml(assignment.title)}</span>
+                        <span class="lesson-row-dur" style="color:${assignment.optional?'var(--success)':'var(--warn)'}">${assignment.optional?'Optional':'Required'}</span>
+                      </div>`:''}
+                  </div>
+                </div>`;
+              }).join('');
+            })()}
           </div>
         </div>
 
@@ -4052,15 +4637,31 @@ async function loadLearningPlayer(slug, lessonId) {
     let activeLesson = lessonId ? allLessons.find(l => l.id === lessonId) : null;
     if (!activeLesson) activeLesson = allLessons.find(l => !completedSet.has(l.id)) || allLessons[0];
 
-    document.getElementById('playerCurriculum').innerHTML = modules.map(m => `
+    const fallbackMods = getFallbackModules(slug);
+    const richModules = modules.map((m, mi) => {
+      const fb = fallbackMods[mi] || {};
+      return { ...fb, ...m, assessment: m.assessment || fb.assessment, assignment: m.assignment || fb.assignment };
+    });
+    if (richModules.length === 0 && fallbackMods.length > 0) richModules.push(...fallbackMods);
+
+    document.getElementById('playerCurriculum').innerHTML = richModules.map((m, mi) => `
       <div class="pcurr-module">
-        <div class="pcurr-module-title">${escapeHtml(m.title)}</div>
-        ${(m.lessons||[]).sort((a,b)=>a.sort_order-b.sort_order).map(l => `
+        <div class="pcurr-module-header">Module ${mi+1}</div>
+        <div class="pcurr-module-title" style="font-size:13px;font-weight:700;padding:4px 0 8px;color:var(--navy)">${escapeHtml(m.title)}</div>
+        ${(m.lessons||[]).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0)).map(l => `
           <a href="#learn/${slug}/${l.id}" class="pcurr-lesson ${activeLesson && l.id===activeLesson.id ? 'active' : ''}">
             <span class="pcurr-check">${completedSet.has(l.id) ? '✓' : '○'}</span>
             <span>${escapeHtml(l.title)}</span>
           </a>
         `).join('')}
+        ${m.assessment ? `
+          <div class="pcurr-assessment-link" onclick="openAssessmentQuiz(${JSON.stringify(m.assessment).replace(/"/g,'&quot;')}, '${escapeHtml(m.title)}')">
+            <span>🧠</span><span>Module Quiz (${m.assessment.time_limit||10} min)</span>
+          </div>` : ''}
+        ${m.assignment ? `
+          <div class="pcurr-assignment-link" onclick="showAssignmentInPlayer(${JSON.stringify(m.assignment).replace(/"/g,'&quot;')})">
+            <span>📌</span><span>${m.assignment.optional?'[Optional] ':''}${escapeHtml(m.assignment.title)}</span>
+          </div>` : ''}
       </div>
     `).join('');
 
@@ -4093,12 +4694,53 @@ async function loadLearningPlayer(slug, lessonId) {
           ${prevLesson ? `<a href="#learn/${slug}/${prevLesson.id}" class="btn btn-ghost">← Previous</a>` : ''}
           ${nextLesson ? `<a href="#learn/${slug}/${nextLesson.id}" class="btn btn-ghost">Next →</a>` : ''}
         </div>
+
+        <div id="playerModuleExtras"></div>
       </div>
     `;
 
     await sbClient.from('lesson_progress').upsert({
       student_id: currentUser.id, lesson_id: activeLesson.id, last_accessed_at: new Date().toISOString()
     }, { onConflict: 'student_id,lesson_id' });
+
+    // Inject assessment + assignment extras for the active lesson's module
+    const activeModuleForLesson = richModules.find(m => (m.lessons||[]).some(l => l.id === activeLesson.id));
+    const extrasEl = document.getElementById('playerModuleExtras');
+    if (extrasEl && activeModuleForLesson) {
+      const isLastInModule = (() => {
+        const sorted = (activeModuleForLesson.lessons||[]).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
+        return sorted.length > 0 && sorted[sorted.length-1].id === activeLesson.id;
+      })();
+      let extrasHtml = '';
+      if (activeModuleForLesson.assessment) {
+        const a = activeModuleForLesson.assessment;
+        extrasHtml += `
+          <div style="border:1.5px solid var(--blue);border-radius:var(--radius-md);background:var(--blue-lt);padding:22px 24px;margin-top:24px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue-dark);margin-bottom:6px">🧠 Module Assessment</div>
+            <div style="font-size:17px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:6px">${escapeHtml(a.title)}</div>
+            <div style="font-size:13.5px;color:var(--navy-soft);margin-bottom:14px">${(a.questions||[]).length} questions · ⏱ ${a.time_limit||10}-minute time limit · Complete to earn your module badge</div>
+            <button class="btn btn-primary" onclick="openAssessmentQuiz(${JSON.stringify(a).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026')}, '${escapeHtml(activeModuleForLesson.title).replace(/'/g,"\\'")}')">
+              Start Assessment
+            </button>
+          </div>`;
+      }
+      if (activeModuleForLesson.assignment) {
+        const as = activeModuleForLesson.assignment;
+        extrasHtml += `
+          <div class="assignment-card">
+            <div class="assignment-badge">📌 ${as.optional?'Optional Assignment':'Assignment'}</div>
+            <div class="assignment-title">${escapeHtml(as.title)}</div>
+            <div class="assignment-desc">${escapeHtml(as.description||'')}</div>
+            ${as.optional?`<div class="assignment-optional">✦ This assignment is optional — complete it for extra practice</div>`:''}
+            <div class="assignment-upload-zone" onclick="alert('Assignment upload coming soon — connect your Supabase storage bucket to enable file submissions.')">
+              <div style="font-size:24px;margin-bottom:6px">📎</div>
+              <div style="font-weight:700;font-size:14px">Tap to upload your submission</div>
+              <div style="font-size:12px;color:var(--navy-soft);margin-top:4px">PDF, DOCX, PPTX, XLSX or image</div>
+            </div>
+          </div>`;
+      }
+      extrasEl.innerHTML = extrasHtml;
+    }
 
     document.getElementById('btnMarkComplete').addEventListener('click', async () => {
       try {
@@ -4551,6 +5193,193 @@ document.getElementById('verifyCertForm').addEventListener('submit', (e) => {
   window.location.hash = `#verify-certificate/${encodeURIComponent(code)}`;
   runCertificateVerification(code);
 });
+
+/* ============================================================
+   TIMED ASSESSMENT / QUIZ ENGINE
+   ============================================================ */
+let quizState = null; // { assessment, moduleTitle, qIndex, answers, timerInterval, secondsLeft }
+
+function openAssessmentQuiz(assessment, moduleTitle) {
+  if (!assessment || !assessment.questions || assessment.questions.length === 0) {
+    showToast('No questions found for this assessment.', 'error');
+    return;
+  }
+  clearInterval(quizState?.timerInterval);
+  quizState = {
+    assessment,
+    moduleTitle: moduleTitle || 'Module',
+    qIndex: 0,
+    answers: new Array(assessment.questions.length).fill(null),
+    secondsLeft: (assessment.time_limit || 10) * 60,
+    timerInterval: null,
+    submitted: false,
+  };
+
+  document.getElementById('quizModLabel').textContent = 'Module Assessment — ' + moduleTitle;
+  document.getElementById('quizTitle').textContent = assessment.title || 'Module Quiz';
+  document.getElementById('quizOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  quizRenderQuestion();
+  quizStartTimer();
+}
+
+function quizCloseModal() {
+  clearInterval(quizState?.timerInterval);
+  document.getElementById('quizOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  quizState = null;
+}
+
+function quizStartTimer() {
+  if (!quizState) return;
+  quizUpdateTimerDisplay();
+  quizState.timerInterval = setInterval(() => {
+    if (!quizState) { clearInterval(quizState?.timerInterval); return; }
+    quizState.secondsLeft--;
+    quizUpdateTimerDisplay();
+    if (quizState.secondsLeft <= 0) {
+      clearInterval(quizState.timerInterval);
+      showToast('⏱ Time is up! Submitting your answers…', 'error');
+      setTimeout(() => quizSubmit(), 800);
+    }
+  }, 1000);
+}
+
+function quizUpdateTimerDisplay() {
+  if (!quizState) return;
+  const s = quizState.secondsLeft;
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  const display = `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  const el = document.getElementById('quizTimerDisplay');
+  if (!el) return;
+  el.textContent = display;
+  el.className = 'quiz-timer' + (s <= 60 ? ' danger' : s <= 180 ? ' warn' : '');
+}
+
+function quizRenderQuestion() {
+  if (!quizState) return;
+  const { assessment, qIndex, answers } = quizState;
+  const q = assessment.questions[qIndex];
+  const total = assessment.questions.length;
+  const pct = Math.round(((qIndex) / total) * 100);
+
+  document.getElementById('quizProgressFill').style.width = pct + '%';
+  document.getElementById('quizQCounter').textContent = `${qIndex + 1} / ${total}`;
+
+  const keys = ['A','B','C','D'];
+  document.getElementById('quizBody').innerHTML = `
+    <div class="quiz-q-label">Question ${qIndex + 1} of ${total}</div>
+    <div class="quiz-question-text">${escapeHtml(q.q)}</div>
+    <div class="quiz-options">
+      ${(q.options || []).map((opt, oi) => `
+        <div class="quiz-option ${answers[qIndex] === oi ? 'selected' : ''}" data-oi="${oi}" onclick="quizSelectOption(${oi})">
+          <div class="quiz-option-key">${keys[oi] || oi+1}</div>
+          <span>${escapeHtml(opt)}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  const prevBtn = document.getElementById('quizPrev');
+  const nextBtn = document.getElementById('quizNext');
+  prevBtn.style.display = qIndex > 0 ? 'inline-flex' : 'none';
+
+  if (qIndex >= total - 1) {
+    nextBtn.textContent = 'Submit Quiz ✓';
+    nextBtn.className = 'btn btn-primary btn-sm';
+    nextBtn.onclick = quizSubmit;
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.className = 'btn btn-primary btn-sm';
+    nextBtn.onclick = quizNext;
+  }
+  prevBtn.onclick = quizPrev;
+}
+
+function quizSelectOption(oi) {
+  if (!quizState || quizState.submitted) return;
+  quizState.answers[quizState.qIndex] = oi;
+  quizRenderQuestion();
+}
+
+function quizNext() {
+  if (!quizState) return;
+  if (quizState.qIndex < quizState.assessment.questions.length - 1) {
+    quizState.qIndex++;
+    quizRenderQuestion();
+  }
+}
+
+function quizPrev() {
+  if (!quizState) return;
+  if (quizState.qIndex > 0) {
+    quizState.qIndex--;
+    quizRenderQuestion();
+  }
+}
+
+function quizSubmit() {
+  if (!quizState) return;
+  clearInterval(quizState.timerInterval);
+  quizState.submitted = true;
+
+  const { assessment, answers } = quizState;
+  const qs = assessment.questions;
+  let correct = 0;
+  qs.forEach((q, i) => { if (answers[i] === q.answer) correct++; });
+  const score = Math.round((correct / qs.length) * 100);
+  const passed = score >= 60;
+
+  const pct = score;
+  document.getElementById('quizProgressFill').style.width = '100%';
+  document.getElementById('quizNav').style.display = 'none';
+
+  document.getElementById('quizBody').innerHTML = `
+    <div class="quiz-result-panel">
+      <div class="quiz-score-circle" style="--pct:${pct}">
+        <div class="quiz-score-inner">${score}%</div>
+      </div>
+      <h3 style="font-size:20px;font-weight:800;margin-bottom:8px">${passed ? '🎉 Well Done!' : '📚 Keep Studying'}</h3>
+      <p style="color:var(--navy-soft);margin-bottom:6px">You scored <strong>${correct} out of ${qs.length}</strong> questions correctly.</p>
+      <p style="font-size:13px;color:${passed?'var(--success)':'var(--warn)'};font-weight:700;margin-bottom:20px">${passed ? '✓ Passed (60% required)' : '✗ Score 60% or higher to pass'}</p>
+
+      <div style="display:flex;flex-direction:column;gap:10px;text-align:left;margin-bottom:22px">
+        ${qs.map((q,i) => {
+          const chosen = answers[i];
+          const isRight = chosen === q.answer;
+          return `
+            <div style="padding:12px 14px;border-radius:10px;border:1.5px solid ${isRight?'var(--success)':'var(--danger)'};background:${isRight?'#F0FDF4':'#FEF2F2'}">
+              <div style="font-size:13px;font-weight:700;margin-bottom:4px;color:${isRight?'var(--success)':'var(--danger)'}">${isRight?'✓':'✗'} Q${i+1}: ${escapeHtml(q.q)}</div>
+              <div style="font-size:12.5px;color:var(--navy-soft)">Your answer: <strong>${chosen!==null?escapeHtml(q.options[chosen]):'Not answered'}</strong></div>
+              ${!isRight?`<div style="font-size:12.5px;color:var(--success)">Correct: <strong>${escapeHtml(q.options[q.answer])}</strong></div>`:''}
+            </div>`;
+        }).join('')}
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        ${!passed ? `<button class="btn btn-primary" onclick="openAssessmentQuiz(quizState?.assessment||${JSON.stringify(assessment)}, '${escapeHtml(quizState?.moduleTitle||'').replace(/'/g,"\\'")}')">Retake Assessment</button>` : ''}
+        <button class="btn btn-secondary" onclick="quizCloseModal()">Close</button>
+      </div>
+    </div>
+  `;
+}
+
+/* Close quiz on overlay click */
+document.getElementById('quizOverlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('quizOverlay')) quizCloseModal();
+});
+
+/* Assignment helper — scroll to or highlight the assignment in the player */
+function showAssignmentInPlayer(assignment) {
+  const extras = document.getElementById('playerModuleExtras');
+  if (extras) {
+    extras.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    extras.style.outline = '2px solid var(--gold)';
+    setTimeout(() => extras.style.outline = '', 2000);
+  }
+}
 </script>
 
 </body>
