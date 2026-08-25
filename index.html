@@ -2778,6 +2778,9 @@ function renderProgramsGrid(programs) {
 function renderGalleryStrip(gallery) {
   const strip = document.getElementById('galleryStrip');
   if (!strip || !gallery || gallery.length === 0) return;
+  // Don't overwrite hardcoded images if every entry from the DB is blank
+  const hasRealData = gallery.some(g => g.image_url && g.image_url.trim());
+  if (!hasRealData) return;
   strip.innerHTML = gallery.map((g, i) => `
     <div class="gallery-item"${i === 0 ? ' style="min-height:280px"' : ''}>
       <img src="${escapeHtml(g.image_url)}" alt="${escapeHtml(g.alt || '')}" loading="lazy">
