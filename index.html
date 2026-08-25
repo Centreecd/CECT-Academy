@@ -848,7 +848,7 @@ section{padding:96px 0;}
   <nav class="nav wrap">
     <a href="#home" class="brand">
       <img class="brand-mark brand-logo" src="https://res.cloudinary.com/g2ajyskg/image/upload/v1786779146/file_00000000f84081f4b6c4415d9e8735e0.png" alt="Center-ECD Academy logo">
-      <span class="brand-name">Center-ECD Academy<small>Learn. Grow. Lead.</small></span>
+      <span class="brand-name">Center-ECD Academy</span>
     </a>
 
     <ul class="nav-links" id="navLinks">
@@ -3096,8 +3096,27 @@ async function saveSettings() {
   ];
 
   try {
-    const { error } = await sbClient.from('site_settings').upsert(rows, { onConflict: 'key' });
-    if (error) throw error;
+    // Try upsert first (requires INSERT + UPDATE RLS policies)
+    const { error } = await sbClient
+      .from('site_settings')
+      .upsert(rows, { onConflict: 'key', ignoreDuplicates: false })
+      .select();
+    if (error) {
+      // If upsert fails (e.g. RLS only allows UPDATE), fall back to per-row updates
+      if (error.message && (error.message.includes('policy') || error.message.includes('permission') || error.message.includes('violates'))) {
+        let fallbackError = null;
+        for (const row of rows) {
+          const { error: upErr } = await sbClient
+            .from('site_settings')
+            .update({ value: row.value, updated_at: new Date().toISOString() })
+            .eq('key', row.key);
+          if (upErr) { fallbackError = upErr; break; }
+        }
+        if (fallbackError) throw fallbackError;
+      } else {
+        throw error;
+      }
+    }
     // Re-apply immediately to live page
     const map = {};
     rows.forEach(r => { map[r.key] = r.value; });
@@ -3108,7 +3127,7 @@ async function saveSettings() {
     msg.className = 'form-msg show error';
     // If table doesn't exist yet, show helpful Supabase SQL
     if (e.message && e.message.includes('relation')) {
-      msg.innerHTML = 'Table missing. Run this in Supabase SQL Editor:<br><code style="font-size:11px;word-break:break-all">CREATE TABLE site_settings (key TEXT PRIMARY KEY, value TEXT, updated_at TIMESTAMPTZ DEFAULT NOW());</code>';
+      msg.innerHTML = 'Table missing. Run this in Supabase SQL Editor:<br><code style="font-size:11px;word-break:break-all">CREATE TABLE site_settings (key TEXT PRIMARY KEY, value TEXT, updated_at TIMESTAMPTZ DEFAULT NOW());<br>ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;<br>CREATE POLICY "admin_all" ON site_settings FOR ALL USING (true) WITH CHECK (true);</code>';
     } else {
       msg.textContent = 'Error: ' + e.message;
     }
@@ -3701,9 +3720,10 @@ document.getElementById('asgRemove').addEventListener('click', async () => {
 async function loadAdminSubmissions() {
   const tbody = document.getElementById('adminSubmissionRows');
   try {
+    // Step 1: fetch submissions without the profiles join (assignment_submissions references auth.users, not profiles)
     const { data, error } = await sbClient
       .from('assignment_submissions')
-      .select('id, file_url, file_name, status, admin_note, submitted_at, module_id, course_id, profiles(full_name, email), courses(title), course_modules(title)')
+      .select('id, file_url, file_name, status, admin_note, submitted_at, module_id, course_id, student_id, courses(title), course_modules(title)')
       .order('submitted_at', { ascending: false })
       .limit(100);
     if (error) throw error;
@@ -3711,10 +3731,24 @@ async function loadAdminSubmissions() {
       tbody.innerHTML = `<tr><td colspan="7"><div class="admin-empty-note">No submissions yet.</div></td></tr>`;
       return;
     }
+
+    // Step 2: fetch matching profiles separately using student_id values
+    const studentIds = [...new Set(data.map(s => s.student_id).filter(Boolean))];
+    let profileMap = {};
+    if (studentIds.length > 0) {
+      const { data: profiles } = await sbClient
+        .from('profiles')
+        .select('id, full_name, email')
+        .in('id', studentIds);
+      (profiles || []).forEach(p => { profileMap[p.id] = p; });
+    }
+
     const statusColors = { submitted: 'upcoming', reviewed: 'draft', accepted: 'published', returned: 'danger' };
-    tbody.innerHTML = data.map(s => `
+    tbody.innerHTML = data.map(s => {
+      const profile = profileMap[s.student_id] || {};
+      return `
       <tr>
-        <td><strong>${escapeHtml(s.profiles?.full_name || '—')}</strong><br><span style="font-size:11.5px;color:var(--navy-soft)">${escapeHtml(s.profiles?.email || '')}</span></td>
+        <td><strong>${escapeHtml(profile.full_name || '—')}</strong><br><span style="font-size:11.5px;color:var(--navy-soft)">${escapeHtml(profile.email || '')}</span></td>
         <td>${escapeHtml(s.courses?.title || '—')}</td>
         <td>${escapeHtml(s.course_modules?.title || '—')}</td>
         <td>${new Date(s.submitted_at).toLocaleDateString()}</td>
@@ -3732,7 +3766,7 @@ async function loadAdminSubmissions() {
           <button data-sub-save="${s.id}" class="btn btn-primary btn-sm" style="margin-top:6px;font-size:12px;padding:6px 12px">Save</button>
         </td>
       </tr>
-    `).join('');
+    `; }).join('');
 
     tbody.querySelectorAll('[data-sub-save]').forEach(btn => {
       btn.addEventListener('click', async () => {
