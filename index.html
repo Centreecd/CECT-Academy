@@ -1652,26 +1652,24 @@ section{padding:96px 0;}
             <div><h3>Site Settings</h3><p>Edit contact info, social links, and homepage content. Changes go live instantly.</p></div>
           </div>
 
-          <div id="settingsSaveMsg" class="form-msg" style="max-width:560px"></div>
 
-          <!-- Hero Announcement -->
+          <!-- Hero Announcement + Subtext -->
           <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
-            <h4 style="font-size:15px;margin-bottom:4px">Hero Announcement</h4>
-            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">The short pill text that appears at the top of the homepage hero section.</p>
-            <div class="field" style="margin-bottom:0">
+            <h4 style="font-size:15px;margin-bottom:4px">Hero Announcement &amp; Subtext</h4>
+            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">The short pill text and paragraph shown in the homepage hero section.</p>
+            <div class="field">
               <label for="setHeroAnnouncement">Announcement Text</label>
               <input type="text" id="setHeroAnnouncement" placeholder="e.g. Enrolment open for August cohort" maxlength="80">
             </div>
-          </div>
-
-          <!-- Hero Subtext -->
-          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
-            <h4 style="font-size:15px;margin-bottom:4px">Hero Subtext</h4>
-            <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">The paragraph of text shown below the main headline on the homepage.</p>
-            <div class="field" style="margin-bottom:0">
+            <div class="field" style="margin-bottom:16px">
               <label for="setHeroSubtext">Hero Paragraph</label>
               <textarea id="setHeroSubtext" rows="3" placeholder="Describe what the academy stands for…" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical"></textarea>
             </div>
+            <div id="heroSaveMsg" class="form-msg" style="margin-bottom:10px"></div>
+            <button class="btn btn-primary btn-sm" id="btnSaveHero" onclick="saveHeroSettings()">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-label">Save Hero</span>
+            </button>
           </div>
 
           <!-- About Section -->
@@ -1686,10 +1684,15 @@ section{padding:96px 0;}
               <label for="setAboutPara1">Paragraph 1</label>
               <textarea id="setAboutPara1" rows="3" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical" placeholder="First paragraph about the academy…"></textarea>
             </div>
-            <div class="field" style="margin-bottom:0">
+            <div class="field" style="margin-bottom:16px">
               <label for="setAboutPara2">Paragraph 2</label>
               <textarea id="setAboutPara2" rows="3" style="width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical" placeholder="Second paragraph about the academy…"></textarea>
             </div>
+            <div id="aboutSaveMsg" class="form-msg" style="margin-bottom:10px"></div>
+            <button class="btn btn-primary btn-sm" id="btnSaveAbout" onclick="saveAboutSettings()">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-label">Save About</span>
+            </button>
           </div>
 
           <!-- Why Section -->
@@ -1700,10 +1703,15 @@ section{padding:96px 0;}
               <label for="setWhyHeading">Section Heading</label>
               <input type="text" id="setWhyHeading" placeholder="e.g. Everything you need to grow your career" maxlength="80">
             </div>
-            <div class="field" style="margin-bottom:0">
+            <div class="field" style="margin-bottom:16px">
               <label for="setWhySubtext">Supporting Text</label>
               <input type="text" id="setWhySubtext" placeholder="Describe what makes the academy unique" maxlength="200">
             </div>
+            <div id="whySaveMsg" class="form-msg" style="margin-bottom:10px"></div>
+            <button class="btn btn-primary btn-sm" id="btnSaveWhy" onclick="saveWhySettings()">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-label">Save Why Section</span>
+            </button>
           </div>
 
           <!-- Contact Info -->
@@ -1718,14 +1726,19 @@ section{padding:96px 0;}
               <label for="setContactPhone">Phone Number</label>
               <input type="tel" id="setContactPhone" placeholder="+234 800 000 0000">
             </div>
-            <div class="field" style="margin-bottom:0">
+            <div class="field" style="margin-bottom:16px">
               <label for="setContactAddress">Office Address</label>
               <input type="text" id="setContactAddress" placeholder="e.g. 12 Innovation Drive, Lagos, Nigeria">
             </div>
+            <div id="contactSaveMsg" class="form-msg" style="margin-bottom:10px"></div>
+            <button class="btn btn-primary btn-sm" id="btnSaveContact" onclick="saveContactSettings()">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-label">Save Contact Info</span>
+            </button>
           </div>
 
           <!-- Social Links -->
-          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:28px;max-width:680px">
+          <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:24px;margin-bottom:20px;max-width:680px">
             <h4 style="font-size:15px;margin-bottom:4px">Social Media Links</h4>
             <p style="font-size:13px;color:var(--navy-soft);margin-bottom:16px">Paste the full URL for each platform. Leave blank to hide the icon.</p>
             <div class="field">
@@ -1740,10 +1753,15 @@ section{padding:96px 0;}
               <label for="setSocialTwitter">Twitter / X URL</label>
               <input type="url" id="setSocialTwitter" placeholder="https://x.com/centerecdacademy">
             </div>
-            <div class="field" style="margin-bottom:0">
+            <div class="field" style="margin-bottom:16px">
               <label for="setSocialLinkedin">LinkedIn URL</label>
               <input type="url" id="setSocialLinkedin" placeholder="https://linkedin.com/company/centerecdacademy">
             </div>
+            <div id="socialSaveMsg" class="form-msg" style="margin-bottom:10px"></div>
+            <button class="btn btn-primary btn-sm" id="btnSaveSocial" onclick="saveSocialSettings()">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-label">Save Social Links</span>
+            </button>
           </div>
 
           <!-- Homepage Video -->
@@ -1779,6 +1797,11 @@ section{padding:96px 0;}
             <h4 style="font-size:15px;margin-bottom:4px">Programs Grid</h4>
             <p style="font-size:13px;color:var(--navy-soft);margin-bottom:20px">The 8 large program cards shown below the hero. Upload a photo and fill in the text for each card.</p>
             <div id="programsEditor"><!-- built by buildSettingsEditors() --></div>
+            <div id="programsSaveMsg" class="form-msg" style="margin-bottom:10px;margin-top:16px"></div>
+            <button class="btn btn-primary btn-sm" id="btnSavePrograms" onclick="saveProgramsSettings()">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-label">Save Programs</span>
+            </button>
           </div>
 
           <!-- Gallery Editor -->
@@ -1786,9 +1809,15 @@ section{padding:96px 0;}
             <h4 style="font-size:15px;margin-bottom:4px">Gallery Strip</h4>
             <p style="font-size:13px;color:var(--navy-soft);margin-bottom:20px">5 photos shown in the "Learning in action" gallery section. The first photo is displayed larger.</p>
             <div id="galleryEditor"><!-- built by buildSettingsEditors() --></div>
+            <div id="gallerySaveMsg" class="form-msg" style="margin-bottom:10px;margin-top:16px"></div>
+            <button class="btn btn-primary btn-sm" id="btnSaveGallery" onclick="saveGallerySettings()">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-label">Save Gallery</span>
+            </button>
           </div>
 
-          <button class="btn btn-primary" id="btnSaveSettings">
+          <div id="settingsSaveMsg" class="form-msg" style="max-width:560px;margin-bottom:10px"></div>
+          <button class="btn btn-secondary" id="btnSaveSettings" onclick="saveSettings()">
             <span class="spinner" aria-hidden="true"></span>
             <span class="btn-label">Save All Settings</span>
           </button>
@@ -2730,6 +2759,9 @@ function renderCourseCards(courses) {
 function renderProgramsGrid(programs) {
   const grid = document.getElementById('programsGrid');
   if (!grid || !programs || programs.length === 0) return;
+  // Don't overwrite hardcoded cards if every entry from the DB is blank
+  const hasRealData = programs.some(p => p.title && p.title.trim());
+  if (!hasRealData) return;
   grid.innerHTML = programs.map(p => `
     <div class="program-card">
       ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy">` : '<div style="width:100%;height:100%;background:var(--grad-brand)"></div>'}
@@ -3153,13 +3185,93 @@ function buildSettingsEditors() {
   }
 }
 
-async function saveSettings() {
+/* ---- shared upsert helper ---- */
+async function _upsertRows(rows, btnId, msgId) {
   if (!supabaseReady) { showToast('Database not connected.', 'error'); return; }
-  const btn = document.getElementById('btnSaveSettings');
-  const msg = document.getElementById('settingsSaveMsg');
-  btn.classList.add('is-loading'); btn.disabled = true;
+  const btn = document.getElementById(btnId);
+  const msg = document.getElementById(msgId);
+  if (btn) { btn.classList.add('is-loading'); btn.disabled = true; }
+  try {
+    const { error } = await sbClient
+      .from('site_settings')
+      .upsert(rows, { onConflict: 'key', ignoreDuplicates: false })
+      .select();
+    if (error) {
+      if (error.message && (error.message.includes('policy') || error.message.includes('permission') || error.message.includes('violates'))) {
+        let fallbackError = null;
+        for (const row of rows) {
+          const { data: updated, error: upErr } = await sbClient
+            .from('site_settings')
+            .update({ value: row.value, updated_at: new Date().toISOString() })
+            .eq('key', row.key)
+            .select();
+          if (upErr) { fallbackError = upErr; break; }
+          if (!updated || updated.length === 0) {
+            const { error: insErr } = await sbClient
+              .from('site_settings')
+              .insert({ key: row.key, value: row.value });
+            if (insErr) { fallbackError = insErr; break; }
+          }
+        }
+        if (fallbackError) throw fallbackError;
+      } else { throw error; }
+    }
+    const map = {};
+    rows.forEach(r => { map[r.key] = r.value; });
+    applySettings(map);
+    if (msg) { msg.className = 'form-msg show success'; msg.textContent = '✓ Saved and applied.'; }
+    showToast('Saved!', 'success');
+  } catch(e) {
+    if (msg) { msg.className = 'form-msg show error'; msg.textContent = 'Error: ' + e.message; }
+    showToast('Save failed.', 'error');
+  } finally {
+    if (btn) { btn.classList.remove('is-loading'); btn.disabled = false; }
+  }
+}
 
-  // Build programs JSON from editor fields
+/* ---- per-section save functions ---- */
+async function saveHeroSettings() {
+  await _upsertRows([
+    { key:'hero_announcement', value: document.getElementById('setHeroAnnouncement')?.value.trim() || '' },
+    { key:'hero_subtext',      value: document.getElementById('setHeroSubtext')?.value.trim() || '' },
+  ], 'btnSaveHero', 'heroSaveMsg');
+}
+
+async function saveAboutSettings() {
+  await _upsertRows([
+    { key:'about_heading',   value: document.getElementById('setAboutHeading')?.value.trim() || '' },
+    { key:'about_para1',     value: document.getElementById('setAboutPara1')?.value.trim() || '' },
+    { key:'about_para2',     value: document.getElementById('setAboutPara2')?.value.trim() || '' },
+    { key:'about_image_url', value: document.getElementById('setAboutImageUrl')?.value.trim() || '' },
+    { key:'video_url',       value: document.getElementById('setVideoUrl')?.value.trim() || '' },
+  ], 'btnSaveAbout', 'aboutSaveMsg');
+}
+
+async function saveWhySettings() {
+  await _upsertRows([
+    { key:'why_heading', value: document.getElementById('setWhyHeading')?.value.trim() || '' },
+    { key:'why_subtext', value: document.getElementById('setWhySubtext')?.value.trim() || '' },
+  ], 'btnSaveWhy', 'whySaveMsg');
+}
+
+async function saveContactSettings() {
+  await _upsertRows([
+    { key:'contact_email',   value: document.getElementById('setContactEmail')?.value.trim() || '' },
+    { key:'contact_phone',   value: document.getElementById('setContactPhone')?.value.trim() || '' },
+    { key:'contact_address', value: document.getElementById('setContactAddress')?.value.trim() || '' },
+  ], 'btnSaveContact', 'contactSaveMsg');
+}
+
+async function saveSocialSettings() {
+  await _upsertRows([
+    { key:'social_facebook',  value: document.getElementById('setSocialFacebook')?.value.trim() || '' },
+    { key:'social_instagram', value: document.getElementById('setSocialInstagram')?.value.trim() || '' },
+    { key:'social_twitter',   value: document.getElementById('setSocialTwitter')?.value.trim() || '' },
+    { key:'social_linkedin',  value: document.getElementById('setSocialLinkedin')?.value.trim() || '' },
+  ], 'btnSaveSocial', 'socialSaveMsg');
+}
+
+async function saveProgramsSettings() {
   const programsArr = Array.from({length:8}, (_,i) => {
     const idx = i + 1;
     return {
@@ -3169,8 +3281,40 @@ async function saveSettings() {
       tag:       document.getElementById(`progTag${idx}`)?.value.trim() || '',
     };
   });
+  await _upsertRows([
+    { key:'programs_json', value: JSON.stringify(programsArr) },
+  ], 'btnSavePrograms', 'programsSaveMsg');
+}
 
-  // Build gallery JSON from editor fields
+async function saveGallerySettings() {
+  const galleryArr = Array.from({length:5}, (_,i) => {
+    const idx = i + 1;
+    return {
+      image_url: document.getElementById(`galleryImgUrl${idx}`)?.value.trim() || '',
+      alt:       document.getElementById(`galleryAlt${idx}`)?.value.trim() || '',
+    };
+  });
+  await _upsertRows([
+    { key:'gallery_json', value: JSON.stringify(galleryArr) },
+  ], 'btnSaveGallery', 'gallerySaveMsg');
+}
+
+/* ---- legacy saveSettings kept for any external calls ---- */
+async function saveSettings() {
+  if (!supabaseReady) { showToast('Database not connected.', 'error'); return; }
+  const btn = document.getElementById('btnSaveSettings');
+  const msg = document.getElementById('settingsSaveMsg');
+  btn.classList.add('is-loading'); btn.disabled = true;
+
+  const programsArr = Array.from({length:8}, (_,i) => {
+    const idx = i + 1;
+    return {
+      image_url: document.getElementById(`progImgUrl${idx}`)?.value.trim() || '',
+      cat:       document.getElementById(`progCat${idx}`)?.value.trim() || '',
+      title:     document.getElementById(`progTitle${idx}`)?.value.trim() || '',
+      tag:       document.getElementById(`progTag${idx}`)?.value.trim() || '',
+    };
+  });
   const galleryArr = Array.from({length:5}, (_,i) => {
     const idx = i + 1;
     return {
